@@ -18,6 +18,19 @@ namespace Kartverket.Controllers
             return View();
         }
 
+        [HttpGet]
+        public ViewResult RegistrationForm()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ViewResult RegistrationForm(UserData userData)
+        {
+            return View("Overview", userData);
+        }
+
+
         public IActionResult Privacy()
         {
             return View();
