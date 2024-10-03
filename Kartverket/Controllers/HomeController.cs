@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Reflection.Metadata.Ecma335;
 using Kartverket.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,8 @@ namespace Kartverket.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
+        // definerer en liste sim en in-memory lagring
+        private static List<PositionModel> positions = new List<PositionModel>();
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
@@ -29,8 +32,29 @@ namespace Kartverket.Controllers
         {
             return View("Overview", userData);
         }
+            
+        [HttpGet]
+        public IActionResult CorrectMap()
+        {
+           return View();
+        }
 
+        [HttpPost]
+        public IActionResult CorrectMap(PositionModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                positions.Add(model);
+                return View("CorrectionOverview", positions);
+            }
+            return View();
+        }
 
+        [HttpGet]
+        public IActionResult CorrectionOverview()
+        {
+            return View(positions);
+        }
         public IActionResult Privacy()
         {
             return View();
