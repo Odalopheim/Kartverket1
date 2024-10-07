@@ -19,24 +19,25 @@
         <h1>Registration Form</h1>
         <form asp-action="RegistrationForm" method="post">
             <div>
-                <label asp-for="Name">Your name:</label>
-                <input asp-for="Name" />
+                <label asp-for="Name" for="exampleInputName" class="form-label mt-4">Name</label>
+                 <input asp-for="Name" class="form-control" id="exampleInputName" aria-describedby="nameHelp" placeholder="Enter Name">
+
             </div>
             <div>
-                <label asp-for="Email">Your email:</label>
-                <input asp-for="Email" />
+                <label asp-for="Email" for="exampleInputEmail1" class="form-label mt-4">Email address</label>
+                <input asp-for="Email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
             </div>
             <div>
-                <label asp-for="Phone">Your phone:</label>
-                 <input asp-for="Phone" />
+                <label asp-for="Phone" for="exampleInputPhone" class="form-label mt-4">Phone</label>
+                <input asp-for="Phone" class="form-control" id="exampleInputPhone" aria-describedby="phoneHelp" placeholder="Enter Phone">
             </div>
             <div>
-                <label asp-for="Address">Your address:</label>
-                <input asp-for="Address" />
+                 <label asp-for="Address" for="exampleInputAddress" class="form-label mt-4">Your address:</label>
+                  <input asp-for="Address" class="form-control" id="exampleInputAddress" aria-describedby="addressHelp" placeholder="Enter Address" />
             </div>
-           
-            
-             <button type="submit" class="btn btn-primary">Submit Data</button>
+            <br />
+
+        <button type="submit" class="btn btn-success">Submit</button>
 
         </form>
     </body>
