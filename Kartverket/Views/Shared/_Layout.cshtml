@@ -13,7 +13,7 @@
     <header>
         <nav class="navbar navbar-expand-lg bg-light" data-bs-theme="light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#"><img src="/images/Kartverket Logo40 .png" alt="Logo">Kartverket</a>
+                <a class="navbar-brand" style="color: black" asp-controller="Home" asp-action="Index"><img src="/images/Kartverket Logo40 .png" alt="Logo">Kartverket</a> <!--byttet farge og gjorde trykkbar til forside-->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -30,17 +30,19 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Home" asp-action="RegisterAreaChange">Register Area Change</a>
                         </li>
+                    </ul>
+                    
+                    <ul class="nav-item ms-auto"> <!-- flytte meny til høyre-->
                         <li class="nav-item dropdown text-success">
                             <a class="nav-link dropdown-toggle text-success" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="true">
                                 MENY<img src="/images/MenyBar40.png" alt="MENY"></a>
-                            <div class="dropdown-menu">
+                            <div class="dropdown-menu dropdown-menu-end">
                                 <a class="dropdown-item" asp-controller="Home" asp-action="CorrectMap">Correct Map</a>
                                 <a class="dropdown-item" asp-controller="Home" asp-action="RegisterAreaChange">Register Area Change</a>
                                 <a class="dropdown-item" asp-controller="Home" asp-action="Index">Home</a>
                                
                             </div>
                         </li>
-
                     </ul>
                 </div>
             </div>
