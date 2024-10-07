@@ -11,6 +11,7 @@ namespace Kartverket.Controllers
 
         // definerer en liste sim en in-memory lagring
         private static List<PositionModel> positions = new List<PositionModel>();
+        private static List<AreaChange> changes = new List<AreaChange>();
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
@@ -32,7 +33,33 @@ namespace Kartverket.Controllers
         {
             return View("Overview", userData);
         }
-            
+
+        [HttpGet]
+        public IActionResult RegisterAreaChange()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult RegisterAreaChange(string geoJson,string description)
+        {
+            var newChange = new AreaChange
+            {
+                Id = Guid.NewGuid().ToString(),
+                GeoJson = geoJson,
+                Description = description
+            };
+
+            changes.Add(newChange);
+            return RedirectToAction("AreaChangeOverview");
+        }
+        [HttpGet]
+        public IActionResult AreaChangeOverview()
+        {
+            return View(changes);
+        }
+   
+
         [HttpGet]
         public IActionResult CorrectMap()
         {
