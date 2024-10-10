@@ -18,20 +18,22 @@
     </div>
 
     <!-- Innmeldings siden til høyre -->
-    <div style="flex: 1; background-color: #FFFFFF; padding: 20px;">
+    <div style="flex: 1; background-color: #F3F0F0; padding: 20px;">
         <h2>Ny Innmelding</h2>
         <form asp-action="RegisterAreaChange" method="post">
             <input type="hidden" id="geoJsonInput" name="geoJson" />
-            <!-- Velge mellom katogorier-->
+            <!-- Velge mellom katogorier  "MÅ FORBEDRES"-->
             <div>
                 <label for="category" class="form-label">Kategori</label>
-                <select id="category" class="form-select" name="category">
-                    <option value="1">Annet</option>
-                    <option value="2">Feil gatenavn</option>
-                    <option value="3">Feil stedsnavn</option>
-                    <option value="4">Vei mangler på kart</option>
-                    <option value="5">Vei mangler i virkligheten</option>
+                <select id="category" class="form-select" name="Category" onchange="checkCustomCategory()">
+                    <option value="Annet">Annet</option>
+                    <option value="Custom">Custom</option>
+                    <option value="Feil gatenavn">Feil gatenavn</option>
+                    <option value="Feil stedsnavn">Feil stedsnavn</option>
+                    <option value="Vei mangler på kart">Vei mangler på kart</option>
+                    <option value="Vei mangler i virkligheten">Vei mangler i virkligheten</option>
                 </select>
+                <input type="text" id="customCategory" name="CustomCategory" class="form-control mt-2" placeholder="Enter custom category" style="display:none;" />
             </div>
 
             <div class="mt-3">
@@ -45,7 +47,7 @@
             </div>
 
             <br />
-            <button type="submit" style="background-color: #008000" class="btn btn-success">Send inn</button>
+            <button type="submit" style="background-color: #1A833B" class="btn btn-success">Send inn</button>
         </form>
     </div>
 </div>
@@ -95,6 +97,16 @@
         function zoomOut()
         {
             map.zoomOut();
+        }
+        //for å vise og hjemme custom catogory 
+        function checkCustomCategory() {
+            var categorySelect = document.getElementById('category');
+            var customCategoryInput = document.getElementById('customCategory');
+            if (categorySelect.value === 'Custom') {
+                customCategoryInput.style.display = 'block';
+            } else {
+                customCategoryInput.style.display = 'none';
+            }
         }
     </script>
 }
