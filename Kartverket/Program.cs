@@ -1,4 +1,14 @@
+using Kartverket.API_Models;
+using Kartverket.Services;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// binder API settings fra appsettings.json
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
+
+//registrerer services og interface
+builder.Services.AddHttpClient<IKommuneInfoService, KommuneInfoService>();
+builder.Services.AddHttpClient<IStedsnavnService, StedsnavnService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

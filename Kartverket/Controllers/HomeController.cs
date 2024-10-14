@@ -2,25 +2,97 @@ using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
 using Kartverket.Models;
 using Microsoft.AspNetCore.Mvc;
+using Kartverket.Services;
 
 namespace Kartverket.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IKommuneInfoService _kommuneInfoService;
+        private readonly IStedsnavnService _stedsnavnService;
 
         // definerer en liste sim en in-memory lagring
         private static List<PositionModel> positions = new List<PositionModel>();
         private static List<AreaChange> changes = new List<AreaChange>();
-        public HomeController(ILogger<HomeController> logger)
+        //private object _kommuneInfoService;
+
+
+        public HomeController(ILogger<HomeController> logger, IKommuneInfoService kommuneInfoService, IStedsnavnService stedsnavnService)
         {
             _logger = logger;
+            _kommuneInfoService = kommuneInfoService;
+            _stedsnavnService = stedsnavnService; // Injiser stedsnavn-tjenesten her
         }
+
+
+
+        // public HomeController(ILogger<HomeController> logger)
+        //{
+        //  _logger = logger;
+        // }
 
         public IActionResult Index()
         {
             return View();
         }
+        //hånterer søk for Komunneinfo
+        [HttpPost]
+        public async Task<IActionResult> KommuneInfo(string kommunenummer)
+        {
+            if(string.IsNullOrEmpty(kommunenummer))
+            {
+                ViewData["Error"] = "Skriv inn riktig kommune nunmmer.";
+                return View("Index");
+            }
+            var kommuneInfo = await _kommuneInfoService.GetKommuneInfoAsync(kommunenummer);
+
+            if (kommuneInfo != null)
+            {
+                var viewModel = new KommuneInfoViewModel
+                {
+                    Kommunenavn = kommuneInfo.Kommunenavn,
+                    Kommunenummer = kommuneInfo.Kommunenummer,
+                    Fylkesnavn = kommuneInfo.Fylkesnavn,
+                    SamiskForvaltningsomrade = kommuneInfo.SamiskForvaltningsomrade
+                };
+                return View("KommuneInfo", viewModel);
+            }
+            else
+            {
+                ViewData["Error"] = $"ikke noe resultat på dette Kommune Mummeret '{kommunenummer}'.";
+                return View("Index");
+            }
+        }
+        //håndterer søk for stedsnavn
+        [HttpPost]
+        public async Task<IActionResult> Stedsnavn(string searchTerm)
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                ViewData["Error"] = "Please skriv in riktig stedsnavn.";
+                return View("Index");
+            }
+
+            var stedsnavnResponse = await _stedsnavnService.GetStedsnavnAsync(searchTerm); // Bruk tjenesten her
+            if (stedsnavnResponse?.Navn != null && stedsnavnResponse.Navn.Any())
+            {
+                var viewModel = stedsnavnResponse.Navn.Select(n => new StedsnavnViewModel
+                {
+                    Skrivemåte = n.Skrivemåte,
+                    Navneobjekttype = n.Navneobjekttype,
+                    Språk = n.Språk,
+                    Navnestatus = n.Navnestatus
+                }).ToList();
+                return View("Stedsnavn", viewModel);
+            }
+            else
+            {
+                ViewData["Error"] = $"ikke noe resultat på '{searchTerm}'.";
+                return View("Index");
+            }
+        }
+
 
         [HttpGet]
         public ViewResult RegistrationForm()
