@@ -1,0 +1,21 @@
+﻿@model Kartverket.Models.UserData
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //Layout = null;
+}
+
+<html>
+<head>
+    <h1>
+        Min Side
+    </h1>
+</head>
+<body>
+    <p1>Min Profil</p1>
+    <p><strong>Name:</strong> @Model.Name</p>
+    <p><strong>Email:</strong> @Model.Email</p>
+    <p><strong>Phone:</strong> @Model.Phone</p>
+    <p><strong>Address:</strong> @Model.Address</p>
+</body>
+</html>
