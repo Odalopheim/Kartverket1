@@ -12,4 +12,23 @@
     <a asp-controller="Home" asp-action="RegisterAreaChange" class="text-info">Eller fortsett som gjest</a>
     @*@Model *@
 </div>
+<h2>Søk Kommune Info</h2>
+<form asp-action="KommuneInfo" method="post">
+    @Html.AntiForgeryToken()
+    <label for="searchTerm">Plasser Navn:</label>
+    <input type="text" id="serchTerm" name="searchTerm" />
+    <button type="submit" class="btn btn-success">Submit</button>
+</form>
+<h2>Søk Stedsnavn</h2>
+<form asp-action="Stedsnavn" method="post">
+    <label for="searchTerm">Søk etter stedsnavn:</label>
+    <input type="text" id="serchTerm" name="searchTerm" />
+    <button type="submit" class="btn btn-success" >Submit</button>
+</form>
+@if (ViewData["Error"] != null) 
+{
+    <div class="alert alert-danger">
+        @ViewData["Error"]
+    </div>
+}
 
