@@ -25,7 +25,7 @@
             <!-- Velge mellom katogorier  "MÅ FORBEDRES"-->
             <div>
                 <label for="category" class="form-label">Kategori</label>
-                <select id="category" class="form-select" name="Category" onchange="checkCustomCategory()">
+                <select id="category" class="form-select" name="Category" onchange="checkCustomCategory()">v
                     <option value="Annet">Annet</option>
                     <option value="Custom">Custom</option>
                     <option value="Feil gatenavn">Feil gatenavn</option>
@@ -57,6 +57,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+
+    <!-- 5. leaflet control geocoder CSS (searchbar)-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+
+    <!-- 6. leaflet control geocoder JS (searchbar)-->
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
     <script>
         var map = L.map('map').setView([51.505, -0.09], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -98,7 +105,7 @@
         {
             map.zoomOut();
         }
-        //for å vise og hjemme custom catogory 
+        //for å vise og gjemme custom catogory 
         function checkCustomCategory() {
             var categorySelect = document.getElementById('category');
             var customCategoryInput = document.getElementById('customCategory');
@@ -108,6 +115,17 @@
                 customCategoryInput.style.display = 'none';
             }
         }
+
+
+        //legger til søkefunskjon
+        L.Control.geocoder({
+            defaultMarkGeocode: false //hindrer automatisk markør
+        })
+            .on('markgeocode', function (e) {
+                var center = e.geocode.center;
+                map.setView(center, 15);
+            })
+            .addTo(map);
     </script>
 }
 
