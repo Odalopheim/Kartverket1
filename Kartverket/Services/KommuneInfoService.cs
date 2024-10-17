@@ -17,11 +17,11 @@ namespace Kartverket.Services
             _apiSettings = apisettings.Value;
         }
 
-        public async Task<KommuneInfo> GetKommuneInfoAsync(string kommunenummer)
+        public async Task<KommuneInfo> GetKommuneInfoAsync(string kommuneNr)
         {
             try
             {
-                var response = await _httpClient.GetAsync($"{_apiSettings.KommuneInfoApiBaseUrl}/kommuner/{kommunenummer}");
+                var response = await _httpClient.GetAsync($"{_apiSettings.KommuneInfoApiBaseUrl}/kommuner/{kommuneNr}");
                 response.EnsureSuccessStatusCode();
 
                 var json = await response.Content.ReadAsStringAsync();
@@ -31,7 +31,7 @@ namespace Kartverket.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error fetching KommuneInfo for {kommunenummer}: {ex.Message}");
+                _logger.LogError($"Error fetching KommuneInfo for {kommuneNr}: {ex.Message}");
                 return null;
             }
         }
