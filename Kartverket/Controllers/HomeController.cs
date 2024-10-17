@@ -38,14 +38,14 @@ namespace Kartverket.Controllers
         }
         //hånterer søk for Komunneinfo
         [HttpPost]
-        public async Task<IActionResult> KommuneInfo(string kommunenummer)
+        public async Task<IActionResult> KommuneInfo(string kommuneNr)
         {
-            if(string.IsNullOrEmpty(kommunenummer))
+            if(string.IsNullOrEmpty(kommuneNr))
             {
                 ViewData["Error"] = "Skriv inn riktig kommune nunmmer.";
                 return View("Index");
             }
-            var kommuneInfo = await _kommuneInfoService.GetKommuneInfoAsync(kommunenummer);
+            var kommuneInfo = await _kommuneInfoService.GetKommuneInfoAsync(kommuneNr);
 
             if (kommuneInfo != null)
             {
@@ -60,7 +60,7 @@ namespace Kartverket.Controllers
             }
             else
             {
-                ViewData["Error"] = $"ikke noe resultat på dette Kommune Mummeret '{kommunenummer}'.";
+                ViewData["Error"] = $"ikke noe resultat på dette Kommune Mummeret '{kommuneNr}'.";
                 return View("Index");
             }
         }

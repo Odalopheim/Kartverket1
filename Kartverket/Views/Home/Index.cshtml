@@ -15,8 +15,8 @@
 <h2>Søk Kommune Info</h2>
 <form asp-action="KommuneInfo" method="post">
     @Html.AntiForgeryToken()
-    <label for="searchTerm">Plasser Navn:</label>
-    <input type="text" id="serchTerm" name="searchTerm" />
+    <label for="kommuneNr">Kommune Nummer:</label>
+    <input type="text" id="kommuneNr" name="kommuneNr" />
     <button type="submit" class="btn btn-success">Submit</button>
 </form>
 <h2>Søk Stedsnavn</h2>
