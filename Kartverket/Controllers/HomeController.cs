@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
 using Kartverket.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Diagnostics;
 
 namespace Kartverket.Controllers
 {
@@ -41,7 +42,7 @@ namespace Kartverket.Controllers
         }
 
         [HttpPost]
-        public IActionResult RegisterAreaChange(string geoJson,string description, string category, string customCategory)
+        public IActionResult RegisterAreaChange(string geoJson,string description, string category, string customCategory, IFormFile fileUpload)
         {
             var finalCategory = category == "Custom" ? customCategory : category;
             var newChange = new AreaChange
@@ -49,8 +50,24 @@ namespace Kartverket.Controllers
                 Id = Guid.NewGuid().ToString(),
                 GeoJson = geoJson,
                 Description = description,
-                Category = finalCategory
+                Category = finalCategory,
+                Vedlegg = new List<Vedlegg>()
             };
+
+            if(fileUpload != null && fileUpload.Length > 0)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    fileUpload.CopyTo(ms);
+                    var fileBytes = ms.ToArray();
+                    var vedlegg = new Vedlegg
+                    {
+                        FilNavn = fileUpload.FileName,
+                        FilData = fileBytes
+                    };
+                    newChange.Vedlegg.Add(vedlegg);
+                }
+            }
 
             changes.Add(newChange);
             return RedirectToAction("AreaChangeOverview");
