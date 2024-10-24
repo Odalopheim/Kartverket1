@@ -106,6 +106,7 @@ namespace Kartverket.Controllers
             return View("Overview", userData);
         }
 
+
         [HttpGet]
         public IActionResult RegisterAreaChange()
         {
