@@ -1,8 +1,6 @@
 using System.Diagnostics;
-using System.Reflection.Metadata.Ecma335;
 using Kartverket.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Kartverket.Services;
 
 
