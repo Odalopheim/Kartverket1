@@ -8,17 +8,35 @@
 }
 <html>
     <head>
-        <h1>
-            Thanks 
-        </h1>
-        <h2>
-            Submitted Data
-        </h2>
+   
     </head>
     <body>
-        <p><strong>Name:</strong> @Model.Name</p>
-        <p><strong>Email:</strong> @Model.Email</p>
-        <p><strong>Phone:</strong> @Model.Phone</p>
-        <p><strong>Address:</strong> @Model.Address</p>
+    <div style="display: flex; height: 100vh;">
+        <div style="flex: 2; background-color: #F3F0F0; padding: 20px;">
+            <h1>Thanks</h1>
+            <h2> Submitted Data</h2>
+            <br />
+            <br />
+            <p><strong>Name:</strong> @Model.Name</p>
+            <p><strong>Email:</strong> @Model.Email</p>
+            <p><strong>Phone:</strong> @Model.Phone</p>
+            <p><strong>Address:</strong> @Model.Address</p>
+        </div>
+
+        <div style="flex: 1; background-color: #F3F0F0; padding: 20px; display: flex; justify-content: center; align-items: center;">
+            <a asp-controller="Home" asp-action="RegisterAreaChange"
+               style="background-color: #008000; justify-content: center; align-items: center;
+                display: inline-flex; width: 200px; height: 50px; text-align: center;
+                font-size: 18px; line-height: 50px;"
+               class="btn btn-success">
+                Ny innmelding
+            </a>
+        </div>
+
+           
+    </div>
+
+
+        
     </body>
 </html>
