@@ -2,7 +2,9 @@ using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
 using Kartverket.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Kartverket.Services;
+
 
 namespace Kartverket.Controllers
 {
@@ -36,7 +38,7 @@ namespace Kartverket.Controllers
         {
             return View();
         }
-        //hånterer søk for Komunneinfo
+        //hÃ¥nterer sÃ¸k for Komunneinfo
         [HttpPost]
         public async Task<IActionResult> KommuneInfo(string kommuneNr)
         {
@@ -60,11 +62,11 @@ namespace Kartverket.Controllers
             }
             else
             {
-                ViewData["Error"] = $"ikke noe resultat på dette Kommune Mummeret '{kommuneNr}'.";
+                ViewData["Error"] = $"ikke noe resultat pÃ¥ dette Kommune Mummeret '{kommuneNr}'.";
                 return View("Index");
             }
         }
-        //håndterer søk for stedsnavn
+        //hÃ¥ndterer sÃ¸k for stedsnavn
         [HttpPost]
         public async Task<IActionResult> Stedsnavn(string searchTerm)
         {
@@ -79,16 +81,16 @@ namespace Kartverket.Controllers
             {
                 var viewModel = stedsnavnResponse.Navn.Select(n => new StedsnavnViewModel
                 {
-                    Skrivemåte = n.Skrivemåte,
+                    SkrivemÃ¥te = n.SkrivemÃ¥te,
                     Navneobjekttype = n.Navneobjekttype,
-                    Språk = n.Språk,
+                    SprÃ¥k = n.SprÃ¥k,
                     Navnestatus = n.Navnestatus
                 }).ToList();
                 return View("Stedsnavn", viewModel);
             }
             else
             {
-                ViewData["Error"] = $"ikke noe resultat på '{searchTerm}'.";
+                ViewData["Error"] = $"ikke noe resultat pÃ¥ '{searchTerm}'.";
                 return View("Index");
             }
         }
@@ -114,7 +116,7 @@ namespace Kartverket.Controllers
         }
 
         [HttpPost]
-        public IActionResult RegisterAreaChange(string geoJson,string description, string category, string customCategory)
+        public IActionResult RegisterAreaChange(string geoJson,string description, string category, string customCategory, IFormFile fileUpload)
         {
             var finalCategory = category == "Custom" ? customCategory : category;
             var newChange = new AreaChange
@@ -122,8 +124,24 @@ namespace Kartverket.Controllers
                 Id = Guid.NewGuid().ToString(),
                 GeoJson = geoJson,
                 Description = description,
-                Category = finalCategory
+                Category = finalCategory,
+                Vedlegg = new List<Vedlegg>()
             };
+
+            if(fileUpload != null && fileUpload.Length > 0)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    fileUpload.CopyTo(ms);
+                    var fileBytes = ms.ToArray();
+                    var vedlegg = new Vedlegg
+                    {
+                        FilNavn = fileUpload.FileName,
+                        FilData = fileBytes
+                    };
+                    newChange.Vedlegg.Add(vedlegg);
+                }
+            }
 
             changes.Add(newChange);
             return RedirectToAction("AreaChangeOverview");
