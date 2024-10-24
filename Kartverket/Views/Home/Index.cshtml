@@ -4,12 +4,79 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
+@*<div class="text-center">
     <h1 class="display-4">Rett i Kartet</h1>
     <br />
     <a asp-controller="Home" asp-action="RegistrationForm" style="background-color: #008000" class="btn btn-success ">Registrer nå</a>
     <hr />
     <a asp-controller="Home" asp-action="RegisterAreaChange" class="text-info">Eller fortsett som gjest</a>
-    @*@Model *@
+    @Model 
+</div>*@
+
+<div style="display: flex; justify-content: space-between; height: auto; padding: 20px  padding: 20px; margin-right: 10px;">
+    <div style="position: absolute; top: 0; left: 0; right: 0; height: 70vh; background-image: url('/images/BakrunsbildeForNå.jpg'); background-size: cover; z-index: -1;"></div>
+   
+    <div style="flex: 1; background-color: white;  padding: 20px; margin-right: 10px; margin-top: 200px;">
+        <h2 style="color:#1A833B">
+            <img src="/images/Eiendom.png" style="width: 50px; height: auto; vertical-align: middle;"> Eiendom</h2>
+        <hr />
+        <form asp-action="Stedsnavn" method="post">
+            <label for="searchTerm">Søk etter stedsnavn:</label>
+            <input type="text" id="serchTerm" name="searchTerm" />
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+    </div>
+
+    
+    <div style="flex: 1; background-color: #F3F0F0; padding: 20px; margin-right: 10px; margin-top: 200px; ">
+        <h2 style="color:#1A833B"> 
+            <img src="/images/TilLands.png" style="width: 50px; height: auto; vertical-align: middle;">Til lands
+        </h2>
+        <hr />
+        <form asp-action="KommuneInfo" method="post">
+            @Html.AntiForgeryToken()
+            <label for="kommuneNr">Kommune Nummer:</label>
+            <input type="text" id="kommuneNr" name="kommuneNr" />
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+        <hr />
+        <a asp-controller="Home" asp-action="RegistrationForm" style="color:black; text-decoration:none;">Ny innmelding</a>
+        <hr />
+        <a asp-controller="Home" asp-action="RegisterAreaChange" style="background-color: #008000" class="btn btn-success ">Ny innmelding</a>
+    </div>
+
+    <div style="flex: 1; background-color: #F3F0F0; padding: 20px; margin-top: 200px;">
+        <h2 style ="color:#1A833B">
+            <img src="/images/TilSjøs.png" style="width: 50px; height: auto; vertical-align: middle;">Til sjøs
+        </h2>
+        <hr />
+        <a asp-controller="Home" style="color:black; text-decoration:none;">Se havnnivået og tidevanet</a>
+        <hr />
+        <a asp-controller="Home" style="color:black; text-decoration:none;">Sjøkart</a>
+        <hr />
+        <a asp-controller="Home" style="color:black; text-decoration:none;">Rettelser til sjøkart (Efs)</a>
+        <hr />
+        <a asp-controller="Home" style="color:black; text-decoration:none;">Det norske los</a>
+    </div>
 </div>
+
+<h2>Søk Kommune Info</h2>
+<form asp-action="KommuneInfo" method="post">
+    @Html.AntiForgeryToken()
+    <label for="kommuneNr">Kommune Nummer:</label>
+    <input type="text" id="kommuneNr" name="kommuneNr" />
+    <button type="submit" class="btn btn-success">Submit</button>
+</form>
+<h2>Søk Stedsnavn</h2>
+<form asp-action="Stedsnavn" method="post">
+    <label for="searchTerm">Søk etter stedsnavn:</label>
+    <input type="text" id="serchTerm" name="searchTerm" />
+    <button type="submit" class="btn btn-success" >Submit</button>
+</form>
+@if (ViewData["Error"] != null) 
+{
+    <div class="alert alert-danger">
+        @ViewData["Error"]
+    </div>
+}
 
