@@ -1,26 +1,26 @@
-﻿@model List<Kartverket.Models.AreaChange>
+﻿@model List<Kartverket.Models.GeoChange>
+@*@model List<Kartverket.Models.AreaChange>*@
+
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-    @{
-        ViewData["Title"] = "Overview";
-    }
+*¨*@
+@{
+    ViewData["Title"] = "Overview";
+}
 
-    <h2>Overview of Registered Changes</h2>
+<h2>Overview of Registered Changes</h2>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>GeoJSON</th>
-                <th>Category</th>
-                <th>Description</th>
-                <th>Vedlegg</th>
-            </tr>
-        </thead>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>GeoJSON</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Vedlegg</th>
+        </tr>
+    </thead>
     <tbody>
-        
-        
         @foreach (var change in Model)
         {
             <tr>
@@ -28,30 +28,27 @@
                 <td>@change.GeoJson</td>
                 <td>@change.Category</td>
                 <td>@change.Description</td>
-
-                <!-- visning av vedlagte filer  -->
-                <td> 
-                    @foreach(var vedlegg in change.Vedlegg) //går gjennom alle elementene i vedlegg listen
-                {   //bruker data:-url-formatet for å lage en nedlastbar fil med base 64-koding.
-                    //@convert konverterer fildata til en base64-streng
-                    
-                    <a href="data:application/octet-stream;base64,@Convert.ToBase64String(vedlegg.FilData)" download="@vedlegg.FilNavn">
-                        @vedlegg.FilNavn
-                        </a> <br />
-                }
+                <td>
+                    @foreach(var vedlegg in change.Vedlegg)
+                    {
+                        <a href="data:application/octet-stream;base64,@Convert.ToBase64String(vedlegg.FilData)" download="@vedlegg.FilNavn">
+                            @vedlegg.FilNavn
+                        </a>
+                        <br />
+                    }
                 </td>
             </tr>
         }
-        
     </tbody>
-    </table>
-    <div id="map" style="height: 400px"></div>
+</table>
+
+<div id="map" style="height: 400px"></div>
 
 @section Scripts {
-        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-        <script>
+    <script>
 
         var map = L.map('map');
 
@@ -61,11 +58,11 @@
 
         var changes = @Html.Raw(Json.Serialize(Model));
 
-       
+
         var geoJsonLayers = [];
 
         //legge til data og samle lagene
-        changes.forEach(function (change) {
+        changes.forEach(function(change) {
             var geoJsonData = JSON.parse(change.geoJson);
             var layer = L.geoJSON(geoJsonData).addTo(map);
             geoJsonLayers.push(layer);
