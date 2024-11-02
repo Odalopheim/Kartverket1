@@ -2,6 +2,8 @@ using System.Diagnostics;
 using Kartverket.Models;
 using Microsoft.AspNetCore.Mvc;
 using Kartverket.Services;
+using Kartverket.Data;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Kartverket.Controllers
@@ -11,16 +13,18 @@ namespace Kartverket.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IKommuneInfoService _kommuneInfoService;
         private readonly IStedsnavnService _stedsnavnService;
+        private readonly ApplicationDbContext _context;
 
         // definerer en liste sim en in-memory lagring
         private static List<PositionModel> positions = new List<PositionModel>();
-        private static List<AreaChange> changes = new List<AreaChange>();
+        private static List<GeoChange> changes = new List<GeoChange>();
         //private object _kommuneInfoService;
 
 
-        public HomeController(ILogger<HomeController> logger, IKommuneInfoService kommuneInfoService, IStedsnavnService stedsnavnService)
+        public HomeController(ILogger<HomeController> logger, IKommuneInfoService kommuneInfoService, IStedsnavnService stedsnavnService, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
             _kommuneInfoService = kommuneInfoService;
             _stedsnavnService = stedsnavnService; // Injiser stedsnavn-tjenesten her
         }
@@ -114,42 +118,61 @@ namespace Kartverket.Controllers
         }
 
         [HttpPost]
-        public IActionResult RegisterAreaChange(string geoJson,string description, string category, string customCategory, IFormFile fileUpload)
+
+        public IActionResult RegisterAreaChange(string geoJson, string description, string category, string customCategory, IFormFile fileUpload)
         {
-            var finalCategory = category == "Custom" ? customCategory : category;
-            var newChange = new AreaChange
+            try
             {
-                Id = Guid.NewGuid().ToString(),
-                GeoJson = geoJson,
-                Description = description,
-                Category = finalCategory,
-                Vedlegg = new List<Vedlegg>()
-            };
-
-            if(fileUpload != null && fileUpload.Length > 0)
-            {
-                using (var ms = new MemoryStream())
+                if (string.IsNullOrEmpty(geoJson) || string.IsNullOrEmpty(description))
                 {
-                    fileUpload.CopyTo(ms);
-                    var fileBytes = ms.ToArray();
-                    var vedlegg = new Vedlegg
-                    {
-                        FilNavn = fileUpload.FileName,
-                        FilData = fileBytes
-                    };
-                    newChange.Vedlegg.Add(vedlegg);
+                    return BadRequest("Invalid data");
                 }
-            }
 
-            changes.Add(newChange);
-            return RedirectToAction("AreaChangeOverview");
+                var finalCategory = category == "Custom" ? customCategory : category;
+                var newGeoChange = new GeoChange
+                {
+                    GeoJson = geoJson,
+                    Description = description,
+                    Category = finalCategory,
+                    Vedlegg = new List<Kartverket.Models.Vedlegg>()
+                };
+
+                if (fileUpload != null && fileUpload.Length > 0)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        fileUpload.CopyTo(ms);
+                        var fileBytes = ms.ToArray();
+                        var vedlegg = new Kartverket.Models.Vedlegg
+                        {
+                            FilNavn = fileUpload.FileName,
+                            FilData = fileBytes
+                        };
+                        newGeoChange.Vedlegg.Add(vedlegg);
+                    }
+                }
+
+                _context.GeoChange.Add(newGeoChange);
+                _context.SaveChanges();
+
+                return RedirectToAction("AreaChangeOverview");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}, Inner Exception: {ex.InnerException?.Message}");
+                return StatusCode(500, "Internal server error");
+            }
         }
+
+
         [HttpGet]
         public IActionResult AreaChangeOverview()
         {
-            return View(changes);
+            var changes_db = _context.GeoChange.ToList();
+            return View(changes_db);
         }
-   
+
+
 
         [HttpGet]
         public IActionResult CorrectMap()

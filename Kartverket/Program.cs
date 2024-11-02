@@ -1,33 +1,70 @@
 using Kartverket.API_Models;
+using Kartverket.Data;
 using Kartverket.Services;
+using Microsoft.EntityFrameworkCore;
+using Pomelo.EntityFrameworkCore.MySql;
+using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// binder API settings fra appsettings.json
+// Binder API settings fra appsettings.json
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 
-//registrerer services og interface
+
+
+// Registrerer services og interface
 builder.Services.AddHttpClient<IKommuneInfoService, KommuneInfoService>();
 builder.Services.AddHttpClient<IStedsnavnService, StedsnavnService>();
 
-// Add services to the container.
+// Legger til services til containeren
 builder.Services.AddControllersWithViews();
 
-var app = builder.Build();
+// Konfigurerer Entity Framework med MariaDB
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        new MySqlServerVersion(new Version(10, 5, 9))
+    )
+);
 
-// Configure the HTTP request pipeline.
+var app = builder.Build();
+app.UseDeveloperExceptionPage();
+
+// Henter og logger MariaDB-versjon
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var connection = dbContext.Database.GetDbConnection();
+
+    try
+    {
+        connection.Open();
+        using var command = connection.CreateCommand();
+        command.CommandText = "SELECT VERSION()";
+        var version = command.ExecuteScalar()?.ToString();
+
+        Console.WriteLine($"Connected to MariaDB version: {version}");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error fetching MariaDB version: {ex.Message}");
+    }
+    finally
+    {
+        connection.Close();
+    }
+}
+
+// Konfigurerer HTTP request-pipelinen
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthorization();
 
 app.MapControllerRoute(
@@ -35,3 +72,4 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
