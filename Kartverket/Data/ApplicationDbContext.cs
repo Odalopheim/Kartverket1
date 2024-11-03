@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Kartverket.Models;
+
 
 namespace Kartverket.Data
 {

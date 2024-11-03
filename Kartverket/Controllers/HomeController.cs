@@ -134,7 +134,7 @@ namespace Kartverket.Controllers
                     GeoJson = geoJson,
                     Description = description,
                     Category = finalCategory,
-                    Vedlegg = new List<Kartverket.Models.Vedlegg>()
+                    Vedlegg = new List<Kartverket.Data.Vedlegg>()
                 };
 
                 if (fileUpload != null && fileUpload.Length > 0)
@@ -143,7 +143,7 @@ namespace Kartverket.Controllers
                     {
                         fileUpload.CopyTo(ms);
                         var fileBytes = ms.ToArray();
-                        var vedlegg = new Kartverket.Models.Vedlegg
+                        var vedlegg = new Kartverket.Data.Vedlegg
                         {
                             FilNavn = fileUpload.FileName,
                             FilData = fileBytes
