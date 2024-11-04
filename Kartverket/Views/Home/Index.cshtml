@@ -20,6 +20,12 @@
         <h2 style="color:#1A833B">
             <img src="/images/Eiendom-removebg-preview (1).png" style="width: 50px; height: auto; vertical-align: middle;"> Eiendom</h2>
         <hr />
+        <a asp-controller="Home" style="color:black; text-decoration:none;">Tinglyse skjøte</a>
+        <hr />
+        <a asp-controller="Home" style="color:black; text-decoration:none;">Arv,skifte og uskifte</a>
+        <hr />
+        <a asp-controller="Home" style="color:black; text-decoration:none;">Eiendomsgrenser</a>
+        <hr />
         <form asp-action="Stedsnavn" method="post">
             <label for="searchTerm">Søk etter stedsnavn:</label>
             <input type="text" id="serchTerm" name="searchTerm" />
@@ -29,9 +35,11 @@
 
     
     <div style="flex: 1; background-color: #F3F0F0; padding: 20px; margin-right: 10px; margin-top: 200px; ">
-        <h2 style="color:#1A833B"> 
-            <img src="/images/TilLands-removebg-preview.png" style="width: 50px; height: auto; vertical-align: middle;">Til lands
-        </h2>
+        <a href="https://www.kartverket.no/til-lands" style="text-decoration:none;">
+            <h2 style="color:#1A833B;">
+                <img src="/images/TilLands-removebg-preview.png" style="width: 50px; height: auto; vertical-align: middle;">Til lands
+            </h2>
+        </a>
         <hr />
         <form asp-action="KommuneInfo" method="post">
             @Html.AntiForgeryToken()
@@ -40,7 +48,11 @@
             <button type="submit" class="btn btn-success">Submit</button>
         </form>
         <hr />
+        <a href="https://www.kartverket.no/til-lands/kart/turkart" style="color:black; text-decoration:none;">Turkart</a>
+        <hr />
         <a asp-controller="Home" asp-action="RegistrationForm" style="color:black; text-decoration:none;">Rett i kartet</a>
+        <hr />
+        <a asp-controller="Home" style="color:black; text-decoration:none;">Stedsnavn</a>
         <hr />
     </div>
 
@@ -49,7 +61,7 @@
             <img src="/images/TilSjøs-removebg-preview.png" style="width: 50px; height: auto; vertical-align: middle;">Til sjøs
         </h2>
         <hr />
-        <a asp-controller="Home" style="color:black; text-decoration:none;">Se havnivået og tidevannet</a>
+        <a href="https://www.kartverket.no/til-sjos/se-havniva" style="color:black; text-decoration:none;">Se havnivået og tidevannet</a>
         <hr />
         <a asp-controller="Home" style="color:black; text-decoration:none;">Sjøkart</a>
         <hr />
