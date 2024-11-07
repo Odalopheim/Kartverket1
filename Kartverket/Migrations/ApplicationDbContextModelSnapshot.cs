@@ -220,7 +220,7 @@ namespace Kartverket.Migrations
                     b.ToTable("PostSteder");
                 });
 
-            modelBuilder.Entity("Kartverket.Models.GeoChange", b =>
+            modelBuilder.Entity("Kartverket.Data.GeoChange", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -242,7 +242,7 @@ namespace Kartverket.Migrations
                     b.ToTable("GeoChange");
                 });
 
-            modelBuilder.Entity("Kartverket.Models.Vedlegg", b =>
+            modelBuilder.Entity("Kartverket.Data.Vedlegg", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -320,9 +320,9 @@ namespace Kartverket.Migrations
                     b.Navigation("Kategori");
                 });
 
-            modelBuilder.Entity("Kartverket.Models.Vedlegg", b =>
+            modelBuilder.Entity("Kartverket.Data.Vedlegg", b =>
                 {
-                    b.HasOne("Kartverket.Models.GeoChange", null)
+                    b.HasOne("Kartverket.Data.GeoChange", null)
                         .WithMany("Vedlegg")
                         .HasForeignKey("GeoChangeId");
                 });
@@ -342,7 +342,7 @@ namespace Kartverket.Migrations
                     b.Navigation("Brukere");
                 });
 
-            modelBuilder.Entity("Kartverket.Models.GeoChange", b =>
+            modelBuilder.Entity("Kartverket.Data.GeoChange", b =>
                 {
                     b.Navigation("Vedlegg");
                 });
