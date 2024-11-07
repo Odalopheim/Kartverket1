@@ -10,8 +10,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Binder API settings fra appsettings.json
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 
-
-
 // Registrerer services og interface
 builder.Services.AddHttpClient<IKommuneInfoService, KommuneInfoService>();
 builder.Services.AddHttpClient<IStedsnavnService, StedsnavnService>();
