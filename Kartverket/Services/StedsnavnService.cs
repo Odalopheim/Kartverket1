@@ -5,23 +5,21 @@ using System.Text.Json;
 namespace Kartverket.Services
 {
     public class StedsnavnService : IStedsnavnService
-    { 
+    {
         private readonly HttpClient _httpClient;
         private readonly ILogger<StedsnavnService> _logger;
         private readonly ApiSettings _apiSettings;
-
         public StedsnavnService(HttpClient httpClient, ILogger<StedsnavnService> logger, IOptions<ApiSettings> apiSettings)
         {
             _httpClient = httpClient;
             _logger = logger;
             _apiSettings = apiSettings.Value;
         }
-
         public async Task<StedsnavnResponse> GetStedsnavnAsync(string search)
         {
             try
             {
-                var response = await _httpClient.GetAsync($"{_apiSettings.StedsnavnApiBaseUrl}/navn?søk={search}");
+                var response = await _httpClient.GetAsync($"{_apiSettings.StedsnavnApiBaseUrl}/navn?sok={search}");
                 response.EnsureSuccessStatusCode();
 
                 var json = await response.Content.ReadAsStringAsync();
