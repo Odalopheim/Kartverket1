@@ -1,5 +1,5 @@
 ﻿@model Kartverket.Models.UserData
-'@*
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
@@ -17,7 +17,7 @@
     </head>
     <body>
         <h1>Registration Form</h1>
-        <form asp-action="RegistrationForm" method="post">
+        <form asp-action="Opprett Bruker" method="post">
             <div>
                 <label asp-for="Name" for="exampleInputName" class="form-label mt-4">Name</label>
                  <input asp-for="Name" class="form-control" id="exampleInputName" aria-describedby="nameHelp" placeholder="Enter Name">
@@ -37,7 +37,7 @@
             </div>
             <br />
 
-        <button type="submit" class="btn btn-success">Submit</button>
+        <button type="submit" class="btn btn-success">OK</button>
 
         </form>
         <br />
