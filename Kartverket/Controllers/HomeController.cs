@@ -197,6 +197,13 @@ namespace Kartverket.Controllers
         {
             return View(positions);
         }
+
+
+        [HttpGet]
+        public ViewResult Saksbehandler()
+        {
+            return View();
+        }
         public IActionResult Privacy()
         {
             return View();
