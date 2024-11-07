@@ -74,11 +74,11 @@ namespace Kartverket.Controllers
         {
             if (string.IsNullOrEmpty(searchTerm))
             {
-                ViewData["Error"] = "Please skriv in riktig stedsnavn.";
+                ViewData["Error"] = "Please enter a valid place name.";
                 return View("Index");
             }
 
-            var stedsnavnResponse = await _stedsnavnService.GetStedsnavnAsync(searchTerm); 
+            var stedsnavnResponse = await _stedsnavnService.GetStedsnavnAsync(searchTerm);
             if (stedsnavnResponse?.Navn != null && stedsnavnResponse.Navn.Any())
             {
                 var viewModel = stedsnavnResponse.Navn.Select(n => new StedsnavnViewModel
@@ -93,7 +93,7 @@ namespace Kartverket.Controllers
             }
             else
             {
-                ViewData["Error"] = $"ikke noe resultat på '{searchTerm}'.";
+                ViewData["Error"] = $"No results found for '{searchTerm}'.";
                 return View("Index");
             }
         }
