@@ -22,3 +22,56 @@ body {
   margin-bottom: 60px;
 }
 
+
+
+.containerS {
+    display: flex;
+    flex-wrap: nowrap;
+    height: 100%;
+}
+
+.left-side, .right-side {
+    width: 50%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.left-side {
+    background-color: #F5F2F2;
+}
+
+.controls {
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12;
+    border: 1px solid lightgrey;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    border: none;
+    border-bottom: 1px solid lightgrey;
+}
+
+th {
+    background-color: #DDE1E6;
+    text-align: left;
+}
+
+#search {
+    width: 60%;
+}
+
+
+select {
+    border-radius: 4px;
+    padding: 5px;
+    margin: 10px;
+}
+
+
