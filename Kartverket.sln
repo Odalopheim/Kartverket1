@@ -3,9 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35309.182
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kartverket", "Kartverket\Kartverket.csproj", "{DD1EFEB1-AA6C-47AA-AB50-A0599AF9DE7D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kartverket", "Kartverket\Kartverket.csproj", "{DD1EFEB1-AA6C-47AA-AB50-A0599AF9DE7D}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{D4576021-C7DC-4AB2-BE08-94BC8FB45B37}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataAccess", "DataAccess", "{BA57EEA8-6535-4B4B-8442-F55F849D3A54}"
+	ProjectSection(SolutionItems) = preProject
+		DataContext.cs = DataContext.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{27202C9D-4B9A-4FBB-910A-9936F326378E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{95DB6C66-A165-456A-AE91-D3E91B9D9BD1}"
+	ProjectSection(SolutionItems) = preProject
+		Program.cs = Program.cs
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +36,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{27202C9D-4B9A-4FBB-910A-9936F326378E} = {BA57EEA8-6535-4B4B-8442-F55F849D3A54}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {68B476A6-4B16-4FB2-88CB-6C9A13990FB7}
