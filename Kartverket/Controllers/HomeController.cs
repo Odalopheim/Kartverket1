@@ -158,7 +158,7 @@ namespace Kartverket.Controllers
 
                 return RedirectToAction("AreaChangeOverview");
             }
-            catch (Exception ex)
+              catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}, Inner Exception: {ex.InnerException?.Message}");
                 return StatusCode(500, "Internal server error");
