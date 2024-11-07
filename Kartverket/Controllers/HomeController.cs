@@ -78,7 +78,7 @@ namespace Kartverket.Controllers
                 return View("Index");
             }
 
-            var stedsnavnResponse = await _stedsnavnService.GetStedsnavnAsync(searchTerm); // Bruk tjenesten her
+            var stedsnavnResponse = await _stedsnavnService.GetStedsnavnAsync(searchTerm); 
             if (stedsnavnResponse?.Navn != null && stedsnavnResponse.Navn.Any())
             {
                 var viewModel = stedsnavnResponse.Navn.Select(n => new StedsnavnViewModel
@@ -88,6 +88,7 @@ namespace Kartverket.Controllers
                     Språk = n.Språk,
                     Navnestatus = n.Navnestatus
                 }).ToList();
+
                 return View("Stedsnavn", viewModel);
             }
             else
