@@ -1,0 +1,39 @@
+﻿@model List<Kartverket.Data.Innmelding>
+
+@{
+    ViewData["Title"] = "Innmelding Oversikt";
+}
+
+<h2>Oversikt over Innmeldinger</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Dato</th>
+            <th>Beskrivelse</th>
+            <th>Bruker</th>
+            <th>Kategori</th>
+            <th>Handlinger</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var innmelding in Model)
+        {
+            <tr>
+                <td>@innmelding.InnmeldingId</td>
+                <td>@innmelding.Dato.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>@innmelding.Beskrivelse</td>
+                <td>@innmelding.Bruker.Fornavn @innmelding.Bruker.Etternavn</td>
+                <td>@innmelding.Kategori.KatNavn</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@innmelding.InnmeldingId" class="btn btn-primary">Rediger</a>
+                    <a asp-action="Delete" asp-route-id="@innmelding.InnmeldingId" class="btn btn-danger">Slett</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-success">Ny Innmelding</a>
+
