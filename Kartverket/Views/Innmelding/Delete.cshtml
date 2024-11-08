@@ -1,0 +1,22 @@
+﻿@model Kartverket.Data.Innmelding
+
+@{
+    ViewData["Title"] = "Delete Innmelding";
+}
+
+<h2>Are you sure you want to delete this innmelding?</h2>
+
+<div>
+    <h3>@Model.Beskrivelse</h3>
+    <p>Date: @Model.Dato</p>
+    <p>Category: @Model.Kategori.KatNavn</p>
+    <p>By: @Model.Bruker.Fornavn, @Model.Bruker.Etternavn</p>
+
+    <form asp-action="DeleteConfirmed" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.InnmeldingId" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="@Url.Action("Index")" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
