@@ -1,6 +1,7 @@
 using Kartverket.API_Models;
 using Kartverket.Data;
 using Kartverket.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql;
 using System.Diagnostics;
@@ -17,17 +18,22 @@ builder.Services.AddHttpClient<IStedsnavnService, StedsnavnService>();
 // Legger til services til containeren
 builder.Services.AddControllersWithViews();
 
-// Konfigurerer Entity Framework med MariaDB
+// Konfigurerer Identity med ApplicationDbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
         new MySqlServerVersion(new Version(10, 5, 9))
     )
 );
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
+// Konfigurerer HTTP request-pipelinen
 var app = builder.Build();
 app.UseDeveloperExceptionPage();
 
+// Database migrasjon
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -69,6 +75,9 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
+// Legger til autentisering og autorisasjon
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
@@ -76,5 +85,3 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
-
-

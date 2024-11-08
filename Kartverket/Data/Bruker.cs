@@ -13,10 +13,17 @@ namespace Kartverket.Data
         public string Etternavn { get; set; }
         [StringLength(50)]
         public string Adresse { get; set; }
-
-        [StringLength(4)]
+        public string Epost { get; set; }
+        [StringLength(321)]
+        public string Brukernavn { get; set; }
+        [StringLength(50)]
+        public string Passord { get; set; }
+        public string BekreftPassord { get; set; }
+        
         public string PostNr { get; set; }
         public PostSted PostSted { get; set; }
+
+       
 
         public ICollection<Innmelding> Innmeldinger { get; set; }
     }
