@@ -14,6 +14,18 @@ public class RegisterViewModel
     public string Email { get; set; }
 
     [Required]
+    [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Only letters are allowed.")]
+    [Display(Name = "Fornavn")]
+    public string Fornavn { get; set; }
+
+    [Required]
+    [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Only letters are allowed.")]
+    [Display(Name = "Etternavn")]
+    public string Etternavn { get; set; }
+
+
+
+    [Required]
     [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
     [DataType(DataType.Password)]
     [Display(Name = "Password")]

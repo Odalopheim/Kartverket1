@@ -22,14 +22,14 @@ namespace Kartverk.Mvc.Controllers
             _signInManager = signInManager;
             _logger = logger;
         }
-        
 
         // GET: /Account/Login
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Login(string returnUrl = null)
         {
-            ViewData["ReturnUrl"] = returnUrl;
+            // Sørg for at returnUrl ikke er null
+            ViewData["ReturnUrl"] = returnUrl ?? string.Empty;
             return View();
         }
 
@@ -39,7 +39,7 @@ namespace Kartverk.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
-            ViewData["ReturnUrl"] = returnUrl;
+            ViewData["ReturnUrl"] = returnUrl ?? string.Empty;
 
             if (ModelState.IsValid)
             {
@@ -59,7 +59,7 @@ namespace Kartverk.Mvc.Controllers
         [AllowAnonymous]
         public IActionResult Register(string returnUrl = null)
         {
-            ViewData["ReturnUrl"] = returnUrl;
+            ViewData["ReturnUrl"] = returnUrl ?? string.Empty; // Sette ReturnUrl som en tom streng hvis den er null
             return View();
         }
 
@@ -69,7 +69,8 @@ namespace Kartverk.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
         {
-            ViewData["ReturnUrl"] = returnUrl;
+            ViewData["ReturnUrl"] = returnUrl ?? string.Empty;
+
             if (ModelState.IsValid)
             {
                 var user = new IdentityUser { UserName = model.Email, Email = model.Email };
@@ -82,25 +83,7 @@ namespace Kartverk.Mvc.Controllers
                 }
                 AddErrors(result);
             }
-            return View(model);
-        }
-
-        // POST: /Account/LogOff
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LogOff()
-        {
-            await _signInManager.SignOutAsync();
-            _logger.LogInformation("User logged out.");
-            return RedirectToAction(nameof(HomeController.Index), "Home");
-        }
-
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
+            return View(new RegisterViewModel());
         }
 
         private IActionResult RedirectToLocal(string returnUrl)
@@ -114,5 +97,14 @@ namespace Kartverk.Mvc.Controllers
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
         }
+
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+        }
     }
+
 }
