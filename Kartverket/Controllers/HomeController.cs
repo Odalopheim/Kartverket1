@@ -99,18 +99,35 @@ namespace Kartverket.Controllers
         }
 
 
+        // GET: RegistrationForm
         [HttpGet]
-        public ViewResult RegistrationForm()
+        public IActionResult RegistrationForm()
         {
             return View();
         }
 
+        // POST: Opprett Bruker
         [HttpPost]
-        public ViewResult RegistrationForm(UserData userData)
+        public IActionResult OpprettBruker(UserData userData)
         {
-            return View("Overview", userData);
+            if (ModelState.IsValid)
+            {
+                // Her kan du implementere logikken for å opprette brukeren i databasen.
+                // For eksempel, lagre userData i databasen
+
+                // For demonstrasjon kan vi bare vise de innsatte dataene på en annen side.
+                return RedirectToAction("Overview", userData);
+            }
+
+            // Hvis modellvalideringen feiler, vis skjemaet igjen med feilmeldinger
+            return View("RegistrationForm", userData);
         }
 
+        // GET: Overview
+        public IActionResult Overview(UserData userData)
+        {
+            return View(userData);
+        }
 
         [HttpGet]
         public IActionResult RegisterAreaChange()
