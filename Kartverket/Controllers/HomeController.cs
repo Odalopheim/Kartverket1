@@ -182,6 +182,37 @@ namespace Kartverket.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult GetGeoChangeDetails(int id)
+        {
+            try
+            {
+                var geoChange = _context.GeoChange.FirstOrDefault(g => g.Id == id);
+                if (geoChange == null)
+                {
+                    return NotFound();
+                }
+
+                var details = new
+                {
+                    GeoJson = geoChange.GeoJson,
+                    Description = geoChange.Description,
+                    Category = geoChange.Category,
+                    Dato = DateTime.Now.ToString("dd.MM.yyyy"), // Autogenerert til dagens dato
+                    Brukernavn = "knut", // Statisk brukernavn for eksempel
+                    Status = "Sendt inn" // Standardverdi for status
+                };
+
+                return Json(details);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching GeoChange details.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+
 
         [HttpGet]
         public IActionResult AreaChangeOverview()
@@ -200,10 +231,13 @@ namespace Kartverket.Controllers
 
 
         [HttpGet]
-        public ViewResult Saksbehandler()
+        public IActionResult Saksbehandler()
         {
-            return View();
+            var changes_db = _context.GeoChange.ToList();
+            return View(changes_db);
         }
+
+
 
         public IActionResult Privacy()
         {
