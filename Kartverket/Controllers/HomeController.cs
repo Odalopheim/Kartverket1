@@ -191,24 +191,6 @@ namespace Kartverket.Controllers
         }
 
 
-
-        [HttpGet]
-        public IActionResult CorrectMap()
-        {
-           return View();
-        }
-
-        [HttpPost]
-        public IActionResult CorrectMap(PositionModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                positions.Add(model);
-                return View("CorrectionOverview", positions);
-            }
-            return View();
-        }
-
         [HttpGet]
         public IActionResult CorrectionOverview()
         {
