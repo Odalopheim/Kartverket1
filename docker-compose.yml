@@ -19,7 +19,8 @@ services:
 
   # Application Container (Kartverket)
   kartverket:
-    build:
+    image: ${DOCKER_REGISTRY-}kartverket
+    build: 
       context: .
       dockerfile: Kartverket/Dockerfile
     container_name: kartverket
