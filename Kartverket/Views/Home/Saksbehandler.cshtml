@@ -1,4 +1,5 @@
-﻿@model Kartverket.Models.PositionModel
+﻿
+@model List<Kartverket.Data.GeoChange>
 
 @{
     ViewData["Title"] = "Saksbehandler";
@@ -16,66 +17,98 @@
         <table>
             <thead>
                 <tr>
-                    <th>Dato</th>
-                    <th>Kategori</th>
-                    <th>Sted</th>
-                    <th>Prioritet</th>
+                    <th>ID</th>
+                    <th>GeoJSON</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Vedlegg</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>12.01.2024</td>
-                    <td>feil</td>
-                    <td>krs</td>
-                    <td>viktig</td>
-                </tr>
-                <tr>
-                    <td>12.01.2024</td>
-                    <td>feil igjen</td>
-                    <td>tbg</td>
-                    <td>viktig</td>
-                </tr>
+                @foreach (var change in Model)
+                {
+                    <tr data-id="@change.Id">
+                        <td>@change.Id</td>
+                        <td>@change.GeoJson</td>
+                        <td>@change.Category</td>
+                        <td>@change.Description</td>
+                        <td>
+                            @foreach (var vedlegg in change.Vedlegg)
+                            {
+                                <a href="data:application/octet-stream;base64,@Convert.ToBase64String(vedlegg.FilData)" download="@vedlegg.FilNavn">
+                                    @vedlegg.FilNavn
+                                </a>
+                                <br />
+                            }
+                        </td>
+                    </tr>
+                }
+       
             </tbody>
         </table>
     </div>
 
+  
 
-    <div class="right-side">
-        <div class="details">
-            <p><strong>Dato: </strong>12.01.2024</p>
-            <p><strong>Bruker: </strong>Knut Knudsen</p>
-        </div>
-        <div>
-            <label for="Kategori">Kategori</label>
-            <select id="Kategori" name="Kategori">
-                <option value="Fei">Feil</option>
-                <option value="Feil1">Feil1</option>
-                <option value="Feil2">Feil2</option>
-            </select>
-
-            <label for="Status">Status</label>
-            <select id="Status" name="Status">
-                <option value="Sendt inn">Sendt inn</option>
-                <option value="Godtatt">Godtatt</option>
-                <option value="Under Behandling">Under behandling</option>
-            </select>
-        </div>
-        <div>
-            <p>beskrivelse her</p>
-            <p>vedlegg her</p>
-        </div>
-        <div>
-            <p>Kart her</p>
-            <label for="Saksbehandler">Saksbehandler</label>
-            <select id="Saksbehandler" name="Saksbehandler">
-                <option value="Stian Stiansen">Stian Stiansen</option>
-                <option value="Roar Roarsen">Roar Roarsen</option>
-                <option value="Alf Alfsen">Alf Alfsen</option>
-            </select>
-
+    <div class="right-side" id="details-container">
+        <p>Venligst velg en innmelding :)</p>
         </div>
 
-        <button>Be om mer Info</button>
-    </div>
-</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+
+            $(document).ready(function () {
+            // Håndter klikk på tabellrader 
+            $('tr[data-id]').click(function () { 
+                var id = $(this).data('id');
+                    $.get('/Home/GetGeoChangeDetails/' + id, function (data) {
+                        $('#details-container').html(
+                            '<p><strong>GeoJSON:</strong> ' + data.GeoJson + '</p>' + 
+                            '<p><strong>Description:</strong> ' + data.Description + '</p>' + 
+                            '<p><strong>Category:</strong> ' + data.Category + '</p>' + 
+                            '<p><strong>Dato:</strong> ' + data.Dato + '</p>' + // Dagens dato 
+                            '<p><strong>Brukernavn:</strong> knut</p>' + // Statisk brukernavn
+                            '<p><strong>Status:</strong> ' + 
+                            '<select>' + 
+                            '<option value="Sendt inn"' + (data.Status === "Sendt inn" ? ' selected' : '') + '>Sendt inn</option>' + 
+                            '<option value="Godtatt"' + (data.Status === "Godtatt" ? ' selected' : '') + '>Godtatt</option>' + 
+                            '<option value="Under behandling"' + (data.Status === "Under behandling" ? ' selected' : '') + 
+                            '>Under behandling</option>' + 
+                            '</select>' + 
+                            '</p>' 
+                        ); 
+                    }); 
+            }); 
+            });
+
+        var map = L.map('map');
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var changes = @Html.Raw(Json.Serialize(Model));
+
+
+        var geoJsonLayers = [];
+
+        //legge til data og samle lagene
+        changes.forEach(function(change) {
+            var geoJsonData = JSON.parse(change.geoJson);
+            var layer = L.geoJSON(geoJsonData).addTo(map);
+            geoJsonLayers.push(layer);
+        });
+
+        //vise kartet der man la inn feilen, ikke London
+        if (geoJsonLayers.length > 0) {
+            var group = new L.featureGroup(geoJsonLayers);
+            map.fitBounds(group.getBounds());
+        }
+    </script>
+}
 
