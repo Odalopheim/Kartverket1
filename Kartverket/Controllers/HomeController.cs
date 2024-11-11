@@ -123,11 +123,21 @@ namespace Kartverket.Controllers
             return View("RegistrationForm", userData);
         }
 
+    
         // GET: Overview
         public IActionResult Overview(UserData userData)
         {
-            return View(userData);
+            var geoDataList = _context.GeoChange.ToList();
+
+            var viewModel = new MinSideViewModel
+            {
+                UserData = userData,
+                GeoChange = geoDataList
+            };
+
+            return View(viewModel);
         }
+
 
         [HttpGet]
         public IActionResult RegisterAreaChange()

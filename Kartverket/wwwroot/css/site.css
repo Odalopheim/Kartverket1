@@ -35,7 +35,7 @@ body {
     
     padding: 10px;
     box-sizing: border-box;
-    overflow-y: auto;
+    flex:1;
 }
 
 .left-side {
@@ -44,6 +44,7 @@ body {
     width:60%;
 }
 
+
 .controls {
     margin-bottom: 20px;
     flex-shrink: 0;
@@ -51,11 +52,12 @@ body {
 }
 
 table {
-    width: 100%;
     border-collapse: collapse;
     font-size: 10px;
     border: 1px solid lightgrey;
     flex-grow: 1;
+    display:block;
+    width:100%;
 }
 
 th, td {
@@ -80,6 +82,28 @@ select {
     border-radius: 4px;
     padding: 5px;
     margin: 10px;
+}
+
+.containerM {
+    display: flex;
+    flex-direction: row; /* Legger elementene ved siden av hverandre */
+    height: 100vh;
+    width: 100vw; /* Full bredde */
+}
+
+.Minside {
+    flex: 0 0 40%; /* Tar opp 40% av bredden */
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    background-color: #F5F2F2;
+}
+
+.Innmeldinger {
+    flex: 1; /* Tar opp resten (60%) av bredden */
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
 
