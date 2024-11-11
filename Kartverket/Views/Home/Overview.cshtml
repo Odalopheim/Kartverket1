@@ -3,40 +3,84 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    //Layout = null;
+    Layout = null;
 }
 <html>
-    <head>
-   
-    </head>
-    <body>
-    <div style="display: flex; height: 100vh;">
-        <div style="flex: 2; background-color: #F3F0F0; padding: 20px;">
-            <h1>Min side</h1>
-            
-            <br />
-            <br />
+<head>
+    <title>Min side</title>
+    <style>
+        .container {
+            display: flex;
+            justify-content: center; /* Sentere innhold horisontalt */
+            align-items: center; /* Sentere innhold vertikalt */
+            height: 100vh;
+            background-color: #F3F0F0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .section {
+            flex: 0 1 60%; /* Endret for å gjøre seksjonene litt smalere */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #F3F0F0;
+            padding: 20px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            margin: 20px; /* Gir litt luft rundt seksjonen */
+        }
+
+        .info-section {
+            flex: 2;
+            align-items: flex-start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 20px;
+        }
+
+            .info-section h1, .info-section p {
+                margin: 10px 0;
+            }
+
+        .button-section {
+            display: flex;
+            justify-content: center; /* Sentere knappen horisontalt */
+            align-items: center; /* Sentere knappen vertikalt */
+            margin-top: 20px; /* Gir litt plass mellom teksten og knappen */
+        }
+
+            .button-section a {
+                display: inline-flex;
+                width: 200px;
+                height: 50px;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                font-size: 18px;
+                color: white;
+                text-decoration: none;
+                background-color: #008000;
+                border-radius: 5px;
+            }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="info-section">
+            <h1 style ="color:#1A833B">Min side</h1>
             <p><strong>Name:</strong> @Model.Name</p>
             <p><strong>Email:</strong> @Model.Email</p>
-            <p><strong>Phone:</strong> @Model.Phone</p>
             <p><strong>Address:</strong> @Model.Address</p>
         </div>
-
-        <div style="flex: 1; background-color: #F3F0F0; padding: 20px; display: flex; justify-content: center; align-items: center;">
-            <a asp-controller="Home" asp-action="RegisterAreaChange"
-               style="background-color: #008000; justify-content: center; align-items: center;
-                display: inline-flex; width: 200px; height: 50px; text-align: center;
-                font-size: 18px; line-height: 50px;"
-               class="btn btn-success">
+        <div class="button-section">
+            <a asp-controller="Home" asp-action="RegisterAreaChange" class="btn btn-success">
                 Ny innmelding
             </a>
         </div>
-
-           
     </div>
-
-
-        
-    </body>
+</body>
 </html>

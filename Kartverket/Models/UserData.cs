@@ -11,9 +11,6 @@ namespace Kartverket.Models
         [EmailAddress(ErrorMessage = "Invalid email address")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Phone is required")]
-        public string Phone { get; set; }
-
         [Required(ErrorMessage = "Address is required")]
         public string Address { get; set; }
     }
