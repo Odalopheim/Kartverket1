@@ -88,20 +88,19 @@ select {
     display: flex;
     flex-direction: row; /* Legger elementene ved siden av hverandre */
     height: 100vh;
-    width: 100vw; /* Full bredde */
+    width: 120vw; /* Full bredde */
 }
 
 .Minside {
-    flex: 0 0 40%; /* Tar opp 40% av bredden */
-    padding: 10px;
+    flex: 0 0 40%;
     box-sizing: border-box;
     overflow-y: auto;
     background-color: #F5F2F2;
+    padding: 10px;
 }
 
 .Innmeldinger {
-    flex: 1; /* Tar opp resten (60%) av bredden */
-    padding: 10px;
+    flex: 1;
     box-sizing: border-box;
     overflow-y: auto;
 }
