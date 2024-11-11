@@ -1,85 +1,79 @@
-﻿@model Kartverket.Models.UserData
+﻿@model Kartverket.Models.MinSideViewModel
+
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <html>
 <head>
     <title>Min side</title>
     <style>
-        .container {
-            display: flex;
-            justify-content: center; /* Sentere innhold horisontalt */
-            align-items: center; /* Sentere innhold vertikalt */
-            height: 100vh;
-            background-color: #F3F0F0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .section {
-            flex: 0 1 60%; /* Endret for å gjøre seksjonene litt smalere */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-color: #F3F0F0;
-            padding: 20px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            margin: 20px; /* Gir litt luft rundt seksjonen */
-        }
-
-        .info-section {
-            flex: 2;
-            align-items: flex-start;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 20px;
-        }
-
-            .info-section h1, .info-section p {
-                margin: 10px 0;
-            }
-
-        .button-section {
-            display: flex;
-            justify-content: center; /* Sentere knappen horisontalt */
-            align-items: center; /* Sentere knappen vertikalt */
-            margin-top: 20px; /* Gir litt plass mellom teksten og knappen */
-        }
-
-            .button-section a {
-                display: inline-flex;
-                width: 200px;
-                height: 50px;
-                justify-content: center;
-                align-items: center;
-                text-align: center;
-                font-size: 18px;
-                color: white;
-                text-decoration: none;
-                background-color: #008000;
-                border-radius: 5px;
+       
+            footer{
+                height:10%;
             }
 
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="info-section">
-            <h1 style ="color:#1A833B">Min side</h1>
-            <p><strong>Name:</strong> @Model.Name</p>
-            <p><strong>Email:</strong> @Model.Email</p>
-            <p><strong>Address:</strong> @Model.Address</p>
-        </div>
-        <div class="button-section">
+    <div class="containerM">
+
+        <div class="Minside">
+
+            <h1 style="color:#1A833B">Min side</h1>
+            <p><strong>Name:</strong> @Model.UserData.Name</p>
+            <p><strong>Email:</strong> @Model.UserData.Email</p>
+            <p><strong>Address:</strong> @Model.UserData.Address</p>
+
             <a asp-controller="Home" asp-action="RegisterAreaChange" class="btn btn-success">
                 Ny innmelding
             </a>
+        </div>
+        
+        <div class="Innmeldinger">
+            <div class="left-side">
+                <div class="controls">
+                    <input id="search" type="text" placeholder="Søk...">
+                    <button>Filter</button>
+                    <button>Sorter etter</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>GeoJSON</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Vedlegg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var geoData in Model.GeoChange)
+                        {
+                            <tr data-id="@geoData.Id">
+                                <td>@geoData.Id</td>
+                                <td>@geoData.GeoJson</td>
+                                <td>@geoData.Category</td>
+                                <td>@geoData.Description</td>
+                                <td>
+                                    @foreach (var vedlegg in geoData.Vedlegg)
+                                    {
+                                        <a href="data:application/octet-stream;base64,@Convert.ToBase64String(vedlegg.FilData)" download="@vedlegg.FilNavn">
+                                            @vedlegg.FilNavn
+                                        </a>
+                                        <br />
+                                    }
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+            
+            
         </div>
     </div>
 </body>
