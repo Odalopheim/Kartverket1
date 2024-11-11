@@ -8,48 +8,64 @@
     ViewData["Title"] = "Overview";
 }
 
-<h2>Overview of Registered Changes</h2>
+<h2>Oversikt over endringer</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>GeoJSON</th>
-            <th>Category</th>
-            <th>Description</th>
-            <th>Vedlegg</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var change in Model)
-        {
-            <tr>
-                <td>@change.Id</td>
-                <td>@change.GeoJson</td>
-                <td>@change.Category</td>
-                <td>@change.Description</td>
-                <td>
-                    @foreach(var vedlegg in change.Vedlegg)
-                    {
-                        <a href="data:application/octet-stream;base64,@Convert.ToBase64String(vedlegg.FilData)" download="@vedlegg.FilNavn">
-                            @vedlegg.FilNavn
-                        </a>
-                        <br />
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
 
-<div id="map" style="height: 400px"></div>
+<div style="display: flex; height: 100vh;">
+
+    <!-- Plasserer kartet til venstre -->
+    <div style="flex: 2; position: relative;">
+        <div id="map" style="height: 400px;"></div>
+    </div>
+
+    <!-- Innmeldings siden til høyre -->
+    <div style="flex: 1; background-color: #F3F0F0; padding: 20px; max-height: 400px; table-layout: fixed;  overflow-y: auto; border: 1px solid #ccc;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>GeoJSON</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Vedlegg</th>
+                    <th>Action</th> <!-- Ny kolonne for sletting -->
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var change in Model)
+                {
+                    <tr id="geoChange-@change.Id">
+                        <td>@change.Id</td>
+                        <td>@change.GeoJson</td>
+                        <td>@change.Category</td>
+                        <td>@change.Description</td>
+                        <td>
+                            @foreach (var vedlegg in change.Vedlegg)
+                            {
+                                <a href="data:application/octet-stream;base64,@Convert.ToBase64String(vedlegg.FilData)" download="@vedlegg.FilNavn">
+                                    @vedlegg.FilNavn
+                                </a>
+                                <br />
+                            }
+                        </td>
+                        <td>
+                            <!-- Slett-knapp -->
+                            <button class="btn btn-success delete-btn" data-id="@change.Id">Slett</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+</div>
+</div>
 
 @section Scripts {
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-
+        // Initialiser kartet
         var map = L.map('map');
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -57,21 +73,51 @@
         }).addTo(map);
 
         var changes = @Html.Raw(Json.Serialize(Model));
-
-
         var geoJsonLayers = [];
 
-        //legge til data og samle lagene
+        // Legg til GeoJSON-data på kartet
         changes.forEach(function(change) {
             var geoJsonData = JSON.parse(change.geoJson);
             var layer = L.geoJSON(geoJsonData).addTo(map);
             geoJsonLayers.push(layer);
         });
 
-        //vise kartet der man la inn feilen, ikke London
+        // Tilpass kartvisningen
         if (geoJsonLayers.length > 0) {
             var group = new L.featureGroup(geoJsonLayers);
             map.fitBounds(group.getBounds());
         }
+
+        // Håndter slett-knappen klikking
+        $(document).on('click', '.delete-btn', function() {
+            var geoChangeId = $(this).data('id');
+            var row = $("#geoChange-" + geoChangeId);
+
+            if (confirm("Er du sikker på at du vil slette denne innmeldingen?")) {
+                console.log("Sending request to delete GeoChange with ID: " + geoChangeId);
+
+                // Send slett-forespørsel med AJAX
+                $.ajax({
+                    url: '/GeoChange/DeleteGeoChange', // URL til slett-handlingen
+                    type: 'POST',
+                    data: { id: geoChangeId },
+                    success: function(response) {
+                        console.log("Response from server:", response);
+
+                        if (response.success) {
+                            // Fjern raden fra tabellen hvis slettingen var vellykket
+                            row.remove();
+                            alert("Innsendingen ble slettet.");
+                        } else {
+                            alert("Det oppstod en feil: " + response.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX request failed: " + status + " - " + error);
+                        alert("Det oppstod en feil med å sende forespørselen til serveren.");
+                    }
+                });
+            }
+        });
     </script>
 }
