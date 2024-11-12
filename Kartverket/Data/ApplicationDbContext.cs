@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace Kartverket.Data
 {
     public class ApplicationDbContext : DbContext
@@ -13,16 +12,10 @@ namespace Kartverket.Data
 
         public DbSet<PostSted> PostSteder { get; set; }
         public DbSet<Bruker> Brukere { get; set; }
-        public DbSet<BrukerID> BrukerId { get; set; }
-        public DbSet<Ansatt> Ansatte { get; set; }
-        public DbSet<Innmelder> Innmeldere { get; set; }
-        public DbSet<Innmelding> Innmeldinger { get; set; }
         public DbSet<Kategori> Kategorier { get; set; }
-        public DbSet<GeoData> Geodata { get; set; }
-        public DbSet<Gjest> Gjester { get; set; }
         public DbSet<GeoChange> GeoChange { get; set; }
 
-         protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
@@ -32,12 +25,12 @@ namespace Kartverket.Data
                 .HasForeignKey(b => b.PostNr);
 
             modelBuilder.Entity<Bruker>()
-                .HasMany(b => b.Innmeldinger)
+                .HasMany(b => b.GeoChanges)
                 .WithOne(i => i.Bruker)
-                .HasForeignKey(i => i.BrukerId);
+                .HasForeignKey(i => i.BrukerNr);
 
             modelBuilder.Entity<Kategori>()
-                .HasMany(k => k.Innmeldinger)
+                .HasMany(k => k.GeoChanges)
                 .WithOne(i => i.Kategori)
                 .HasForeignKey(i => i.KatNr);
         }

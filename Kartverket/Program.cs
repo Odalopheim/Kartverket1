@@ -22,7 +22,12 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
-        new MySqlServerVersion(new Version(10, 5, 9))
+        new MySqlServerVersion(new Version(10, 5, 9)),
+        mySqlOptions => mySqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5, // Number of retries
+            maxRetryDelay: TimeSpan.FromSeconds(10), // Delay between retries
+            errorNumbersToAdd: null // Optional: handle default transient errors
+        )
     )
 );
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()

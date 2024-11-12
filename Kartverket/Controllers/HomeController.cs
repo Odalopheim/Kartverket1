@@ -147,7 +147,7 @@ namespace Kartverket.Controllers
 
         [HttpPost]
 
-        public IActionResult RegisterAreaChange(string geoJson, string description, string category, string customCategory, IFormFile fileUpload)
+        public IActionResult RegisterAreaChange(string geoJson, string description, int category, IFormFile fileUpload)
         {
             try
             {
@@ -156,12 +156,12 @@ namespace Kartverket.Controllers
                     return BadRequest("Invalid data");
                 }
 
-                var finalCategory = category == "Custom" ? customCategory : category;
+           ;
                 var newGeoChange = new GeoChange
                 {
                     GeoJson = geoJson,
                     Description = description,
-                    Category = finalCategory,
+                    KatNr = category,
                     Vedlegg = new List<Kartverket.Data.Vedlegg>()
                 };
 
@@ -207,7 +207,7 @@ namespace Kartverket.Controllers
                 {
                     GeoJson = geoChange.GeoJson,
                     Description = geoChange.Description,
-                    Category = geoChange.Category,
+                    Category = geoChange.KatNr,
                     Dato = DateTime.Now.ToString("dd.MM.yyyy"), // Autogenerert til dagens dato
                     Brukernavn = "knut", // Statisk brukernavn for eksempel
                     Status = "Sendt inn" // Standardverdi for status

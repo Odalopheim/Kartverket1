@@ -8,7 +8,13 @@ namespace Kartverket.Data
         public int Id { get; set; }
         public string? GeoJson { get; set; }
         public string? Description { get; set; }
-        public string? Category { get; set; }
+        public DateTime Dato { get; set; }
+        public int KatNr { get; set; }
+        public Kategori Kategori { get; set; }
+        public int BrukerNr { get; set; }
+        public Bruker Bruker { get; set; }
+
+
         public List<Vedlegg> Vedlegg { get; set; } = new List<Vedlegg>();
     }
 
