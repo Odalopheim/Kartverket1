@@ -19,12 +19,12 @@ namespace Kartverket.Data
         [StringLength(50)]
         public string Passord { get; set; }
         public string BekreftPassord { get; set; }
-        
+
         public string PostNr { get; set; }
         public PostSted PostSted { get; set; }
 
-       
 
-        public ICollection<Innmelding> Innmeldinger { get; set; }
+
+        public ICollection<GeoChange> GeoChanges { get; set; }
     }
 }

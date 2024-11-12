@@ -9,6 +9,6 @@ namespace Kartverket.Data
         public int KatNr { get; set; }
         public string KatNavn { get; set; }
 
-        public ICollection<Innmelding> Innmeldinger { get; set; }
+        public ICollection<GeoChange> GeoChanges { get; set; }
     }
 }

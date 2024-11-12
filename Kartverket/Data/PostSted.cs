@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Kartverket.Data
 {
-    public class PostSted 
+    public class PostSted
     {
         [Key]
         [StringLength(4)]

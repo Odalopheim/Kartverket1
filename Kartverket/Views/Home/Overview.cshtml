@@ -50,15 +50,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var geoData in Model.GeoChange)
+                        @foreach (var geoChange in Model.GeoChange)
                         {
-                            <tr data-id="@geoData.Id">
-                                <td>@geoData.Id</td>
-                                <td>@geoData.GeoJson</td>
-                                <td>@geoData.Category</td>
-                                <td>@geoData.Description</td>
+                            <tr data-id="@geoChange.Id">
+                                <td>@geoChange.Id</td>
+                                <td>@geoChange.GeoJson</td>
+                                <td>@geoChange.KatNr</td>
+                                <td>@geoChange.Description</td>
                                 <td>
-                                    @foreach (var vedlegg in geoData.Vedlegg)
+                                    @foreach (var vedlegg in geoChange.Vedlegg)
                                     {
                                         <a href="data:application/octet-stream;base64,@Convert.ToBase64String(vedlegg.FilData)" download="@vedlegg.FilNavn">
                                             @vedlegg.FilNavn

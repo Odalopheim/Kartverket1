@@ -17,53 +17,53 @@ namespace Kartverket.Controllers
         // Hent alle innmeldinger og vis dem
         public IActionResult Index()
         {
-            var innmeldinger = _context.Innmeldinger
+            var GeoChanges = _context.GeoChange
                                         .Include(i => i.Bruker) // Hent relatert Bruker
                                         .Include(i => i.Kategori) // Hent relatert Kategori
                                         .ToList();
-            return View(innmeldinger);
+            return View(GeoChanges);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Innmelding updatedInnmelding)
+        public IActionResult Edit(int id, GeoChange updatedGeoChanges)
         {
-            if (id != updatedInnmelding.InnmeldingId)
+            if (id != updatedGeoChanges.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                _context.Update(updatedInnmelding);
+                _context.Update(updatedGeoChanges);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(updatedInnmelding);
+            return View(updatedGeoChanges);
         }
 
         // Slett en innmelding
         public IActionResult Delete(int id)
         {
-            var innmelding = _context.Innmeldinger
+            var geoChanges = _context.GeoChange
                                      //.Include(i => i.Bruker)
                                      .Include(i => i.Kategori)
-                                     .FirstOrDefault(i => i.InnmeldingId == id);
-            if (innmelding == null)
+                                     .FirstOrDefault(i => i.Id == id);
+            if (geoChanges == null)
             {
                 return NotFound();
             }
-            return View(innmelding);
+            return View(geoChanges);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            var innmelding = _context.Innmeldinger.Find(id);
-            if (innmelding != null)
+            var geoChange = _context.GeoChange.Find(id);
+            if (geoChange != null)
             {
-                _context.Innmeldinger.Remove(innmelding);
+                _context.GeoChange.Remove(geoChange);
                 _context.SaveChanges();
             }
             return RedirectToAction(nameof(Index));
