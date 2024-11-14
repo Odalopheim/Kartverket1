@@ -34,11 +34,11 @@ var app = builder.Build();
 app.UseDeveloperExceptionPage();
 
 // Database migrasjon
-using (var scope = app.Services.CreateScope())
+/*using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     dbContext.Database.Migrate();
-}
+}*/
 
 // Henter og logger MariaDB-versjon
 using (var scope = app.Services.CreateScope())
