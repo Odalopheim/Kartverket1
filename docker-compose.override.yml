@@ -1,12 +1,42 @@
+version: '3.8'
+
 services:
-  kartverket:
+  # MariaDB Database Container
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+      MYSQL_ROOT_PASSWORD: Testingtesting1234
+      MYSQL_DATABASE: KartverketDb1
+      MYSQL_USER: root
+      MYSQL_PASSWORD: Testingtesting1234
     ports:
-      - "8080"
-      - "8081"
+      - "3306:3306"
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - backend
+
+  # Application Container (Kartverket)
+  kartverket:
+    image: ${DOCKER_REGISTRY:-kartverket} # Defaulting DOCKER_REGISTRY if not set
+    build:
+      context: .
+      dockerfile: Kartverket/Dockerfile
+    container_name: kartverket
+    environment:
+      ASPNETCORE_URLS: "http://+/"
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Server=mariadb;Port=3306;Database=KartverketDb;User=root;Password=Testingtesting1234;"
+    ports:
+      - "5266:80"
+    depends_on:
+      - mariadb
+    networks:
+      - backend
+
+networks:
+  backend:
+
+volumes:
+  mariadb_data:

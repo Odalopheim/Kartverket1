@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using Kartverket.Data;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Kartverk.Mvc.Controllers
 {
@@ -104,6 +105,15 @@ namespace Kartverk.Mvc.Controllers
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            // Logger ut brukeren ved å fjerne autentiseringstokenet
+            await HttpContext.SignOutAsync();
+
+            // Omdirigerer til hjemmesiden etter utlogging
+            return RedirectToAction("Index", "Home");
         }
     }
 
