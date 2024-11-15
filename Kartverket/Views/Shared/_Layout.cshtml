@@ -19,14 +19,8 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarColor03">
                     <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="CorrectMap">Correct Map</a>
-                        </li>
-
+                       
+          
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Home" asp-action="RegisterAreaChange">Ny Innmelding</a>
                         </li>
@@ -37,6 +31,28 @@
                         </li>
           
                     </ul>
+                    <!-- Authentication Links -->
+                    <ul class="navbar-nav ms-auto">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <form asp-action="Logout" asp-controller="Account" method="post" class="form-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-link nav-link" style="border: none; padding: 0;">Logout</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Register">Register</a>
+                            </li>
+                        }
+                    </ul>
+                    <!-- Meny bar -->
                     
                     <ul class="nav-item ms-auto"> <!-- flytte meny til høyre-->
                         <li class="nav-item dropdown text-success">
@@ -45,7 +61,7 @@
                             <div class="dropdown-menu dropdown-menu-end">
                                 <a class="dropdown-item" asp-controller="Home" asp-action="RegistrationForm">Registrer nå</a>
                                 <a class="dropdown-item" asp-controller="Home" asp-action="RegisterAreaChange">Ny innmelding</a>
-                                <a class="dropdown-item" asp-controller="Home" asp-action="Index">Home</a>
+                             
                                
                             </div>
                         </li>

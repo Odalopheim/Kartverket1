@@ -1,9 +1,14 @@
-using System.Diagnostics;
-using Kartverket.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Kartverket.Services;
 using Kartverket.Data;
 using Microsoft.EntityFrameworkCore;
+using Kartverket.Models;
 
 
 namespace Kartverket.Controllers
@@ -14,6 +19,8 @@ namespace Kartverket.Controllers
         private readonly IKommuneInfoService _kommuneInfoService;
         private readonly IStedsnavnService _stedsnavnService;
         private readonly ApplicationDbContext _context;
+        private readonly GeoChangeService _geoChangeService;
+        private readonly UserManager<IdentityUser>_userManager;
 
         // definerer en liste sim en in-memory lagring
         private static List<PositionModel> positions = new List<PositionModel>();
@@ -21,12 +28,15 @@ namespace Kartverket.Controllers
         //private object _kommuneInfoService;
 
 
-        public HomeController(ILogger<HomeController> logger, IKommuneInfoService kommuneInfoService, IStedsnavnService stedsnavnService, ApplicationDbContext context)
+        public HomeController(ILogger<HomeController> logger, IKommuneInfoService kommuneInfoService, IStedsnavnService stedsnavnService, ApplicationDbContext context, GeoChangeService geoChangeService, UserManager<IdentityUser> userManager)
         {
             _logger = logger;
             _context = context;
             _kommuneInfoService = kommuneInfoService;
             _stedsnavnService = stedsnavnService; // Injiser stedsnavn-tjenesten her
+            _geoChangeService = geoChangeService;
+            _userManager = userManager;
+
         }
 
 
@@ -118,9 +128,10 @@ namespace Kartverket.Controllers
             return View();
         }
 
+        [Authorize]
         [HttpPost]
 
-        public IActionResult RegisterAreaChange(string geoJson, string description, string category, string customCategory, IFormFile fileUpload)
+        public async Task <IActionResult> RegisterAreaChange(string geoJson, string description, string category)
         {
             try
             {
@@ -129,32 +140,12 @@ namespace Kartverket.Controllers
                     return BadRequest("Invalid data");
                 }
 
-                var finalCategory = category == "Custom" ? customCategory : category;
-                var newGeoChange = new GeoChange
-                {
-                    GeoJson = geoJson,
-                    Description = description,
-                    Category = finalCategory,
-                    Vedlegg = new List<Kartverket.Data.Vedlegg>()
-                };
-
-                if (fileUpload != null && fileUpload.Length > 0)
-                {
-                    using (var ms = new MemoryStream())
-                    {
-                        fileUpload.CopyTo(ms);
-                        var fileBytes = ms.ToArray();
-                        var vedlegg = new Kartverket.Data.Vedlegg
-                        {
-                            FilNavn = fileUpload.FileName,
-                            FilData = fileBytes
-                        };
-                        newGeoChange.Vedlegg.Add(vedlegg);
-                    }
-                }
-
-                _context.GeoChange.Add(newGeoChange);
-                _context.SaveChanges();
+                var user = await _userManager.GetUserAsync(User);
+                var userId = user.Id;
+                
+                //Save to the database using Dapper
+                _geoChangeService.AddGeoChange(description, geoJson, userId);
+              
 
                 return RedirectToAction("AreaChangeOverview");
             }
@@ -166,29 +157,129 @@ namespace Kartverket.Controllers
         }
 
 
+        [Authorize]
         [HttpGet]
-        public IActionResult AreaChangeOverview()
+        public async Task <IActionResult> AreaChangeOverview()
         {
-            var changes_db = _context.GeoChange.ToList();
-            return View(changes_db);
+            var user = await _userManager.GetUserAsync(User);
+            var userId = user.Id;
+
+            var changes = _geoChangeService.GetAllGeoChanges(userId);
+            return View(changes);
         }
 
 
-
+        //New action methods for UpdateOverview feature
+        [Authorize]
         [HttpGet]
-        public IActionResult CorrectMap()
+        public async Task<IActionResult> UpdateOverview()
         {
-           return View();
+            try
+            {
+                var user = await _userManager.GetUserAsync(User);
+                var userId = user.Id;
+
+                var allChanges = _geoChangeService.GetAllGeoChanges(userId);
+                return View(allChanges);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving GeoChanges in UpdateOverview.");
+                return View("Error");
+            }
         }
 
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            _logger.LogInformation($"Edit GET action called with id={id}");
+
+            var user = await _userManager.GetUserAsync(User);
+            var userId = user.Id;
+
+            var geoChange = _geoChangeService.GetGeoChangeById(id, userId);
+            if (geoChange == null)
+            {
+                _logger.LogWarning($"GeoChange with id={id} not found for userId={userId}");
+                return NotFound();
+            }
+
+            return View(geoChange);
+        }
+
+        [Authorize]
         [HttpPost]
-        public IActionResult CorrectMap(PositionModel model)
+        public async Task<IActionResult> Edit(GeoChange model)
         {
+            // Remove validation for UserId since it is set programmatically
+            ModelState.Remove("UserId");
+
+            // Get the current logged-in user
+            var user = await _userManager.GetUserAsync(User);
+
+            // Set the UserId programmatically
+            model.UserId = user.Id;
+
             if (ModelState.IsValid)
             {
-                positions.Add(model);
-                return View("CorrectionOverview", positions);
+                _logger.LogInformation("ModelState is valid. Updating GeoChange.");
+
+                // Proceed with updating the geo change
+                _geoChangeService.UpdateGeoChange(model.Id, model.Description, model.GeoJson, user.Id);
+                return RedirectToAction("UpdateOverview");
             }
+            else
+            {
+                _logger.LogWarning("ModelState is invalid.");
+                foreach (var modelState in ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        _logger.LogWarning(error.ErrorMessage);
+                    }
+                }
+            }
+
+            return View(model);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var userId = user.Id;
+
+            var geoChange = _geoChangeService.GetGeoChangeById(id, userId);
+            if (geoChange == null)
+            {
+                return NotFound();
+            }
+            return View(geoChange);
+        }
+
+        [Authorize]
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var userId = user.Id;
+
+            _geoChangeService.DeleteGeoChange(id, userId);
+            return RedirectToAction("UpdateOverview");
+        }
+
+        [AllowAnonymous]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View();
+        }
+
+        public IActionResult Privacy()
+        {
             return View();
         }
 
@@ -203,16 +294,6 @@ namespace Kartverket.Controllers
         public ViewResult Saksbehandler()
         {
             return View();
-        }
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

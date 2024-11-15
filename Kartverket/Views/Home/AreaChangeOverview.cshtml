@@ -28,15 +28,7 @@
                 <td>@change.GeoJson</td>
                 <td>@change.Category</td>
                 <td>@change.Description</td>
-                <td>
-                    @foreach(var vedlegg in change.Vedlegg)
-                    {
-                        <a href="data:application/octet-stream;base64,@Convert.ToBase64String(vedlegg.FilData)" download="@vedlegg.FilNavn">
-                            @vedlegg.FilNavn
-                        </a>
-                        <br />
-                    }
-                </td>
+                
             </tr>
         }
     </tbody>

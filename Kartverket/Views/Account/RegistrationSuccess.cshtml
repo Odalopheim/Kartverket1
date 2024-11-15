@@ -1,0 +1,20 @@
+﻿﻿@{
+    ViewData["Title"] = "Registration Success";
+}
+
+<h2>@TempData["RegistrationSuccess"]</h2>
+
+<p>You will be redirected to the login page in <span id="countdown">7</span> seconds...</p>
+
+<script>
+    var seconds = 7;
+    var countdownElement = document.getElementById('countdown');
+
+    setInterval(function() {
+        seconds--;
+        countdownElement.textContent = seconds;
+        if (seconds <= 0) {
+            window.location.href = '@Url.Action("Login", "Account")';
+        }
+    }, 1000);
+</script>
