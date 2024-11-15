@@ -12,19 +12,27 @@ using Microsoft.CodeAnalysis;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.ConfigureAppConfiguration(config =>
-{
-    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-    config.AddEnvironmentVariables();
-});
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
+Console.WriteLine(builder.Environment);
 
 // Legger til services til containeren
 builder.Services.AddControllersWithViews();
 
 // Configure MySQL/MariaDB
+// Configure MySQL/MariaDB med transient feilresiliens
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
-    new MySqlServerVersion(new Version(10, 5, 8))));
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        new MySqlServerVersion(new Version(10, 5, 8)),
+        mysqlOptions => mysqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5, // Antall ganger å prøve på nytt
+            maxRetryDelay: TimeSpan.FromSeconds(10), // Forsinkelse mellom forsøk
+            errorNumbersToAdd: null // Eventuelle spesifikke feilnumre som skal håndteres
+        )
+    )
+);
+
 
 // Add Identity services
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>

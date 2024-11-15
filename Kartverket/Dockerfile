@@ -27,4 +27,5 @@ RUN dotnet publish "./Kartverket.csproj" -c $BUILD_CONFIGURATION -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+ENV AspnetCoreEnvironment=Docker
 ENTRYPOINT ["dotnet", "Kartverket.dll"]
