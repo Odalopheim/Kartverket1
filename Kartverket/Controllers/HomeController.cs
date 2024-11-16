@@ -115,11 +115,11 @@ namespace Kartverket.Controllers
             return View();
         }
 
-        [HttpPost]
+       /* [HttpPost]
         public ViewResult RegistrationForm(UserData userData)
         {
             return View("Overview", userData);
-        }
+        }*/
 
 
         [HttpGet]
