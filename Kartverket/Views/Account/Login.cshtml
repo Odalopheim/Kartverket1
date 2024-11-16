@@ -1,10 +1,9 @@
 ﻿@model Kartverket.ViewModels.LoginViewModel
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+
 @{
     ViewData["Title"] = "Login";
 }
+
 <h2>Login</h2>
 
 <form asp-action="Login" method="post">
@@ -18,18 +17,38 @@
 
     <div class="form-group">
         <label asp-for="Password" class="control-label"></label>
-        <input asp-for="Password" type="password" class="form-control" />
+        <div class="input-group">
+            <input asp-for="Password" id="Password" type="password" class="form-control" />
+            <div class="input-group-append">
+                <button type="button" id="togglePassword" class="btn btn-outline-secondary">
+                    <i class="fas fa-eye"></i> <!-- Eye icon for showing password -->
+                </button>
+            </div>
+        </div>
         <span asp-validation-for="Password" class="text-danger"></span>
     </div>
+
     <br />
     <br />
 
     <div class="form-group">
         <button type="submit" class="btn btn-success">Login</button>
+        <a asp-controller="Account" asp-action="Register" class="btn btn-success"> Registrer bruker</a>
     </div>
 </form>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
-}
+    <script>
+        document.getElementById("togglePassword").addEventListener("click", function() {
+            var passwordField = document.getElementById("Password");
+            var passwordType = passwordField.type === "password" ? "text" : "password";
+            passwordField.type = passwordType;
 
+            // Toggle the icon between eye and eye-slash
+            var icon = this.querySelector("i");
+            icon.classList.toggle("fa-eye");
+            icon.classList.toggle("fa-eye-slash");
+        });
+    </script>
+}

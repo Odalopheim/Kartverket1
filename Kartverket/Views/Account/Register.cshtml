@@ -1,13 +1,10 @@
 ﻿@model Kartverket.ViewModels.RegistrerViewModel
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+
 <h2>Register</h2>
 
 <form asp-action="Register" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
     <div>
         <label asp-for="Username"></label>
         <input asp-for="Username" class="form-control" />
@@ -20,12 +17,26 @@
     </div>
     <div>
         <label asp-for="Password"></label>
-        <input asp-for="Password" type="password" class="form-control" />
+        <div class="input-group">
+            <input asp-for="Password" id="Password" type="password" class="form-control" />
+            <div class="input-group-append">
+                <button type="button" id="togglePassword" class="btn btn-outline-secondary">
+                    <i id="password-icon" class="fa fa-eye"></i>
+                </button>
+            </div>
+        </div>
         <span asp-validation-for="Password" class="text-danger"></span>
     </div>
     <div>
         <label asp-for="ConfirmPassword"></label>
-        <input asp-for="ConfirmPassword" type="password" class="form-control" />
+        <div class="input-group">
+            <input asp-for="ConfirmPassword" id="ConfirmPassword" type="password" class="form-control" />
+            <div class="input-group-append">
+                <button type="button" id="toggleConfirmPassword" class="btn btn-outline-secondary">
+                    <i id="confirm-password-icon" class="fa fa-eye"></i>
+                </button>
+            </div>
+        </div>
         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
     </div>
     <br />
@@ -34,7 +45,37 @@
 </form>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }
+
+<script>
+    // Toggle password visibility
+    document.getElementById("togglePassword").addEventListener("click", function() {
+        var passwordField = document.getElementById("Password");
+        var passwordIcon = document.getElementById("password-icon");
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            passwordIcon.classList.remove("fa-eye");
+            passwordIcon.classList.add("fa-eye-slash");
+        } else {
+            passwordField.type = "password";
+            passwordIcon.classList.remove("fa-eye-slash");
+            passwordIcon.classList.add("fa-eye");
+        }
+    });
+
+    // Toggle confirm password visibility
+    document.getElementById("toggleConfirmPassword").addEventListener("click", function() {
+        var confirmPasswordField = document.getElementById("ConfirmPassword");
+        var confirmPasswordIcon = document.getElementById("confirm-password-icon");
+        if (confirmPasswordField.type === "password") {
+            confirmPasswordField.type = "text";
+            confirmPasswordIcon.classList.remove("fa-eye");
+            confirmPasswordIcon.classList.add("fa-eye-slash");
+        } else {
+            confirmPasswordField.type = "password";
+            confirmPasswordIcon.classList.remove("fa-eye-slash");
+            confirmPasswordIcon.classList.add("fa-eye");
+        }
+    });
+</script>
