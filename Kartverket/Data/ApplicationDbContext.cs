@@ -16,7 +16,7 @@ namespace Kartverket.Data
 
         
         public DbSet<GeoChange> GeoChanges { get; set; }
-        //public DbSet<AreaChange> AreaChanges { get; set; }  
+       
 
 
        
