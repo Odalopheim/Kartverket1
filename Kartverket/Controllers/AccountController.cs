@@ -6,52 +6,19 @@ using Kartverket.Models;
 
 namespace Kartverket.Controllers
 {
-   
     public class AccountController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
-        
+
         public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
-            _userManager = userManager; 
-            _signInManager = signInManager; 
-        }
-        // GET: /Account/Register
-        public IActionResult Register()
-        {
-            return View();
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
-        // POST: /Account/Register
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegistrerViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = new IdentityUser { UserName = model.Username, Email = model.Email };
-                var result = await _userManager.CreateAsync(user, model.Password);
-
-                if (result.Succeeded)
-                {
-                    // Show success message and redirect to Login page after 7 seconds
-                    TempData["RegistrationSuccess"] = "Registration successful! You will be redirected to the login page shortly.";
-                    return RedirectToAction("RegistrationSuccess");
-                }
-                else
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error.Description);
-                    }
-                }
-            }
-            return View(model);
-        }
-
-        // GET: /Account/RegistrationSuccess
-        public IActionResult RegistrationSuccess()
+        // GET: /Account/Login
+        public IActionResult Login()
         {
             return View();
         }
@@ -64,7 +31,6 @@ namespace Kartverket.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
-
                 if (user != null)
                 {
                     var result = await _signInManager.PasswordSignInAsync(
@@ -75,7 +41,6 @@ namespace Kartverket.Controllers
 
                     if (result.Succeeded)
                     {
-                        // Redirect to RegisterAreaChange view
                         return RedirectToAction("RegisterAreaChange", "Home");
                     }
                 }
@@ -94,6 +59,42 @@ namespace Kartverket.Controllers
             return RedirectToAction("Login", "Account");
         }
 
+        // GET: /Account/Register
+        public IActionResult Register()
+        {
+            return View();
+        }
 
+        // POST: /Account/Register
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegistrerViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new IdentityUser { UserName = model.Username, Email = model.Email };
+                var result = await _userManager.CreateAsync(user, model.Password);
+
+                if (result.Succeeded)
+                {
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("RegistrationSuccess");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+            }
+            return View(model);
+        }
+
+        // GET: /Account/RegistrationSuccess
+        public IActionResult RegistrationSuccess()
+        {
+            return View();
+        }
     }
 }
