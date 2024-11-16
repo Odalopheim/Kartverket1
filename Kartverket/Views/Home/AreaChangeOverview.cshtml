@@ -1,9 +1,20 @@
-﻿@model List<Kartverket.Data.GeoChange>
-@*@model List<Kartverket.Models.AreaChange>*@
+﻿<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="utf-8"/>
+<title>Kartverkskart</title>
 
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*¨*@
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<style>
+#map {height: 800px; width: 600px;}
+</style>
+</head>
+<body>
+
+@model List<Kartverket.Data.GeoChange>
+
 @{
     ViewData["Title"] = "Overview";
 }
@@ -17,7 +28,6 @@
             <th>GeoJSON</th>
             <th>Category</th>
             <th>Description</th>
-            <th>Vedlegg</th>
         </tr>
     </thead>
     <tbody>
@@ -28,42 +38,59 @@
                 <td>@change.GeoJson</td>
                 <td>@change.Category</td>
                 <td>@change.Description</td>
-                
             </tr>
         }
     </tbody>
 </table>
 
-<div id="map" style="height: 400px"></div>
+<div id="map"></div>
 
 @section Scripts {
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
     <script>
+        // Initialize the map
+        var map = L.map('map').setView([60.14, 10.25], 9);
 
-        var map = L.map('map');
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        // Add Kartverket's topographic tile layer
+        var topoLayer = L.tileLayer('https://cache.kartverket.no/v1/wmts/1.0.0/topo/default/webmercator/{z}/{y}/{x}.png', {
+            attribution: '&copy; <a href="http://www.kartverket.no/">Kartverket</a>'
         }).addTo(map);
 
-        var changes = @Html.Raw(Json.Serialize(Model));
+        // Add Kartverket's gray tone map layer
+        var grayLayer = L.tileLayer('https://cache.kartverket.no/v1/wmts/1.0.0/topograatone/default/webmercator/{z}/{y}/{x}.png', {
+            attribution: '&copy; <a href="http://www.kartverket.no/">Kartverket</a>'
+        });
 
+        // Layer control for switching between topographic and gray map layers
+        var baseMaps = {
+            "Topografisk kart": topoLayer,
+            "Grått kart": grayLayer
+        };
+
+        L.control.layers(baseMaps).addTo(map);
+
+        // Get the GeoJSON data from the model
+        var changes = @Html.Raw(Json.Serialize(Model));
 
         var geoJsonLayers = [];
 
-        //legge til data og samle lagene
+        // Iterate through each change and add it as a GeoJSON layer to the map
         changes.forEach(function(change) {
-            var geoJsonData = JSON.parse(change.geoJson);
-            var layer = L.geoJSON(geoJsonData).addTo(map);
-            geoJsonLayers.push(layer);
+            try {
+                var geoJsonData = JSON.parse(change.GeoJson);
+                var layer = L.geoJSON(geoJsonData).addTo(map);
+                geoJsonLayers.push(layer);
+            } catch (e) {
+                console.error("Invalid GeoJSON for change ID: " + change.Id);
+            }
         });
 
-        //vise kartet der man la inn feilen, ikke London
+        // Fit the map bounds to the combined extent of all layers
         if (geoJsonLayers.length > 0) {
             var group = new L.featureGroup(geoJsonLayers);
             map.fitBounds(group.getBounds());
         }
     </script>
 }
+
+</body>
+</html>
