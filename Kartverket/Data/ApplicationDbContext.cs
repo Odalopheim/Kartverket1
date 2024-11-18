@@ -14,7 +14,7 @@ namespace Kartverket.Data
         {
         }
 
-        
+        public DbSet<UserDetails> UserDetails { get; set; }
         public DbSet<GeoChange> GeoChanges { get; set; }
        
 
