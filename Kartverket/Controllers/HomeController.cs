@@ -168,7 +168,7 @@ namespace Kartverket.Controllers
         //New action methods for UpdateOverview feature
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> UpdateOverview()
+        public async Task<IActionResult> UpdateAreaChangeOverview()
         {
             try
             {
@@ -238,7 +238,7 @@ namespace Kartverket.Controllers
 
                 // Proceed with updating the geo change
                 _geoChangeService.UpdateGeoChange(model.Id, model.Description, model.GeoJson, user.Id);
-                return RedirectToAction("UpdateOverview");
+                return RedirectToAction("UpdateAreaChangeOverview");
             }
             else
             {
@@ -279,7 +279,7 @@ namespace Kartverket.Controllers
             var userId = user.Id;
 
             _geoChangeService.DeleteGeoChange(id, userId);
-            return RedirectToAction("UpdateOverview");
+            return RedirectToAction("UpdateAreaChangeOverview");
         }
 
         [AllowAnonymous]
