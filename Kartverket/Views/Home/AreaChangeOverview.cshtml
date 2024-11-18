@@ -13,7 +13,7 @@
 </head>
 <body>
 
-@model List<Kartverket.Data.GeoChange>
+@model IEnumerable<Kartverket.Data.GeoChange>
 
 @{
     ViewData["Title"] = "Overview";
@@ -38,6 +38,11 @@
                 <td>@change.GeoJson</td>
                 <td>@change.Category</td>
                 <td>@change.Description</td>
+                    <td>
+                        <a asp-controller="Home" asp-action="Edit" asp-route-id="@change.Id">Edit</a> |
+                        <a asp-controller="Home" asp-action="Delete" asp-route-id="@change.Id">Delete</a>
+                    </td>
+
             </tr>
         }
     </tbody>
