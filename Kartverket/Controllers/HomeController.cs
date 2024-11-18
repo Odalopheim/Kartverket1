@@ -10,6 +10,7 @@ using Kartverket.Data;
 using Microsoft.EntityFrameworkCore;
 using Kartverket.Models;
 using Kartverket.ViewModels;
+using NuGet.Packaging.Rules;
 
 
 
@@ -203,22 +204,34 @@ namespace Kartverket.Controllers
 
             return View(geoChange);
         }
-
-        // GET: Overview
-        [HttpGet]
-        public IActionResult MinSide(RegistrerViewModel registrerViewModel)
+        [Authorize]
+        public async Task<IActionResult> MinSide()
         {
-            var geoDataList = _context.GeoChanges.ToList();
-
-            var viewModel = new MinSideViewModel
+            var user = await _userManager.GetUserAsync(User);
+            if (user==null)
             {
-                RegistrerViewModel = registrerViewModel,
-                GeoChange = geoDataList
-            };
+                return NotFound("Bruker ikke funnet");
+            }
+            var userDetails = await _context.UserDetails.FirstOrDefaultAsync(u=> u.UserId == user.Id);
+            var geoChanges = await _context.GeoChanges
+                .Where(g => g.UserId == user.Id)
+                .ToListAsync();
+            var model = new MinSideViewModel
+            {
+                RegistrerViewModel = new RegistrerViewModel
+                {
+                    Name = userDetails?.Name,
+                    Email = user.Email,
+                    Address = userDetails?.Address,
+                    PostNumber = userDetails?.PostNumber
 
-            return View(viewModel);
+                },
+                GeoChange = geoChanges
+            };
+            return View(model);
         }
 
+   
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Edit(GeoChange model)

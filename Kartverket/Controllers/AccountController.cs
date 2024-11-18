@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Kartverket.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
+using Kartverket.Data;
 
 namespace Kartverket.Controllers
 {
@@ -13,12 +14,14 @@ namespace Kartverket.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<AccountController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, ILogger<AccountController> logger)
+        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, ILogger<AccountController> logger, ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _context = context;
         }
 
         // GET: /Account/Login
@@ -98,6 +101,17 @@ namespace Kartverket.Controllers
 
                 if (result.Succeeded)
                 {
+                    var userDetails = new UserDetails
+                    {
+                        UserId = user.Id,
+                        Name = model.Name,
+                        Address = model.Address,
+                        PostNumber = model.PostNumber
+                    };
+
+                    _context.UserDetails.Add(userDetails);
+                    await _context.SaveChangesAsync();
+
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("RegistrationSuccess");
                 }
