@@ -21,44 +21,93 @@
         <p><strong>Description:</strong> @Model.Description</p>
 
         <br />
-        <a asp-controller="Home" asp-action="Index" class="btn btn-success">Tilbake</a>
+        <a asp-controller="Home" asp-action="MinSide" class="btn btn-success">Tilbake</a>
         <a asp-controller="Home" asp-action="Edit" asp-route-id="@Model.Id" class="text-success">Edit</a> |
         <a asp-controller="Home" asp-action="Delete" asp-route-id="@Model.Id" class="text-success">Delete</a>
-
     </div>
 </div>
 
 @using System.Text.Json
 
 @section Scripts {
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
     <script>
-        // Initialize the map
-        var map = L.map('map').setView([63.4305, 10.3951], 13);
+        // Initialiser kartet med senter i Kristiansand
+        var map = L.map('map').setView([58.1467, 7.9956], 15);
 
-        // Add a basic tile layer
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
+        // Definer kartlagene
+        var topoLayer = L.tileLayer('https://cache.kartverket.no/v1/wmts/1.0.0/topo/default/webmercator/{z}/{y}/{x}.png', {
+            attribution: '&copy; <a href="http://www.kartverket.no/">Kartverket</a>'
+        });
 
-        // Log the serialized GeoJSON data
-        console.log("Serialized GeoJSON data:", geoJsonData);
+        var grayLayer = L.tileLayer('https://cache.kartverket.no/v1/wmts/1.0.0/topograatone/default/webmercator/{z}/{y}/{x}.png', {
+            attribution: '&copy; <a href="http://www.kartverket.no/">Kartverket</a>'
+        });
 
-        // Add the GeoJSON data to the map
+        // Legg til topografisk kart som standard
+        topoLayer.addTo(map);
+
+        // Legg til lagkontroll for å bytte mellom kartlagene
+        var baseMaps = {
+            "Topografisk kart": topoLayer,
+            "Grått kart": grayLayer
+        };
+        L.control.layers(baseMaps).addTo(map);
+
+        // Legg til feature group for tegning
+        var drawnItems = new L.FeatureGroup();
+        map.addLayer(drawnItems);
+
+        var drawControl = new L.Control.Draw({
+            draw: {
+                polygon: true,
+                polyline: true,
+                marker: true,
+                circle: false,
+                rectangle: true
+            },
+            edit: {
+                featureGroup: drawnItems
+            }
+        });
+        map.addControl(drawControl);
+
+        // Håndter tegning og legge til GeoJSON
+        map.on(L.Draw.Event.CREATED, function(e) {
+            var layer = e.layer;
+            drawnItems.addLayer(layer);
+            var geoJsonData = layer.toGeoJSON();
+            var geoJsonString = JSON.stringify(geoJsonData);
+            console.log("Tegnet GeoJSON:", geoJsonString);
+        });
+
+        // Legg til GeoJSON-data fra serveren
         var geoJsonData = @Html.Raw(JsonSerializer.Serialize(Model.GeoJson));
-        if (geoJsonData) {
+        if (geoJsonData && geoJsonData !== "null") {
             var geoJsonLayer = L.geoJSON(JSON.parse(geoJsonData), {
                 onEachFeature: function(feature, layer) {
-                    // Add a popup displaying the category if it exists
                     if (feature.properties && feature.properties.Category) {
                         layer.bindPopup("Category: " + feature.properties.Category);
                     }
                 }
             }).addTo(map);
-
             map.fitBounds(geoJsonLayer.getBounds());
         } else {
             alert("Ingen GeoJSON-data tilgjengelig");
         }
+
+        // Legg til søkefunksjon
+        L.Control.geocoder({
+            defaultMarkGeocode: false
+        }).on('markgeocode', function(e) {
+            var center = e.geocode.center;
+            map.setView(center, 15);
+        }).addTo(map);
     </script>
 }
-
