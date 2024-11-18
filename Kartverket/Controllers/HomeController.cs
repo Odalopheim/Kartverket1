@@ -9,6 +9,8 @@ using Kartverket.Services;
 using Kartverket.Data;
 using Microsoft.EntityFrameworkCore;
 using Kartverket.Models;
+using Kartverket.ViewModels;
+
 
 
 namespace Kartverket.Controllers
@@ -200,6 +202,21 @@ namespace Kartverket.Controllers
             }
 
             return View(geoChange);
+        }
+
+        // GET: Overview
+        [HttpGet]
+        public IActionResult MinSide(RegistrerViewModel registrerViewModel)
+        {
+            var geoDataList = _context.GeoChanges.ToList();
+
+            var viewModel = new MinSideViewModel
+            {
+                RegistrerViewModel = registrerViewModel,
+                GeoChange = geoDataList
+            };
+
+            return View(viewModel);
         }
 
         [Authorize]
