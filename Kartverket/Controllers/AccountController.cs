@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Kartverket.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Kartverket.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 
 namespace Kartverket.Controllers
 {
@@ -10,11 +12,13 @@ namespace Kartverket.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly ILogger<AccountController> _logger;
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, ILogger<AccountController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _logger = logger;
         }
 
         // GET: /Account/Login
@@ -33,22 +37,39 @@ namespace Kartverket.Controllers
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 if (user != null)
                 {
+                    // Logg informasjon om brukeren som ble funnet
+                    _logger.LogInformation($"User found: {user.Email}, NormalizedEmail: {user.NormalizedEmail}");
+
                     var result = await _signInManager.PasswordSignInAsync(
-                        userName: user.UserName,
+                        userName: user.Email, // Bruk e-post som brukernavn
                         password: model.Password,
                         isPersistent: false,
                         lockoutOnFailure: false);
 
                     if (result.Succeeded)
                     {
+                        _logger.LogInformation($"Login succeeded for user {user.Email}");
                         return RedirectToAction("RegisterAreaChange", "Home");
                     }
+                    else
+                    {
+                        // Logg at innlogging mislyktes
+                        _logger.LogWarning($"Login failed for user {user.Email}");
+                        ModelState.AddModelError("", "Invalid login attempt.");
+                    }
                 }
-
-                ModelState.AddModelError("", "Invalid login attempt.");
+                else
+                {
+                    // Logg at brukeren ikke ble funnet
+                    _logger.LogWarning($"User with email {model.Email} not found.");
+                    ModelState.AddModelError("", "Invalid login attempt.");
+                }
             }
             return View(model);
         }
+
+
+        
 
         // POST: /Account/Logout
         [HttpPost]
@@ -72,7 +93,7 @@ namespace Kartverket.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = model.Username, Email = model.Email };
+                var user = new IdentityUser { UserName = model.Email, Email = model.Email }; // Bruk e-post som brukernavn
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)

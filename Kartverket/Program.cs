@@ -11,6 +11,11 @@ using Microsoft.CodeAnalysis;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Legg til logging-tjenester
+builder.Logging.ClearProviders(); 
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
 Console.WriteLine(builder.Environment);
