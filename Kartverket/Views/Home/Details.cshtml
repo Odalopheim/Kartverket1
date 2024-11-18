@@ -1,0 +1,64 @@
+﻿@model Kartverket.Data.GeoChange
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Innmelding";
+}
+
+<div style="display: flex; height: 100vh;">
+    <!-- Plasserer kartet til venstre -->
+    <div style="flex: 2; position: relative;">
+        <div id="map" style="height: 100%;"></div>
+    </div>
+
+    <!-- Detaljert informasjon til høyre -->
+    <div style="flex: 1; background-color: #F3F0F0; padding: 20px;">
+        <h2 style="color:#1A833B">Innmelding</h2>
+
+        <p><strong>ID:</strong> @Model.Id</p>
+        <p><strong>GeoJSON:</strong> @Model.GeoJson</p>
+        <p><strong>Category:</strong> @Model.Category</p>
+        <p><strong>Description:</strong> @Model.Description</p>
+
+        <br />
+        <a asp-controller="Home" asp-action="Index" class="btn btn-success">Tilbake</a>
+        <a asp-controller="Home" asp-action="Edit" asp-route-id="@Model.Id" class="text-success">Edit</a> |
+        <a asp-controller="Home" asp-action="Delete" asp-route-id="@Model.Id" class="text-success">Delete</a>
+
+    </div>
+</div>
+
+@using System.Text.Json
+
+@section Scripts {
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([63.4305, 10.3951], 13);
+
+        // Add a basic tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Log the serialized GeoJSON data
+        console.log("Serialized GeoJSON data:", geoJsonData);
+
+        // Add the GeoJSON data to the map
+        var geoJsonData = @Html.Raw(JsonSerializer.Serialize(Model.GeoJson));
+        if (geoJsonData) {
+            var geoJsonLayer = L.geoJSON(JSON.parse(geoJsonData), {
+                onEachFeature: function(feature, layer) {
+                    // Add a popup displaying the category if it exists
+                    if (feature.properties && feature.properties.Category) {
+                        layer.bindPopup("Category: " + feature.properties.Category);
+                    }
+                }
+            }).addTo(map);
+
+            map.fitBounds(geoJsonLayer.getBounds());
+        } else {
+            alert("Ingen GeoJSON-data tilgjengelig");
+        }
+    </script>
+}
+

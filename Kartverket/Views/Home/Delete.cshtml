@@ -4,9 +4,9 @@
 *@
 @{
 }
-<h2>Delete Geo Change</h2>
+<h2>Slett Innmelding</h2>
 
-<p>Are you sure you want to delete this geo change?</p>
+<p>Er du sikker på at du vil slette innmelding</p>
 
 <div>
     <strong>Description:</strong> @Model.Description
@@ -20,5 +20,5 @@
     @Html.AntiForgeryToken()
     <input type="hidden" asp-for="Id" />
     <button type="submit" class="btn btn-success">Delete</button>
-    <a asp-action="UpdateOverview" class="btn btn-success">Cancel</a>
+    <a asp-action="MinSide" class="btn btn-success">Cancel</a>
 </form>

@@ -144,7 +144,7 @@ namespace Kartverket.Controllers
                 _geoChangeService.AddGeoChange(description, geoJson, userId);
               
 
-                return RedirectToAction("AreaChangeOverview");
+                return RedirectToAction("MinSide");
             }
             catch (Exception ex)
             {
@@ -261,6 +261,17 @@ namespace Kartverket.Controllers
                 return NotFound();
             }
             return View(geoChange);
+        }
+        //Får opp innmeldingen når du trykker på den 
+        [HttpGet]
+        public IActionResult Details(int id)
+        {
+            var model = _context.GeoChanges.FirstOrDefault(gc => gc.Id == id);
+            if (model == null)
+            {
+                return NotFound();
+            }
+            return View(model);
         }
 
         [Authorize]
