@@ -44,16 +44,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var geoData in Model.GeoChange)
+                        @foreach (var change in Model.GeoChange)
                         {
-                            <tr data-id="@geoData.Id">
-                                <td>@geoData.Id</td>
-                                <td>@geoData.GeoJson</td>
-                                <td>@geoData.Category</td>
-                                <td>@geoData.Description</td>
+                            <tr data-id="@change.Id">
+                                <td>@change.Id</td>
+                                <td>@change.GeoJson</td>
+                                <td>@change.Category</td>
+                                <td>@change.Description</td>
+                                <td>
+                                    <a asp-controller="Home" asp-action="Edit" asp-route-id="@change.Id" class="text-success">Edit</a> |
+                                    <a asp-controller="Home" asp-action="Delete" asp-route-id="@change.Id" class="text-success">Delete</a>
+                                </td>
                             </tr>
                         }
-
                     </tbody>
                 </table>
             </div>
