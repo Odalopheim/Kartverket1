@@ -18,14 +18,6 @@ namespace Kartverket.Data
         [BindNever]
         public string UserId { get; set; }
 
-        //public List<Vedlegg> Vedlegg { get; set; } = new List<Vedlegg>();
     }
-
-    /*public class Vedlegg
-    {
-        public int Id { get; set; }
-        public string FilNavn { get; set; }
-        public byte[] FilData { get; set; }
-    }*/
 
 }
