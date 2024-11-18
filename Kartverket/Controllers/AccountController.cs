@@ -49,7 +49,7 @@ namespace Kartverket.Controllers
                     if (result.Succeeded)
                     {
                         _logger.LogInformation($"Login succeeded for user {user.Email}");
-                        return RedirectToAction("RegisterAreaChange", "Home");
+                        return RedirectToAction("MinSide", "Home");
                     }
                     else
                     {
