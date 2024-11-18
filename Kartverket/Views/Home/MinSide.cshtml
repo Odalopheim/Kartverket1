@@ -5,13 +5,12 @@
     ViewData["Title"] = "MinSide";
 }
 
-
 <html>
 <head>
 
 </head>
 <body>
-    <div class="containerM"> 
+    <div class="containerM">
         <div class="Minside">
             <h1>Min side</h1>
 
@@ -21,7 +20,7 @@
             <p><strong>Email:</strong> @Model.RegistrerViewModel.Email</p>
             <p><strong>Address:</strong> @Model.RegistrerViewModel.Address</p>
             <p><strong>PostNummer:</strong> @Model.RegistrerViewModel.PostNumber</p>
-             <a asp-controller="Home" asp-action="RegisterAreaChange" class="btn btn-success">
+            <a asp-controller="Home" asp-action="RegisterAreaChange" class="btn btn-success">
                 Ny innmelding
             </a>
         </div>
@@ -40,13 +39,13 @@
                             <th>GeoJSON</th>
                             <th>Category</th>
                             <th>Description</th>
-                            
+                            <th>Endring</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var change in Model.GeoChange)
                         {
-                            <tr data-id="@change.Id">
+                            <tr data-id="@change.Id" onclick="window.location.href='@Url.Action("Details", "Home", new { id = change.Id })'" style="cursor: pointer;">
                                 <td>@change.Id</td>
                                 <td>@change.GeoJson</td>
                                 <td>@change.Category</td>
@@ -60,7 +59,6 @@
                     </tbody>
                 </table>
             </div>
-
 
         </div>
     </div>
