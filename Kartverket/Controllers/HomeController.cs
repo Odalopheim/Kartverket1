@@ -165,27 +165,6 @@ namespace Kartverket.Controllers
             return View(changes);
         }
 
-
-        //New action methods for UpdateOverview feature
-        [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> UpdateAreaChangeOverview()
-        {
-            try
-            {
-                var user = await _userManager.GetUserAsync(User);
-                var userId = user.Id;
-
-                var allChanges = _geoChangeService.GetAllGeoChanges(userId);
-                return View(allChanges);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error retrieving GeoChanges in UpdateOverview.");
-                return View("Error");
-            }
-        }
-
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
@@ -251,7 +230,7 @@ namespace Kartverket.Controllers
 
                 // Proceed with updating the geo change
                 _geoChangeService.UpdateGeoChange(model.Id, model.Description, model.GeoJson, user.Id);
-                return RedirectToAction("UpdateAreaChangeOverview");
+                return RedirectToAction("MinSide");
             }
             else
             {
@@ -292,7 +271,7 @@ namespace Kartverket.Controllers
             var userId = user.Id;
 
             _geoChangeService.DeleteGeoChange(id, userId);
-            return RedirectToAction("UpdateAreaChangeOverview");
+            return RedirectToAction("MinSide");
         }
 
         [AllowAnonymous]
