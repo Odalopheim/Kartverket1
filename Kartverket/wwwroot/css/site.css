@@ -74,27 +74,32 @@ select {
     padding: 5px;
     margin: 10px;
 }
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
 
-.cnteinerM {
+.containerM {
     display: flex;
     flex-direction: row;
-    height: 100vh;
-    width: 120vh;
+    height: 100vh; 
+    width: 100vw; 
+    margin: 0;
+    padding: 0;
 }
+
 .Minside {
-    flex: 0 0 40%; /* Tar opp 40% av bredden */
+    flex: 0 0 30%; 
     padding: 10px;
-    flex: 0 0 40%;
     box-sizing: border-box;
     overflow-y: auto;
     background-color: #F5F2F2;
-    padding: 10px;
 }
 
 .Innmeldinger {
-    flex: 1; /* Tar opp resten (60%) av bredden */
+    flex: 0 0 60%; 
     padding: 10px;
-    flex: 1;
     box-sizing: border-box;
     overflow-y: auto;
 }
