@@ -3,10 +3,8 @@
 @{
     ViewData["Title"] = "Login";
 }
-<div class="background-container"></div> <!-- Bakgrunnsbilde -->
 
-<div class="login-wrapper">
-    <!-- Wrapper for å sentrere login-containeren -->
+<div class="background-container">
     <div class="login-container">
         <h2 class="green-text">Login</h2>
 
@@ -43,19 +41,18 @@
     </div>
 </div>
 
-
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
-    <script>
-        document.getElementById("togglePassword").addEventListener("click", function() {
-            var passwordField = document.getElementById("Password");
-            var passwordType = passwordField.type === "password" ? "text" : "password";
-            passwordField.type = passwordType;
+        <script>
+            document.getElementById("togglePassword").addEventListener("click", function() {
+                var passwordField = document.getElementById("Password");
+                var passwordType = passwordField.type === "password" ? "text" : "password";
+                passwordField.type = passwordType;
 
-            // Toggle the icon between eye and eye-slash
-            var icon = this.querySelector("i");
-            icon.classList.toggle("fa-eye");
-            icon.classList.toggle("fa-eye-slash");
-        });
-    </script>
+                // Toggle the icon between eye and eye-slash
+                var icon = this.querySelector("i");
+                icon.classList.toggle("fa-eye");
+                icon.classList.toggle("fa-eye-slash");
+            });
+        </script>
 }

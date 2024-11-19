@@ -117,12 +117,9 @@ html, body {
     background: url('/images/BakrunsbildeForNå.jpg') no-repeat center center fixed;
     background-size: cover;
     z-index: -1; /* Sørger for at bakgrunnen er bak innholdet */
-}
-.login-wrapper {
     display: flex;
-    justify-content: center; /* Sentrerer horisontalt */
-    align-items: center; /* Sentrerer vertikalt */
-    height: 100vh; /* Bruker hele skjermen for å sentrere innholdet */
+    justify-content: center;
+    align-items: center;
 }
 
 .login-container {
