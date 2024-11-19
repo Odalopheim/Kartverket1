@@ -42,16 +42,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var change in Model.GeoChange)
-                        {
-                            <tr data-id="@change.Id" onclick="window.location.href='@Url.Action("Details", "Home", new { id = change.Id })'" style="cursor: pointer;">
-                                <td>@change.Category</td>
-                                <td>
-                                    <a asp-controller="Home" asp-action="Edit" asp-route-id="@change.Id" class="text-success">Endre</a> |
-                                    <a asp-controller="Home" asp-action="Delete" asp-route-id="@change.Id" class="text-success">Slette</a>
-                                </td>
-                            </tr>
-                        }
+                    @foreach (var change in Model.GeoChange)
+                    {
+                        <tr data-id="@change.Id" onclick="window.location.href='@Url.Action("Details", "Home", new { id = change.Id })'" style="cursor: pointer;">
+                            <!-- Bruk change.CreatedDate i stedet for Model.GeoChange -->
+                            <td>@change.CreatedDate.ToString("dd.MM.yyyy")</td>
+                            <td>@change.Category</td>
+                            <td>
+                                <!-- Lenker for redigering og sletting -->
+                                <a asp-controller="Home" asp-action="Edit" asp-route-id="@change.Id" class="text-success">Endre</a> |
+                                <a asp-controller="Home" asp-action="Delete" asp-route-id="@change.Id" class="text-success">Slette</a>
+                            </td>
+                        </tr>
+                    }
+
                     </tbody>
                 </table>
             </div>
