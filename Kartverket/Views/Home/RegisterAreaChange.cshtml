@@ -18,22 +18,20 @@
             <!-- Velge mellom katogorier  -->
             <div>
                 <label for="category" class="form-label">Kategori</label>
-                <select id="category" class="form-select" name="Category" onchange="checkCustomCategory()">
+                <select id="category" class="form-select" name="Category">
+                    <option value="Stedsnavn">Stedsnavn</option>
+                    <option value="Veinavn">Veinavn</option>
+                    <option value="Tursti">Tursti</option>
+                    <option value="Bilvei">Bilvei</option>
                     <option value="Annet">Annet</option>
-                    <option value="Custom">Custom</option>
-                    <option value="Feil gatenavn">Feil gatenavn</option>
-                    <option value="Feil stedsnavn">Feil stedsnavn</option>
-                    <option value="Vei mangler på kart">Vei mangler på kart</option>
-                    <option value="Vei mangler i virkligheten">Vei mangler i virkligheten</option>
                 </select>
-                <input type="text" id="customCategory" name="CustomCategory" class="form-control mt-2" placeholder="Enter custom category" style="display:none;" />
             </div>
 
             <div class="mt-3">
                 <label for="description" class="form-label">Beskrivelse</label>
                 <textarea class="form-control" id="description" name="description" rows="3"></textarea>
             </div>
-            
+
 
             <br />
             <button type="submit" style="background-color: #1A833B" class="btn btn-success">Send inn</button>
@@ -42,7 +40,7 @@
 </div>
 
 @section Scripts {
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
@@ -93,7 +91,7 @@
         });
         map.addControl(drawControl);
 
-        map.on(L.Draw.Event.CREATED, function(e) {
+        map.on(L.Draw.Event.CREATED, function (e) {
             var layer = e.layer;
             drawnItems.addLayer(layer);
             var geoJsonData = layer.toGeoJSON();

@@ -127,8 +127,7 @@ namespace Kartverket.Controllers
 
         [Authorize]
         [HttpPost]
-
-        public async Task <IActionResult> RegisterAreaChange(string geoJson, string description, string category)
+        public async Task<IActionResult> RegisterAreaChange(string geoJson, string description, GeoChangeCategory category)
         {
             try
             {
@@ -139,10 +138,13 @@ namespace Kartverket.Controllers
 
                 var user = await _userManager.GetUserAsync(User);
                 var userId = user.Id;
-                
-                //Save to the database using Dapper
-                _geoChangeService.AddGeoChange(description, geoJson, userId);
-              
+
+                // Sett standardverdier for status og saksbehandler
+                var status = GeoChangeStatus.SendtInn;
+                var saksbehandler = string.Empty;
+
+                // Save to the database using Dapper
+                _geoChangeService.AddGeoChange(description, geoJson, userId, status, category, saksbehandler);
 
                 return RedirectToAction("MinSide");
             }
@@ -152,6 +154,7 @@ namespace Kartverket.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+
 
 
         [Authorize]
@@ -211,7 +214,7 @@ namespace Kartverket.Controllers
             return View(model);
         }
 
-   
+
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Edit(GeoChange model)
@@ -230,7 +233,16 @@ namespace Kartverket.Controllers
                 _logger.LogInformation("ModelState is valid. Updating GeoChange.");
 
                 // Proceed with updating the geo change
-                _geoChangeService.UpdateGeoChange(model.Id, model.Description, model.GeoJson, user.Id);
+                _geoChangeService.UpdateGeoChange(
+                    model.Id,
+                    model.Description,
+                    model.GeoJson,
+                    user.Id,
+                    model.Status,
+                    model.Category,
+                    model.Saksbehandler
+                );
+
                 return RedirectToAction("MinSide");
             }
             else
@@ -247,6 +259,7 @@ namespace Kartverket.Controllers
 
             return View(model);
         }
+
 
         [Authorize]
         [HttpGet]
@@ -293,6 +306,59 @@ namespace Kartverket.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Saksbehandler()
+        {
+            var geoChanges = await _context.GeoChanges.ToListAsync();
+            return View(geoChanges);
+        }
+
+        public async Task<IActionResult> GeoChangeDetails(int id)
+        {
+            var geoChange = await _context.GeoChanges.FirstOrDefaultAsync(g => g.Id == id);
+
+            if (geoChange == null)
+            {
+                return NotFound();
+            }
+
+            // Hent brukerdata basert på UserId
+            var user = await _userManager.FindByIdAsync(geoChange.UserId);
+
+            // Pakk inn dataen i en ViewModel for visningen
+            var model = new GeoChangeDetailsViewModel
+            {
+                GeoChange = geoChange,
+                UserName = user?.UserName ?? "Ukjent Bruker"
+            };
+
+            return View(model);
+        }
+
+      
+        [HttpPost]
+        public async Task<IActionResult> SaveChanges(GeoChangeDetailsViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var geoChange = await _context.GeoChanges.FirstOrDefaultAsync(g => g.Id == model.GeoChange.Id);
+
+                if (geoChange != null)
+                {
+                    geoChange.Status = model.GeoChange.Status;
+                    geoChange.Category = model.GeoChange.Category;
+
+                    _context.Update(geoChange);
+                    await _context.SaveChangesAsync();
+                }
+
+                return RedirectToAction("Saksbehandler");
+            }
+
+            return View("GeoChangeDetails", model);
+        }
+
+
+
         public IActionResult Privacy()
         {
             return View();
@@ -305,10 +371,5 @@ namespace Kartverket.Controllers
         }
 
 
-        [HttpGet]
-        public ViewResult Saksbehandler()
-        {
-            return View();
-        }
     }
 }

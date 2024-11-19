@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using Kartverket.Models;
+using System;
 
 namespace Kartverket.Data
 {
@@ -15,11 +16,11 @@ namespace Kartverket.Data
         }
 
         // Inserts a new record into the GeoChanges table
-        public void AddGeoChange(string description, string geoJson, string userId)
+        public void AddGeoChange(string description, string geoJson, string userId, GeoChangeStatus status, GeoChangeCategory category, string saksbehandler)
         {
-            string query = @"INSERT INTO GeoChanges (Description, GeoJson, UserId) 
-                             VALUES (@Description, @GeoJson, @UserId)";
-            _dbConnection.Execute(query, new { Description = description, GeoJson = geoJson, UserId = userId });
+            string query = @"INSERT INTO GeoChanges (Description, GeoJson, UserId, Status, CreatedDate, Category, Saksbehandler) 
+                             VALUES (@Description, @GeoJson, @UserId, @Status, @CreatedDate, @Category, @Saksbehandler)";
+            _dbConnection.Execute(query, new { Description = description, GeoJson = geoJson, UserId = userId, Status = status, CreatedDate = DateTime.Now, Category = category, Saksbehandler = saksbehandler });
         }
 
         // Retrieves all records from the GeoChanges table for a specific user
@@ -37,13 +38,12 @@ namespace Kartverket.Data
         }
 
         // Updates an existing GeoChange record in the database based on Id and UserId
-        public void UpdateGeoChange(int id, string description, string geoJsonData, string userId)
+        public void UpdateGeoChange(int id, string description, string geoJsonData, string userId, GeoChangeStatus status, GeoChangeCategory category, string saksbehandler)
         {
             string query = @"UPDATE GeoChanges 
-                             SET Description = @Description, GeoJson = @GeoJson 
+                             SET Description = @Description, GeoJson = @GeoJson, Status = @Status, Category = @Category, Saksbehandler = @Saksbehandler 
                              WHERE Id = @Id AND UserId = @UserId";
-            Console.WriteLine(query);
-            _dbConnection.Execute(query, new { Id = id, Description = description, GeoJson = geoJsonData, UserId = userId });
+            _dbConnection.Execute(query, new { Id = id, Description = description, GeoJson = geoJsonData, UserId = userId, Status = status, Category = category, Saksbehandler = saksbehandler });
         }
 
         // Deletes an existing GeoChange record based on its Id and UserId
