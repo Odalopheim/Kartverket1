@@ -117,6 +117,10 @@ html, body {
     color: #1A833B;
 }
 
+.progress-bar {
+    background-color: #1A833B; /* Standard Kartvarket grønn farge */
+}
+
 .background-container {
     position: absolute;
     top: 0;

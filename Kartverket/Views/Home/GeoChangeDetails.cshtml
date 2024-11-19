@@ -5,7 +5,7 @@
     ViewData["Title"] = "GeoChange Details";
 }
 
-<h2>GeoChange Details</h2>
+<h2 class="green-text">Innmelding til behandling</h2>
 
 <form asp-action="SaveChanges" method="post">
     <input type="hidden" asp-for="GeoChange.Id" />
@@ -22,27 +22,29 @@
             </div>
 
             <div>
-                <label>Status</label><br />
-                <div>
-                    @foreach (var status in Enum.GetValues(typeof(GeoChangeStatus)).Cast<GeoChangeStatus>())
-                    {
-                        <button type="button" class="btn @(status == Model.GeoChange.Status ? "btn-success" : "btn-secondary")" onclick="document.getElementById('Status').value='@status'">@status</button>
-                    }
-                    <input type="hidden" id="Status" name="Status" value="@Model.GeoChange.Status" asp-for="GeoChange.Status" />
-                </div>
-            </div>
+<label>Status</label><br />
+     <div>
+         @foreach (var status in Enum.GetValues(typeof(GeoChangeStatus)).Cast<GeoChangeStatus>())
+         {
+            <button type="button" class="btn @(status == Model.GeoChange.Status ? "btn-success" : "btn-secondary")" data-status="@status">@status</button>
+         }
+              <input type="hidden" id="Status" name="GeoChange.Status" value="@Model.GeoChange.Status" />
+     </div>
+ </div>
 
-            <div>
-                <label>Kategori</label><br />
-                <div>
-                    <button type="button" class="btn @(Model.GeoChange.Category == GeoChangeCategory.Stedsnavn ? "btn-success" : "btn-secondary")" onclick="document.getElementById('Kategori').value='Stedsnavn'">Stedsnavn</button>
-                    <button type="button" class="btn @(Model.GeoChange.Category == GeoChangeCategory.Veinavn ? "btn-success" : "btn-secondary")" onclick="document.getElementById('Kategori').value='Veinavn'">Veinavn</button>
-                    <button type="button" class="btn @(Model.GeoChange.Category == GeoChangeCategory.Tursti ? "btn-success" : "btn-secondary")" onclick="document.getElementById('Kategori').value='Tursti'">Tursti</button>
-                    <button type="button" class="btn @(Model.GeoChange.Category == GeoChangeCategory.Bilvei ? "btn-success" : "btn-secondary")" onclick="document.getElementById('Kategori').value='Bilvei'">Bilvei</button>
-                    <button type="button" class="btn @(Model.GeoChange.Category == GeoChangeCategory.Annet ? "btn-success" : "btn-secondary")" onclick="document.getElementById('Kategori').value='Annet'">Annet</button>
-                    <input type="hidden" id="Kategori" name="Kategori" value="@Model.GeoChange.Category" asp-for="GeoChange.Category" />
-                </div>
-            </div>
+<div>
+     <label>Kategori</label><br />
+         <div>
+             <button type="button" class="btn @(Model.GeoChange.Category == GeoChangeCategory.Stedsnavn ? "btn-success" : "btn-secondary")" data-category="Stedsnavn">Stedsnavn</button>
+              <button type="button" class="btn @(Model.GeoChange.Category == GeoChangeCategory.Veinavn ? "btn-success" : "btn-secondary")" data-category="Veinavn">Veinavn</button>
+              <button type="button" class="btn @(Model.GeoChange.Category == GeoChangeCategory.Tursti ? "btn-success" : "btn-secondary")" data-category="Tursti">Tursti</button>
+              <button type="button" class="btn @(Model.GeoChange.Category == GeoChangeCategory.Bilvei ? "btn-success" : "btn-secondary")" data-category="Bilvei">Bilvei</button>
+              <button type="button" class="btn @(Model.GeoChange.Category == GeoChangeCategory.Annet ? "btn-success" : "btn-secondary")" data-category="Annet">Annet</button>
+                <input type="hidden" id="Kategori" name="GeoChange.Category" value="@Model.GeoChange.Category" />
+         </div>
+</div>
+
+
 
             <div>
                 <p><strong>Beskrivelse: </strong>@Model.GeoChange.Description</p>
@@ -60,16 +62,16 @@
 
         <!-- Map Column -->
         <div style="width: 48%; height: 100%;">
-            <div id="map" style="width: 100%; height: 100%;"></div>
+            <<div id="map" style="width: 100%; height: 400px;"></div>>
         </div>
 
     </div>
 </form>
 
 @using System.Text.Json
-
 @section Scripts {
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <!-- Leaflet CSS og JavaScript -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
@@ -80,7 +82,7 @@
         // Initialiser kartet med senter i Kristiansand
         var map = L.map('map').setView([58.1467, 7.9956], 15);
 
-        // Definer kartlagene
+        // Definer kartlagene (topografisk og grått kart)
         var topoLayer = L.tileLayer('https://cache.kartverket.no/v1/wmts/1.0.0/topo/default/webmercator/{z}/{y}/{x}.png', {
             attribution: '&copy; <a href="http://www.kartverket.no/">Kartverket</a>'
         });
@@ -99,20 +101,51 @@
         };
         L.control.layers(baseMaps).addTo(map);
 
-        // Legg til GeoJSON-data fra serveren
+        // Last inn GeoJSON-data fra serveren
         var geoJsonData = @Html.Raw(JsonSerializer.Serialize(Model.GeoChange.GeoJson));
-        if (geoJsonData && geoJsonData !== "null") {
-            var geoJsonLayer = L.geoJSON(JSON.parse(geoJsonData), {
-                onEachFeature: function(feature, layer) {
-                    if (feature.properties && feature.properties.Category) {
-                        layer.bindPopup("Category: " + feature.properties.Category);
+        
+        try {
+            if (geoJsonData && geoJsonData !== "null") {
+                // Sikker parsing av GeoJSON-data
+                var parsedData = JSON.parse(geoJsonData); 
+
+                // Legg til GeoJSON-lag på kartet
+                var geoJsonLayer = L.geoJSON(parsedData, {
+                    onEachFeature: function (feature, layer) {
+                        if (feature.properties && feature.properties.Category) {
+                            layer.bindPopup("Kategori: " + feature.properties.Category);
+                        }
                     }
-                }
-            }).addTo(map);
-            map.fitBounds(geoJsonLayer.getBounds());
-        } else {
-            alert("Ingen GeoJSON-data tilgjengelig");
+                }).addTo(map);
+
+                // Tilpass visningen til geojson-lagets grenser
+                map.fitBounds(geoJsonLayer.getBounds());
+            } else {
+                console.warn("Ingen GeoJSON-data tilgjengelig");
+            }
+        } catch (e) {
+            console.error("Feil i GeoJSON-data parsing: ", e);
+            alert("Kunne ikke laste GeoJSON-data. Sjekk konsollen for detaljer.");
         }
 
+        // Oppdater skjulte inputfelt basert på knappetrykk
+        document.querySelectorAll('button[data-status]').forEach(button => {
+            button.addEventListener('click', function () {
+                document.getElementById('Status').value = this.getAttribute('data-status');
+                // Oppdater knappstiler dynamisk
+                document.querySelectorAll('button[data-status]').forEach(b => b.classList.remove('btn-success'));
+                this.classList.add('btn-success');
+            });
+        });
+
+        // Håndter klikk på kategori-knapper
+        document.querySelectorAll('button[data-category]').forEach(button => {
+            button.addEventListener('click', function () {
+                document.getElementById('Kategori').value = this.getAttribute('data-category');
+                // Oppdater knappstiler dynamisk
+                document.querySelectorAll('button[data-category]').forEach(b => b.classList.remove('btn-success'));
+                this.classList.add('btn-success');
+            });
+        });
     </script>
 }
