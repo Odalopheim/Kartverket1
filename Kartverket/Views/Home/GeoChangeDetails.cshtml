@@ -1,0 +1,54 @@
+﻿@model Kartverket.ViewModels.GeoChangeDetailsViewModel
+@using Kartverket.Data
+
+@{
+    ViewData["Title"] = "GeoChange Details";
+}
+
+<h2>GeoChange Details</h2>
+
+<form asp-action="SaveChanges" method="post">
+    <input type="hidden" asp-for="GeoChange.Id" />
+    <input type="hidden" asp-for="GeoChange.UserId" />
+
+    <div>
+        <p><strong>Dato: </strong>@Model.GeoChange.CreatedDate.ToString("dd.MM.yyyy")</p>
+        <p><strong>Bruker: </strong>@Model.UserName</p>
+    </div>
+
+    <div>
+        <label>Status</label><br />
+        <div>
+            @foreach (var status in Enum.GetValues(typeof(GeoChangeStatus)).Cast<GeoChangeStatus>())
+            {
+                <button type="button" class="btn @(status == Model.GeoChange.Status ? "btn-success" : "btn-secondary")" onclick="document.getElementById('Status').value='@status'">@status</button>
+            }
+            <input type="hidden" id="Status" name="Status" value="@Model.GeoChange.Status" asp-for="GeoChange.Status" />
+        </div>
+    </div>
+
+    <div>
+        <label>Kategori</label><br />
+        <div>
+            <button type="button" class="btn @(Model.GeoChange.Category == GeoChangeCategory.Stedsnavn ? "btn-success" : "btn-secondary")" onclick="document.getElementById('Kategori').value='Stedsnavn'">Stedsnavn</button>
+            <button type="button" class="btn @(Model.GeoChange.Category == GeoChangeCategory.Veinavn ? "btn-success" : "btn-secondary")" onclick="document.getElementById('Kategori').value='Veinavn'">Veinavn</button>
+            <button type="button" class="btn @(Model.GeoChange.Category == GeoChangeCategory.Tursti ? "btn-success" : "btn-secondary")" onclick="document.getElementById('Kategori').value='Tursti'">Tursti</button>
+            <button type="button" class="btn @(Model.GeoChange.Category == GeoChangeCategory.Bilvei ? "btn-success" : "btn-secondary")" onclick="document.getElementById('Kategori').value='Bilvei'">Bilvei</button>
+            <button type="button" class="btn @(Model.GeoChange.Category == GeoChangeCategory.Annet ? "btn-success" : "btn-secondary")" onclick="document.getElementById('Kategori').value='Annet'">Annet</button>
+            <input type="hidden" id="Kategori" name="Kategori" value="@Model.GeoChange.Category" asp-for="GeoChange.Category" />
+        </div>
+    </div>
+
+    <div>
+        <p><strong>Beskrivelse: </strong>@Model.GeoChange.Description</p>
+    </div>
+
+    <div>
+        <p><strong>Kart: </strong>@Model.GeoChange.GeoJson</p>
+    </div>
+
+    <div>
+        <button type="submit" class="btn btn-success">Lagre</button>
+        <a asp-action="Saksbehandler" class="btn btn-secondary">Tilbake</a>
+    </div>
+</form>

@@ -1,81 +1,30 @@
-﻿@model Kartverket.Models.PositionModel
+﻿@model IEnumerable<Kartverket.Data.GeoChange>
 
 @{
     ViewData["Title"] = "Saksbehandler";
 }
 
+<h2>Saksbehandler</h2>
 
-
-<div class="containerS">
-    <div class="left-side">
-        <div class="controls">
-            <input id="search" type="text" placeholder="Søk...">
-            <button>Filter</button>
-            <button>Sorter etter</button>
-        </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Dato</th>
-                    <th>Kategori</th>
-                    <th>Sted</th>
-                    <th>Prioritet</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>12.01.2024</td>
-                    <td>feil</td>
-                    <td>krs</td>
-                    <td>viktig</td>
-                </tr>
-                <tr>
-                    <td>12.01.2024</td>
-                    <td>feil igjen</td>
-                    <td>tbg</td>
-                    <td>viktig</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-
-    <div class="right-side">
-        <div class="details">
-            <p><strong>Dato: </strong>12.01.2024</p>
-            <p><strong>Bruker: </strong>Knut Knudsen</p>
-        </div>
-        <div>
-            <label for="Kategori">Kategori</label>
-            <select id="Kategori" name="Kategori">
-                <option value="Fei">Feil</option>
-                <option value="Feil1">Feil1</option>
-                <option value="Feil2">Feil2</option>
-            </select>
-
-            <label for="Status">Status</label>
-            <select id="Status" name="Status">
-                <option value="Sendt inn">Sendt inn</option>
-                <option value="Godtatt">Godtatt</option>
-                <option value="Under Behandling">Under behandling</option>
-            </select>
-        </div>
-        <div>
-            <p>beskrivelse her</p>
-            <p>vedlegg her</p>
-        </div>
-        <div>
-            <p>Kart her</p>
-            <label for="Saksbehandler">Saksbehandler</label>
-            <select id="Saksbehandler" name="Saksbehandler">
-                <option value="Stian Stiansen">Stian Stiansen</option>
-                <option value="Roar Roarsen">Roar Roarsen</option>
-                <option value="Alf Alfsen">Alf Alfsen</option>
-            </select>
-
-        </div>
-
-        <button>Be om mer Info</button>
-    </div>
-</div>
-
+<table class="table">
+    <thead>
+        <tr>
+            <th>Dato</th>
+            <th>Status</th>
+            <th>Kategori</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var geoChange in Model)
+        {
+            <tr>
+                <td>@geoChange.CreatedDate.ToString("dd.MM.yyyy")</td>
+                <td>@geoChange.Status</td>
+                <td>@geoChange.Category</td>
+                <td>
+                    <a asp-action="GeoChangeDetails" asp-route-id="@geoChange.Id" class="btn btn-success">Vis detaljer</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
