@@ -1,4 +1,5 @@
 ﻿@model Kartverket.Data.GeoChange
+@using System.Text.Json
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -15,7 +16,9 @@
     <div style="flex: 1; background-color: #F3F0F0; padding: 20px;">
         <h2 style="color:#1A833B">Innmelding</h2>
 
+        <p><strong>Dato:</strong> @Model.CreatedDate.ToString("dd.MM.yyyy")</p>
         <p><strong>ID:</strong> @Model.Id</p>
+        <p><strong>Status:</strong> @Model.Status</p>
         <p><strong>GeoJSON:</strong> @Model.GeoJson</p>
         <p><strong>Category:</strong> @Model.Category</p>
         <p><strong>Description:</strong> @Model.Description</p>
@@ -26,8 +29,6 @@
         <a asp-controller="Home" asp-action="Delete" asp-route-id="@Model.Id" class="text-success">Slette</a>
     </div>
 </div>
-
-@using System.Text.Json
 
 @section Scripts {
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -60,38 +61,11 @@
         };
         L.control.layers(baseMaps).addTo(map);
 
-        // Legg til feature group for tegning
-        var drawnItems = new L.FeatureGroup();
-        map.addLayer(drawnItems);
-
-        var drawControl = new L.Control.Draw({
-            draw: {
-                polygon: true,
-                polyline: true,
-                marker: true,
-                circle: false,
-                rectangle: true
-            },
-            edit: {
-                featureGroup: drawnItems
-            }
-        });
-        map.addControl(drawControl);
-
-        // Håndter tegning og legge til GeoJSON
-        map.on(L.Draw.Event.CREATED, function(e) {
-            var layer = e.layer;
-            drawnItems.addLayer(layer);
-            var geoJsonData = layer.toGeoJSON();
-            var geoJsonString = JSON.stringify(geoJsonData);
-            console.log("Tegnet GeoJSON:", geoJsonString);
-        });
-
         // Legg til GeoJSON-data fra serveren
         var geoJsonData = @Html.Raw(JsonSerializer.Serialize(Model.GeoJson));
         if (geoJsonData && geoJsonData !== "null") {
             var geoJsonLayer = L.geoJSON(JSON.parse(geoJsonData), {
-                onEachFeature: function(feature, layer) {
+                onEachFeature: function (feature, layer) {
                     if (feature.properties && feature.properties.Category) {
                         layer.bindPopup("Category: " + feature.properties.Category);
                     }
@@ -101,13 +75,5 @@
         } else {
             alert("Ingen GeoJSON-data tilgjengelig");
         }
-
-        // Legg til søkefunksjon
-        L.Control.geocoder({
-            defaultMarkGeocode: false
-        }).on('markgeocode', function(e) {
-            var center = e.geocode.center;
-            map.setView(center, 15);
-        }).addTo(map);
     </script>
 }

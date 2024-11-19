@@ -48,6 +48,7 @@
                             <!-- Bruk change.CreatedDate i stedet for Model.GeoChange -->
                             <td>@change.CreatedDate.ToString("dd.MM.yyyy")</td>
                             <td>@change.Category</td>
+                            <td>@change.Status</td>
                             <td>
                                 <!-- Lenker for redigering og sletting -->
                                 <a asp-controller="Home" asp-action="Edit" asp-route-id="@change.Id" class="text-success">Endre</a> |

@@ -222,43 +222,30 @@ namespace Kartverket.Controllers
             // Remove validation for UserId since it is set programmatically
             ModelState.Remove("UserId");
 
-            // Get the current logged-in user
-            var user = await _userManager.GetUserAsync(User);
-
-            // Set the UserId programmatically
-            model.UserId = user.Id;
-
             if (ModelState.IsValid)
             {
-                _logger.LogInformation("ModelState is valid. Updating GeoChange.");
+                var geoChange = await _context.GeoChanges.FirstOrDefaultAsync(g => g.Id == model.Id);
 
-                // Proceed with updating the geo change
-                _geoChangeService.UpdateGeoChange(
-                    model.Id,
-                    model.Description,
-                    model.GeoJson,
-                    user.Id,
-                    model.Status,
-                    model.Category,
-                    model.Saksbehandler
-                );
+                if (geoChange == null)
+                {
+                    return NotFound();
+                }
+
+                geoChange.Description = model.Description;
+                geoChange.GeoJson = model.GeoJson;
+                geoChange.Category = model.Category;
+                geoChange.Status = model.Status;
+                geoChange.Saksbehandler = model.Saksbehandler;
+
+                _context.Update(geoChange);
+                await _context.SaveChangesAsync();
 
                 return RedirectToAction("MinSide");
-            }
-            else
-            {
-                _logger.LogWarning("ModelState is invalid.");
-                foreach (var modelState in ModelState.Values)
-                {
-                    foreach (var error in modelState.Errors)
-                    {
-                        _logger.LogWarning(error.ErrorMessage);
-                    }
-                }
             }
 
             return View(model);
         }
+
 
 
 

@@ -38,13 +38,14 @@ namespace Kartverket.Data
         }
 
         // Updates an existing GeoChange record in the database based on Id and UserId
-        public void UpdateGeoChange(int id, string description, string geoJsonData, string userId, GeoChangeStatus status, GeoChangeCategory category, string saksbehandler)
+        public void UpdateGeoChange(int id, string description, string geoJson, string userId, GeoChangeStatus status, GeoChangeCategory category, string saksbehandler)
         {
             string query = @"UPDATE GeoChanges 
-                             SET Description = @Description, GeoJson = @GeoJson, Status = @Status, Category = @Category, Saksbehandler = @Saksbehandler 
-                             WHERE Id = @Id AND UserId = @UserId";
-            _dbConnection.Execute(query, new { Id = id, Description = description, GeoJson = geoJsonData, UserId = userId, Status = status, Category = category, Saksbehandler = saksbehandler });
+                     SET Description = @Description, GeoJson = @GeoJson, Status = @Status, Category = @Category, Saksbehandler = @Saksbehandler 
+                     WHERE Id = @Id AND UserId = @UserId";
+            _dbConnection.Execute(query, new { Id = id, Description = description, GeoJson = geoJson, UserId = userId, Status = status, Category = category, Saksbehandler = saksbehandler });
         }
+
 
         // Deletes an existing GeoChange record based on its Id and UserId
         public void DeleteGeoChange(int id, string userId)
