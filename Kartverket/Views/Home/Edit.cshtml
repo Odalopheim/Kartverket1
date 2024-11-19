@@ -1,9 +1,11 @@
 ﻿@model Kartverket.Data.GeoChange
+@using System.Text.Json
+
 @{
     ViewData["Title"] = "Edit Geo Change";
 }
 
-<h2>Endre Inmelding</h2>
+<h2>Endre Innmelding</h2>
 
 <form asp-controller="Home" asp-action="Edit" method="post">
     @Html.AntiForgeryToken()
@@ -12,9 +14,13 @@
     <!-- Hidden input for Id -->
     <input type="hidden" asp-for="Id" />
 
-    <!-- Hidden input for UserId (newly added) -->
+    <!-- Hidden input for UserId -->
     <input type="hidden" asp-for="UserId" />
 
+    <div class="containerS">
+        <div class="left-side">
+            <a asp-action="MinSide" class="btn btn-success">Tilbake</a>
+            <br />
     <div class="form-group">
         <label asp-for="Description"></label>
         <input asp-for="Description" class="form-control" />
@@ -23,15 +29,109 @@
 
     <div class="form-group">
         <label asp-for="GeoJson"></label>
-        <textarea asp-for="GeoJson" class="form-control"></textarea>
+        <textarea asp-for="GeoJson" class="form-control" id="geoJsonInput"></textarea>
         <span asp-validation-for="GeoJson" class="text-danger"></span>
     </div>
-    <br />
-    <br />
 
+    <div class="form-group">
+        <label for="Category">Kategori</label>
+        <select asp-for="Category" class="form-control">
+            <option value="Stedsnavn">Stedsnavn</option>
+            <option value="Veinavn">Veinavn</option>
+            <option value="Tursti">Tursti</option>
+            <option value="Bilvei">Bilvei</option>
+            <option value="Annet">Annet</option>
+        </select>
+    </div>
+        </div>
+
+        <div class="right-side">
+    <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
+
+    <br />
     <button type="submit" class="btn btn-success">Lagre Endringer</button>
+        </div>
+    </div>
 </form>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+
+    <script>
+        // Initialiser kartet med senter i Kristiansand
+        var map = L.map('map').setView([58.1467, 7.9956], 15);
+
+        // Definer kartlagene
+        var topoLayer = L.tileLayer('https://cache.kartverket.no/v1/wmts/1.0.0/topo/default/webmercator/{z}/{y}/{x}.png', {
+            attribution: '&copy; <a href="http://www.kartverket.no/">Kartverket</a>'
+        });
+
+        var grayLayer = L.tileLayer('https://cache.kartverket.no/v1/wmts/1.0.0/topograatone/default/webmercator/{z}/{y}/{x}.png', {
+            attribution: '&copy; <a href="http://www.kartverket.no/">Kartverket</a>'
+        });
+
+        // Legg til topografisk kart som standard
+        topoLayer.addTo(map);
+
+        // Legg til lagkontroll for å bytte mellom kartlagene
+        var baseMaps = {
+            "Topografisk kart": topoLayer,
+            "Grått kart": grayLayer
+        };
+        L.control.layers(baseMaps).addTo(map);
+
+        // Legg til GeoJSON-data fra serveren
+        var geoJsonData = @Html.Raw(JsonSerializer.Serialize(Model.GeoJson));
+        if (geoJsonData && geoJsonData !== "null") {
+            var geoJsonLayer = L.geoJSON(JSON.parse(geoJsonData), {
+                onEachFeature: function (feature, layer) {
+                    if (feature.properties && feature.properties.Category) {
+                        layer.bindPopup("Category: " + feature.properties.Category);
+                    }
+                }
+            }).addTo(map);
+            map.fitBounds(geoJsonLayer.getBounds());
+        } else {
+            alert("Ingen GeoJSON-data tilgjengelig");
+        }
+
+        // Legg til søkefunksjon
+        L.Control.geocoder({
+            defaultMarkGeocode: false
+        }).on('markgeocode', function (e) {
+            var center = e.geocode.center;
+            map.setView(center, 15);
+        }).addTo(map);
+
+        // Legg til feature group for tegning
+        var drawnItems = new L.FeatureGroup();
+        map.addLayer(drawnItems);
+
+        var drawControl = new L.Control.Draw({
+            draw: {
+                polygon: true,
+                polyline: true,
+                marker: true,
+                circle: false,
+                rectangle: true
+            },
+            edit: {
+                featureGroup: drawnItems
+            }
+        });
+        map.addControl(drawControl);
+
+        map.on(L.Draw.Event.CREATED, function (e) {
+            var layer = e.layer;
+            drawnItems.addLayer(layer);
+            var geoJsonData = layer.toGeoJSON();
+            var geoJsonString = JSON.stringify(geoJsonData);
+            document.getElementById('geoJsonInput').value = geoJsonString;
+        });
+    </script>
 }

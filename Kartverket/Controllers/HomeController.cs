@@ -261,6 +261,7 @@ namespace Kartverket.Controllers
         }
 
 
+
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
