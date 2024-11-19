@@ -168,7 +168,6 @@ namespace Kartverket.Controllers
             return View(changes);
         }
 
-
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
@@ -214,7 +213,6 @@ namespace Kartverket.Controllers
             return View(model);
         }
 
-
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Edit(GeoChange model)
@@ -245,7 +243,6 @@ namespace Kartverket.Controllers
 
             return View(model);
         }
-
 
 
 
@@ -300,6 +297,7 @@ namespace Kartverket.Controllers
             return View(geoChanges);
         }
 
+        [HttpGet]
         public async Task<IActionResult> GeoChangeDetails(int id)
         {
             var geoChange = await _context.GeoChanges.FirstOrDefaultAsync(g => g.Id == id);
@@ -316,34 +314,63 @@ namespace Kartverket.Controllers
             var model = new GeoChangeDetailsViewModel
             {
                 GeoChange = geoChange,
-                UserName = user?.UserName ?? "Ukjent Bruker"
+                UserName = user?.UserName ?? "Ukjent Bruker",
+                // Legg til statusen for å vise i visningen
+                Status = geoChange.Status.ToString()  // Viktig å sende statusen til visningen
             };
 
             return View(model);
         }
 
-      
+
         [HttpPost]
         public async Task<IActionResult> SaveChanges(GeoChangeDetailsViewModel model)
         {
             if (ModelState.IsValid)
             {
+                // Hent eksisterende GeoChange
                 var geoChange = await _context.GeoChanges.FirstOrDefaultAsync(g => g.Id == model.GeoChange.Id);
 
                 if (geoChange != null)
                 {
-                    geoChange.Status = model.GeoChange.Status;
+                    // Oppdater status og kategori
+                    geoChange.Status = model.GeoChange.Status;  // Pass på at statusen blir oppdatert
                     geoChange.Category = model.GeoChange.Category;
 
+                    // Oppdater databasen
                     _context.Update(geoChange);
                     await _context.SaveChangesAsync();
-                }
 
-                return RedirectToAction("Saksbehandler");
+                    // Gå tilbake til oversikten
+                    return RedirectToAction("Saksbehandler");
+                }
             }
 
+            // Hvis ModelState ikke er gyldig eller noe feilet, last inn dataene på nytt
+            var geoChangeData = await _context.GeoChanges
+                .FirstOrDefaultAsync(g => g.Id == model.GeoChange.Id);
+
+            if (geoChangeData != null)
+            {
+                // Fyll inn data som mangler
+                model.GeoChange.GeoJson = geoChangeData.GeoJson;
+                model.GeoChange.Description = geoChangeData.Description;
+                model.UserName = await _context.Users
+                    .Where(u => u.Id == geoChangeData.UserId)
+                    .Select(u => u.UserName)
+                    .FirstOrDefaultAsync();
+            }
+            else
+            {
+                // Legg til en feilmelding hvis GeoChange ikke finnes
+                ModelState.AddModelError("", "Kunne ikke finne endringen i databasen.");
+            }
+
+            // Returner visningen med oppdatert modell
             return View("GeoChangeDetails", model);
         }
+
+
 
 
 
