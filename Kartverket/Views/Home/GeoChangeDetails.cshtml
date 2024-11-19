@@ -114,12 +114,5 @@
             alert("Ingen GeoJSON-data tilgjengelig");
         }
 
-        // Legg til søkefunksjon
-        L.Control.geocoder({
-            defaultMarkGeocode: false
-        }).on('markgeocode', function(e) {
-            var center = e.geocode.center;
-            map.setView(center, 15);
-        }).addTo(map);
     </script>
 }

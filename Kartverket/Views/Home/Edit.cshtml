@@ -21,35 +21,34 @@
         <div class="left-side">
             <a asp-action="MinSide" class="btn btn-success">Tilbake</a>
             <br />
-    <div class="form-group">
-        <label asp-for="Description"></label>
-        <input asp-for="Description" class="form-control" />
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
+            <div class="form-group">
+                <label asp-for="Description"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
 
-    <div class="form-group">
-        <label asp-for="GeoJson"></label>
-        <textarea asp-for="GeoJson" class="form-control" id="geoJsonInput"></textarea>
-        <span asp-validation-for="GeoJson" class="text-danger"></span>
-    </div>
+            <div class="form-group">
+                <label asp-for="GeoJson"></label>
+                <textarea asp-for="GeoJson" class="form-control" id="geoJsonInput"></textarea>
+                <span asp-validation-for="GeoJson" class="text-danger"></span>
+            </div>
 
-    <div class="form-group">
-        <label for="Category">Kategori</label>
-        <select asp-for="Category" class="form-control">
-            <option value="Stedsnavn">Stedsnavn</option>
-            <option value="Veinavn">Veinavn</option>
-            <option value="Tursti">Tursti</option>
-            <option value="Bilvei">Bilvei</option>
-            <option value="Annet">Annet</option>
-        </select>
-    </div>
+            <div class="form-group">
+                <label for="Category">Kategori</label>
+                <select asp-for="Category" class="form-control">
+                    <option value="Stedsnavn">Stedsnavn</option>
+                    <option value="Veinavn">Veinavn</option>
+                    <option value="Tursti">Tursti</option>
+                    <option value="Bilvei">Bilvei</option>
+                    <option value="Annet">Annet</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success">Lagre Endringer</button>
         </div>
 
         <div class="right-side">
-    <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
-
-    <br />
-    <button type="submit" class="btn btn-success">Lagre Endringer</button>
+            <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
         </div>
     </div>
 </form>
@@ -99,39 +98,5 @@
         } else {
             alert("Ingen GeoJSON-data tilgjengelig");
         }
-
-        // Legg til søkefunksjon
-        L.Control.geocoder({
-            defaultMarkGeocode: false
-        }).on('markgeocode', function (e) {
-            var center = e.geocode.center;
-            map.setView(center, 15);
-        }).addTo(map);
-
-        // Legg til feature group for tegning
-        var drawnItems = new L.FeatureGroup();
-        map.addLayer(drawnItems);
-
-        var drawControl = new L.Control.Draw({
-            draw: {
-                polygon: true,
-                polyline: true,
-                marker: true,
-                circle: false,
-                rectangle: true
-            },
-            edit: {
-                featureGroup: drawnItems
-            }
-        });
-        map.addControl(drawControl);
-
-        map.on(L.Draw.Event.CREATED, function (e) {
-            var layer = e.layer;
-            drawnItems.addLayer(layer);
-            var geoJsonData = layer.toGeoJSON();
-            var geoJsonString = JSON.stringify(geoJsonData);
-            document.getElementById('geoJsonInput').value = geoJsonString;
-        });
     </script>
 }
