@@ -24,8 +24,17 @@ body {
 }
 
 
+.footer {
+    border-top: 1px solid #ddd;
+    padding: 10px 0;
+    background: #f8f9fa;
+    text-align: center;
+    position: relative;
+    width: 100%;
+    bottom: 0;
+}
 
-.containerS {
+    .containerS {
     display: flex;
     flex-wrap: nowrap;
     height: 100%;
@@ -91,7 +100,7 @@ html, body {
 
 .Minside {
     flex: 0 0 30%;
-    padding: 10px;
+    padding: 40px;
     box-sizing: border-box;
     overflow-y: auto;
     background-color: #FCEBCD;
