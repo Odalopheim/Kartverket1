@@ -1,58 +1,76 @@
 ﻿@model Kartverket.ViewModels.RegistrerViewModel
+<!-- Bakgrunnscontainer som fyller hele skjermen -->
+<div class="background-container"></div>
 
-<h2>Register</h2>
+<!-- Wrapper som sentrerer register-container på skjermen -->
+<div class="login-wrapper">
+    <div class="login-container">
+        <h2 class="green-text">Register</h2>
 
-<form asp-action="Register" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="Register" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <div>
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
-    <div>
-        <label asp-for="Address"></label>
-        <input asp-for="Address" class="form-control" />
-        <span asp-validation-for="Address" class="text-danger"></span>
-    </div>
-    <div>
-        <label asp-for="PostNumber"></label>
-        <input asp-for="PostNumber" class="form-control" />
-        <span asp-validation-for="PostNumber" class="text-danger"></span>
-    </div>
-    <div>
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-    <div>
-        <label asp-for="Password"></label>
-        <div class="input-group">
-            <input asp-for="Password" id="Password" type="password" class="form-control" />
-            <div class="input-group-append">
-                <button type="button" id="togglePassword" class="btn btn-outline-secondary">
-                    <i id="password-icon" class="fa fa-eye"></i>
-                </button>
+            <!-- Registrer Name -->
+            <div>
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-        </div>
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-    <div>
-        <label asp-for="ConfirmPassword"></label>
-        <div class="input-group">
-            <input asp-for="ConfirmPassword" id="ConfirmPassword" type="password" class="form-control" />
-            <div class="input-group-append">
-                <button type="button" id="toggleConfirmPassword" class="btn btn-outline-secondary">
-                    <i id="confirm-password-icon" class="fa fa-eye"></i>
-                </button>
+
+            <!-- Registrer Address -->
+            <div>
+                <label asp-for="Address"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
             </div>
-        </div>
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+
+            <!-- Registrer PostNumber -->
+            <div>
+                <label asp-for="PostNumber"></label>
+                <input asp-for="PostNumber" class="form-control" />
+                <span asp-validation-for="PostNumber" class="text-danger"></span>
+            </div>
+
+            <!-- Registrer Email -->
+            <div>
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <!-- Registrer Password -->
+            <div>
+                <label asp-for="Password"></label>
+                <div class="input-group">
+                    <input asp-for="Password" id="Password" type="password" class="form-control" />
+                    <div class="input-group-append">
+                        <button type="button" id="togglePassword" class="btn btn-outline-secondary">
+                            <i id="password-icon" class="fa fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <!-- Bekreft Passord -->
+            <div>
+                <label asp-for="ConfirmPassword"></label>
+                <div class="input-group">
+                    <input asp-for="ConfirmPassword" id="ConfirmPassword" type="password" class="form-control" />
+                    <div class="input-group-append">
+                        <button type="button" id="toggleConfirmPassword" class="btn btn-outline-secondary">
+                            <i id="confirm-password-icon" class="fa fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+
+            <br />
+            <button type="submit" class="btn btn-success">Register</button>
+        </form>
     </div>
-    <br />
-    <br />
-    <button type="submit" class="btn btn-success">Register</button>
-</form>
+</div>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
