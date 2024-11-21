@@ -6,6 +6,7 @@ using Kartverket.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using Kartverket.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Kartverket.Controllers
 {
@@ -52,7 +53,7 @@ namespace Kartverket.Controllers
                     if (result.Succeeded)
                     {
                         _logger.LogInformation($"Login succeeded for user {user.Email}");
-                        return RedirectToAction("MinSide", "Home");
+                        return RedirectToAction("MinSide", "Account");
                     }
                     else
                     {
@@ -123,6 +124,33 @@ namespace Kartverket.Controllers
                     }
                 }
             }
+            return View(model);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> MinSide()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound("Bruker ikke funnet");
+            }
+            var userDetails = await _context.UserDetails.FirstOrDefaultAsync(u => u.UserId == user.Id);
+            var geoChanges = await _context.GeoChanges
+                .Where(g => g.UserId == user.Id)
+                .ToListAsync();
+            var model = new MinSideViewModel
+            {
+                RegistrerViewModel = new RegistrerViewModel
+                {
+                    Name = userDetails?.Name,
+                    Email = user.Email,
+                    Address = userDetails?.Address,
+                    PostNumber = userDetails?.PostNumber
+
+                },
+                GeoChange = geoChanges
+            };
             return View(model);
         }
 
