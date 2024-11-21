@@ -53,5 +53,29 @@ namespace Kartverket.Data
             string query = "DELETE FROM GeoChanges WHERE Id = @Id AND UserId = @UserId";
             _dbConnection.Execute(query, new { Id = id, UserId = userId });
         }
+
+        //Søkefunskjon for saksbehandlere
+        public IEnumerable<GeoChange> SearchGeoChanges(DateTime? fromDate, DateTime? toDate, GeoChangeCategory? category)
+        {
+            string query = @"SELECT * FROM GeoChanges WHERE 1=1";
+
+            if (fromDate.HasValue)
+            {
+                query += " AND CreatedDate >= @FromDate";
+            }
+
+            if (toDate.HasValue)
+            {
+                query += " AND CreatedDate <= @ToDate";
+            }
+
+            if (category.HasValue)
+            {
+                query += " AND Category = @Category";
+            }
+
+            return _dbConnection.Query<GeoChange>(query, new { FromDate = fromDate, ToDate = toDate, Category = category });
+        }
+
     }
 }
