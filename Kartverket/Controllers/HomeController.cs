@@ -26,7 +26,6 @@ namespace Kartverket.Controllers
         private readonly UserManager<IdentityUser>_userManager;
 
         // definerer en liste sim en in-memory lagring
-        private static List<PositionModel> positions = new List<PositionModel>();
         private static List<GeoChange> changes = new List<GeoChange>();
         //private object _kommuneInfoService;
 
@@ -42,12 +41,6 @@ namespace Kartverket.Controllers
 
         }
 
-
-
-        // public HomeController(ILogger<HomeController> logger)
-        //{
-        //  _logger = logger;
-        // }
 
         public IActionResult Index()
         {
@@ -113,13 +106,6 @@ namespace Kartverket.Controllers
 
 
         [HttpGet]
-        public ViewResult RegistrationForm()
-        {
-            return View();
-        }
-
-
-        [HttpGet]
         public IActionResult RegisterAreaChange()
         {
             return View();
@@ -146,26 +132,13 @@ namespace Kartverket.Controllers
                 // Save to the database using Dapper
                 _geoChangeService.AddGeoChange(description, geoJson, userId, status, category, saksbehandler);
 
-                return RedirectToAction("MinSide");
+                return RedirectToAction("MinSide", "Account");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}, Inner Exception: {ex.InnerException?.Message}");
                 return StatusCode(500, "Internal server error");
             }
-        }
-
-
-
-        [Authorize]
-        [HttpGet]
-        public async Task <IActionResult> AreaChangeOverview()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            var userId = user.Id;
-
-            var changes = _geoChangeService.GetAllGeoChanges(userId);
-            return View(changes);
         }
 
         [Authorize]
@@ -213,7 +186,7 @@ namespace Kartverket.Controllers
                 _context.Update(geoChange);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction("MinSide");
+                return RedirectToAction("MinSide", "Account");
             }
 
             return View(model);
@@ -256,7 +229,7 @@ namespace Kartverket.Controllers
             var userId = user.Id;
 
             _geoChangeService.DeleteGeoChange(id, userId);
-            return RedirectToAction("MinSide");
+            return RedirectToAction("MinSide", "Account");
         }
 
         [AllowAnonymous]
@@ -361,12 +334,7 @@ namespace Kartverket.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult CorrectionOverview()
-        {
-            return View(positions);
-        }
-
+       
 
     }
 }

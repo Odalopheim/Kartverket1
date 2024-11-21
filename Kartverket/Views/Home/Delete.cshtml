@@ -20,5 +20,5 @@
     @Html.AntiForgeryToken()
     <input type="hidden" asp-for="Id" />
     <button type="submit" class="btn btn-success">Slette</button>
-    <a asp-action="MinSide" class="btn btn-success">Tilbake</a>
+    <a asp-controller="Account" asp-action="MinSide" class="btn btn-success">Tilbake</a>
 </form>

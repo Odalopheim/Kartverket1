@@ -19,7 +19,7 @@
 
     <div class="containerS">
         <div class="left-side">
-            <a asp-action="MinSide" class="btn btn-success">Tilbake</a>
+            <a asp-controller="Account" asp-action="MinSide" class="btn btn-success">Tilbake</a>
             <br />
             <div class="form-group">
                 <label asp-for="Description"></label>
@@ -52,7 +52,6 @@
             <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
         </div>
     </div>
-    <button type="submit" class="btn btn-success">Save Changes</button>
 </form>
 
 @section Scripts {
