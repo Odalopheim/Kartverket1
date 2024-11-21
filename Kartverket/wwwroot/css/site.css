@@ -149,8 +149,9 @@ html, body {
 }
 
 .iWrapper {
-    max-height: 400px; /* Adjust this value as needed */
+    max-height: 500px; /* Adjust this value as needed */
     overflow-y: auto;
+}
 
 .modal {
     display: none; /* Hidden by default */

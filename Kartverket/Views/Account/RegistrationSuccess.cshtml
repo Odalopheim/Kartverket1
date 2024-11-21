@@ -28,13 +28,13 @@
         // When the user clicks the button, close the modal and redirect
         okButton.onclick = function() {
             modal.style.display = "none";
-            window.location.href = '@Url.Action("MinSide", "Home")';
+            window.location.href = '@Url.Action("MinSide", "Account")';
         }
         // When the user clicks anywhere outside of the modal, close it
         window.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = "none";
-                window.location.href = '@Url.Action("MinSide", "Home")';
+                window.location.href = '@Url.Action("MinSide", "Account")';
             }
         }
 
