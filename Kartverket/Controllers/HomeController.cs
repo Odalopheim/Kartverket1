@@ -208,18 +208,7 @@ namespace Kartverket.Controllers
             }
             return View(geoChange);
         }
-        //Får opp innmeldingen når du trykker på den 
-        [HttpGet]
-        public IActionResult Details(int id)
-        {
-            var model = _context.GeoChanges.FirstOrDefault(gc => gc.Id == id);
-            if (model == null)
-            {
-                return NotFound();
-            }
-            return View(model);
-        }
-
+    
         [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -230,6 +219,18 @@ namespace Kartverket.Controllers
 
             _geoChangeService.DeleteGeoChange(id, userId);
             return RedirectToAction("MinSide", "Account");
+        }
+
+        //Får opp innmeldingen når du trykker på den 
+        [HttpGet]
+        public IActionResult Details(int id)
+        {
+            var model = _context.GeoChanges.FirstOrDefault(gc => gc.Id == id);
+            if (model == null)
+            {
+                return NotFound();
+            }
+            return View(model);
         }
 
         [AllowAnonymous]
