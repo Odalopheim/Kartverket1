@@ -2,63 +2,46 @@
     ViewData["Title"] = "Registration Success";
 }
 
-
-<!-- Modal HTML -->
-<div id="successModal" class="modal">
-    <div class="modal-content">
-        <p class ="green-text">Brukeren din er registrert!</p>
-        <button id="okButton" class="btn btn-success">OK</button>
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <!-- Inkludere site.css -->
+    <link rel="stylesheet" type="text/css" href="/css/site.css">
+</head>
+<body>
+    <!-- Modal HTML -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <p class ="green-text">Brukeren din er registrert!</p>
+            <button id="okButton" class="btn btn-success">OK</button>
+        </div>
     </div>
-</div>
 
-<!-- Modal CSS -->
-<style>
-    .modal {
-        display: none; /* Hidden by default */
-        position: fixed; /* Stay in place */
-        z-index: 1; /* Sit on top */
-        left: 0;
-        top: 0;
-        width: 100%; /* Full width */
-        height: 100%; /* Full height */
-        overflow: auto; /* Enable scroll if needed */
-        background-color: rgb(0,0,0); /* Fallback color */
-        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-    }
-    .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto; /* 15% from the top and centered */
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%; /* Could be more or less, depending on screen size */
-        text-align: center;
-    }
+    <!-- Modal JavaScript -->
+    <script>
+        // Get the modal
+        var modal = document.getElementById("successModal");
     
-</style>
+        // Get the button that closes the modal
+        var okButton = document.getElementById("okButton");
 
-<!-- Modal JavaScript -->
-<script>
-    // Get the modal
-    var modal = document.getElementById("successModal");
-    
-    // Get the button that closes the modal
-    var okButton = document.getElementById("okButton");
-
-    // When the user clicks the button, close the modal and redirect
-    okButton.onclick = function() {
-        modal.style.display = "none";
-        window.location.href = '@Url.Action("MinSide", "Home")';
-    }
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-        if (event.target == modal) {
+        // When the user clicks the button, close the modal and redirect
+        okButton.onclick = function() {
             modal.style.display = "none";
             window.location.href = '@Url.Action("MinSide", "Home")';
         }
-    }
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                window.location.href = '@Url.Action("MinSide", "Home")';
+            }
+        }
 
-    // Show the modal when the page loads
-    window.onload = function() {
-        modal.style.display = "block";
-    }
-</script>
+        // Show the modal when the page loads
+        window.onload = function() {
+            modal.style.display = "block";
+        }
+    </script>
+</body> 
+</html>
