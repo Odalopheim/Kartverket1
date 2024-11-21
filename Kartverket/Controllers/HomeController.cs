@@ -186,32 +186,7 @@ namespace Kartverket.Controllers
 
             return View(geoChange);
         }
-        [Authorize]
-        public async Task<IActionResult> MinSide()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user==null)
-            {
-                return NotFound("Bruker ikke funnet");
-            }
-            var userDetails = await _context.UserDetails.FirstOrDefaultAsync(u=> u.UserId == user.Id);
-            var geoChanges = await _context.GeoChanges
-                .Where(g => g.UserId == user.Id)
-                .ToListAsync();
-            var model = new MinSideViewModel
-            {
-                RegistrerViewModel = new RegistrerViewModel
-                {
-                    Name = userDetails?.Name,
-                    Email = user.Email,
-                    Address = userDetails?.Address,
-                    PostNumber = userDetails?.PostNumber
-
-                },
-                GeoChange = geoChanges
-            };
-            return View(model);
-        }
+       
 
         [Authorize]
         [HttpPost]
