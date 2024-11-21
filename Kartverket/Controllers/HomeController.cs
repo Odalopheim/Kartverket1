@@ -372,6 +372,13 @@ namespace Kartverket.Controllers
 
 
 
+        //søkefunskjon for saksbehandlere
+        public IActionResult SearchGeoChanges(DateTime? fromDate, DateTime? toDate, GeoChangeCategory? category)
+        {
+            var geoChanges = _geoChangeService.SearchGeoChanges(fromDate, toDate, category);
+            return View("Saksbehandler", geoChanges);
+        }
+
 
 
         public IActionResult Privacy()
