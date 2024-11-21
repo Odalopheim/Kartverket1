@@ -99,25 +99,6 @@
             document.getElementById('geoJsonInput').value = geoJsonString;
         });
 
-        // Zoom-funksjoner
-        function zoomIn() {
-            map.zoomIn();
-        }
-
-        function zoomOut() {
-            map.zoomOut();
-        }
-
-        // Funksjon for å vise/gjemme custom kategori
-        function checkCustomCategory() {
-            var categorySelect = document.getElementById('category');
-            var customCategoryInput = document.getElementById('customCategory');
-            if (categorySelect.value === 'Custom') {
-                customCategoryInput.style.display = 'block';
-            } else {
-                customCategoryInput.style.display = 'none';
-            }
-        }
 
         // Legg til søkefunksjon
         L.Control.geocoder({
