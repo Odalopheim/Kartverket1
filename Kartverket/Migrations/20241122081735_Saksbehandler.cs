@@ -4,10 +4,8 @@
 
 namespace Kartverket.Migrations
 {
-    /// <inheritdoc />
     public partial class Saksbehandler : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<int>(
@@ -19,17 +17,16 @@ namespace Kartverket.Migrations
                 oldType: "longtext")
                 .OldAnnotation("MySql:CharSet", "utf8mb4");
 
-            //Oppdaterer Saksbehandler til å være nullable
-            //håndterer konverteringen fra en tom string til NULL i databasen
+            // Oppdaterer Saksbehandler til å være nullable
+            // håndterer konverteringen fra en tom string til NULL i databasen
             migrationBuilder.Sql(
                 @"
-                UPDATE GeoCHanges
+                UPDATE GeoChanges
                 SET Saksbehandler = NULL
-                WHERE Saksbehandler = '')
+                WHERE Saksbehandler = ''
                 ");
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.UpdateData(
@@ -49,12 +46,12 @@ namespace Kartverket.Migrations
                 oldNullable: true)
                 .Annotation("MySql:CharSet", "utf8mb4");
 
-            //Tilbakestiller Saksbehandler til å være nullable
-            //Håndterer konfertering fra tom string til NULL i databasen
+            // Tilbakestiller Saksbehandler til å være nullable
+            // Håndterer konvertering fra tom string til NULL i databasen
             migrationBuilder.Sql(
             @"
             UPDATE GeoChanges
-            SET Saksbehandler =''
+            SET Saksbehandler = ''
             WHERE Saksbehandler IS NULL
             ");
         }
