@@ -3,24 +3,29 @@ using System.Collections.Generic;
 using System.Data;
 using Kartverket.Models;
 using System;
+using Microsoft.Extensions.Logging;
+using Kartverket.Controllers;
+using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 
 namespace Kartverket.Data
 {
     public class GeoChangeService
     {
         private readonly IDbConnection _dbConnection;
+        private readonly ILogger<GeoChangeService> _logger;
 
-        public GeoChangeService(IDbConnection dbConnection)
+        public GeoChangeService(IDbConnection dbConnection, ILogger<GeoChangeService> logger)
         {
             _dbConnection = dbConnection;
+            _logger = logger;
         }
 
         // Inserts a new record into the GeoChanges table
-        public void AddGeoChange(string description, string geoJson, string userId, GeoChangeStatus status, GeoChangeCategory category, string saksbehandler)
+        public void AddGeoChange(string description, string geoJson, string userId, GeoChangeStatus status, GeoChangeCategory category)
         {
-            string query = @"INSERT INTO GeoChanges (Description, GeoJson, UserId, Status, CreatedDate, Category, Saksbehandler) 
-                             VALUES (@Description, @GeoJson, @UserId, @Status, @CreatedDate, @Category, @Saksbehandler)";
-            _dbConnection.Execute(query, new { Description = description, GeoJson = geoJson, UserId = userId, Status = status, CreatedDate = DateTime.Now, Category = category, Saksbehandler = saksbehandler });
+            string query = @"INSERT INTO GeoChanges (Description, GeoJson, UserId, Status, CreatedDate, Category) 
+                             VALUES (@Description, @GeoJson, @UserId, @Status, @CreatedDate, @Category)";
+            _dbConnection.Execute(query, new { Description = description, GeoJson = geoJson, UserId = userId, Status = status, CreatedDate = DateTime.Now, Category = category });
         }
 
         // Retrieves all records from the GeoChanges table for a specific user
@@ -38,13 +43,18 @@ namespace Kartverket.Data
         }
 
         // Updates an existing GeoChange record in the database based on Id and UserId
-        public void UpdateGeoChange(int id, string description, string geoJson, string userId, GeoChangeStatus status, GeoChangeCategory category, string saksbehandler)
+        public void UpdateGeoChange(int id, string description, string geoJson, string userId, GeoChangeStatus status, GeoChangeCategory category)
         {
             string query = @"UPDATE GeoChanges 
-                     SET Description = @Description, GeoJson = @GeoJson, Status = @Status, Category = @Category, Saksbehandler = @Saksbehandler 
+                     SET Description = @Description, GeoJson = @GeoJson, Status = @Status, Category = @Category 
                      WHERE Id = @Id AND UserId = @UserId";
-            _dbConnection.Execute(query, new { Id = id, Description = description, GeoJson = geoJson, UserId = userId, Status = status, Category = category, Saksbehandler = saksbehandler });
+
+            _logger.LogInformation("Executing query: " + query);
+            _logger.LogInformation($"Parameters - Id: {id}, Description: {description}, GeoJson: {geoJson}, UserId: {userId}, Status: {status}, Category: {category}");
+
+            _dbConnection.Execute(query, new { Id = id, Description = description, GeoJson = geoJson, UserId = userId, Status = status, Category = category });
         }
+
 
 
         // Deletes an existing GeoChange record based on its Id and UserId

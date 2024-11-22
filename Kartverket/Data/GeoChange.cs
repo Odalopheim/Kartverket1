@@ -19,7 +19,6 @@ namespace Kartverket.Data
         public string UserId { get; set; }
         public GeoChangeStatus Status { get; set; }
         [Required] public DateTime CreatedDate { get; set; } = DateTime.Now; // Automatisk dato ved opprettelse
-        public string Saksbehandler { get; set; } 
         public GeoChangeCategory Category {  get; set; } 
     } 
     public enum GeoChangeStatus 
@@ -45,6 +44,7 @@ namespace Kartverket.Data
         [Display(Name = "Annet")]
         Annet
     }
+
 
 
 }
