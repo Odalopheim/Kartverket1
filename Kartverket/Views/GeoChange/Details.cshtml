@@ -14,7 +14,7 @@
 
     <!-- Detaljert informasjon til høyre -->
     <div style="flex: 1; background-color: #F3F0F0; padding: 20px;">
-        <h2 style="color:#1A833B">Innmelding</h2>
+        <h2 class="green-text">Innmelding</h2>
 
         <p><strong>Dato:</strong> @Model.CreatedDate.ToString("dd.MM.yyyy")</p>
         <p><strong>ID:</strong> @Model.Id</p>
@@ -33,8 +33,8 @@
 
         <br />
         <a asp-controller="Account" asp-action="MinSide" class="btn btn-success">Tilbake</a>
-        <a asp-controller="Home" asp-action="Edit" asp-route-id="@Model.Id" class="text-success">Endre</a> |
-        <a asp-controller="Home" asp-action="Delete" asp-route-id="@Model.Id" class="text-success">Slette</a>
+        <a asp-controller="GeoChange" asp-action="Edit" asp-route-id="@Model.Id" class="text-success">Endre</a> |
+        <a asp-controller="GeoChange" asp-action="Delete" asp-route-id="@Model.Id" class="text-success">Slette</a>
     </div>
 </div>
 @section Scripts {
