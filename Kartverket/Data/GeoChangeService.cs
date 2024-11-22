@@ -6,6 +6,7 @@ using System;
 using Microsoft.Extensions.Logging;
 using Kartverket.Controllers;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
+using System.Collections;
 
 namespace Kartverket.Data
 {
@@ -65,7 +66,7 @@ namespace Kartverket.Data
         }
 
         //Søkefunskjon for saksbehandlere
-        public IEnumerable<GeoChange> SearchGeoChanges(DateTime? fromDate, DateTime? toDate, GeoChangeCategory? category)
+        public IEnumerable SearchGeoChanges(DateTime? fromDate, DateTime? toDate, GeoChangeCategory? category)
         {
             string query = @"SELECT * FROM GeoChanges WHERE 1=1";
 
@@ -84,7 +85,7 @@ namespace Kartverket.Data
                 query += " AND Category = @Category";
             }
 
-            return _dbConnection.Query<GeoChange>(query, new { FromDate = fromDate, ToDate = toDate, Category = category });
+            return _dbConnection.Query(query, new { FromDate = fromDate, ToDate = toDate, Category = category });
         }
 
     }
