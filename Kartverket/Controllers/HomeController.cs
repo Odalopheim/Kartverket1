@@ -125,12 +125,12 @@ namespace Kartverket.Controllers
                 var user = await _userManager.GetUserAsync(User);
                 var userId = user.Id;
 
-                // Sett standardverdier for status og saksbehandler
+                // Sett standardverdier for status 
                 var status = GeoChangeStatus.SendtInn;
-                var saksbehandler = string.Empty;
+               
 
                 // Save to the database using Dapper
-                _geoChangeService.AddGeoChange(description, geoJson, userId, status, category, saksbehandler);
+                _geoChangeService.AddGeoChange(description, geoJson, userId, status, category);
 
                 return RedirectToAction("MinSide", "Account");
             }
@@ -142,30 +142,39 @@ namespace Kartverket.Controllers
         }
 
         [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> Edit(int id)
-        {
-            _logger.LogInformation($"Edit GET action called with id={id}");
+[HttpGet]
+public async Task<IActionResult> Edit(int id)
+{
+    _logger.LogInformation($"Edit GET action called with id={id}");
 
-            var user = await _userManager.GetUserAsync(User);
-            var userId = user.Id;
+    var user = await _userManager.GetUserAsync(User);
+    var userId = user.Id;
 
-            var geoChange = _geoChangeService.GetGeoChangeById(id, userId);
-            if (geoChange == null)
-            {
-                _logger.LogWarning($"GeoChange with id={id} not found for userId={userId}");
-                return NotFound();
-            }
+    var geoChange = _geoChangeService.GetGeoChangeById(id, userId);
+    if (geoChange == null)
+    {
+        _logger.LogWarning($"GeoChange with id={id} not found for userId={userId}");
+        return NotFound();
+    }
 
-            return View(geoChange);
-        }
-       
+    // Logg GeoJson-dataen
+    if (string.IsNullOrWhiteSpace(geoChange.GeoJson))
+    {
+        _logger.LogWarning("GeoJson-data is missing.");
+    }
+    else
+    {
+        _logger.LogInformation($"GeoJson data: {geoChange.GeoJson}");
+    }
+
+    return View(geoChange);
+}
 
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Edit(GeoChange model)
         {
-            // Remove validation for UserId since it is set programmatically
+            // Remove validation for UserId since it can be null
             ModelState.Remove("UserId");
 
             if (ModelState.IsValid)
@@ -174,19 +183,42 @@ namespace Kartverket.Controllers
 
                 if (geoChange == null)
                 {
+                    _logger.LogWarning("GeoChange not found");
                     return NotFound();
                 }
 
+                _logger.LogInformation("Updating GeoChange with Id: " + model.Id);
+
+                // Oppdater geoChange med nye verdier
                 geoChange.Description = model.Description;
-                geoChange.GeoJson = model.GeoJson;
                 geoChange.Category = model.Category;
                 geoChange.Status = model.Status;
-                geoChange.Saksbehandler = model.Saksbehandler;
 
-                _context.Update(geoChange);
-                await _context.SaveChangesAsync();
+                // Behold den eksisterende GeoJson-dataen
+                geoChange.GeoJson = model.GeoJson ?? geoChange.GeoJson;
+               
+
+                // Kall UpdateGeoChange i tjenesten
+                _geoChangeService.UpdateGeoChange(
+                    geoChange.Id,
+                    geoChange.Description,
+                    geoChange.GeoJson,
+                    geoChange.UserId,
+                    geoChange.Status,
+                    geoChange.Category
+                );
+
+                _logger.LogInformation("GeoChange updated successfully");
 
                 return RedirectToAction("MinSide", "Account");
+            }
+            else
+            {
+                _logger.LogWarning("ModelState is invalid");
+                foreach (var state in ModelState)
+                {
+                    _logger.LogWarning($"{state.Key}: {string.Join(", ", state.Value.Errors.Select(e => e.ErrorMessage))}");
+                }
             }
 
             return View(model);

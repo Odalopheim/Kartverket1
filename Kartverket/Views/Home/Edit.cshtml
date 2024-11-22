@@ -17,9 +17,12 @@
     <!-- Hidden input for UserId -->
     <input type="hidden" asp-for="UserId" />
 
+    <!-- Hidden input for GeoJson -->
+    <input type="hidden" asp-for="GeoJson" />
+
     <div class="containerS">
         <div class="left-side">
-            <a asp-controller="Account" asp-action="MinSide" class="btn btn-success">Tilbake</a>
+            <a asp-action="MinSide" class="btn btn-success">Tilbake</a>
             <br />
             <div class="form-group">
                 <label asp-for="Description"></label>
@@ -28,14 +31,7 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="GeoJson"></label>
-                <textarea asp-for="GeoJson" class="form-control" id="geoJsonInput"></textarea>
-                <span asp-validation-for="GeoJson" class="text-danger"></span>
-            </div>
-
-
-            <div class="form-group">
-                <label for="Category">Kategori</label>
+                <label asp-for="Category">Kategori</label>
                 <select asp-for="Category" class="form-control">
                     <option value="Stedsnavn">Stedsnavn</option>
                     <option value="Veinavn">Veinavn</option>
