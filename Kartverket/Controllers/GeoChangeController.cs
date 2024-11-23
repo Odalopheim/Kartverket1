@@ -126,6 +126,86 @@ namespace Kartverket.Controllers
             }
             return View(model);
         }
+
+        [AllowAnonymous]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> Saksbehandler()
+        {
+            var geoChanges = await _context.GeoChanges.ToListAsync();
+            return View(geoChanges);
+        }
+        
+
+        //søkefunskjon for saksbehandlere
+        public IActionResult SearchGeoChanges(DateTime? fromDate, DateTime? toDate, GeoChangeCategory? category)
+        {
+            var geoChanges = _geoChangeService.SearchGeoChanges(fromDate, toDate, category);
+            return View("Saksbehandler", geoChanges);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Update(int id)
+        {
+            var geoChange = await _context.GeoChanges.FindAsync(id);
+            if (geoChange == null)
+            {
+                
+                return NotFound();
+            }
+            return View(geoChange);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(GeoChange model)
+        {
+            ModelState.Remove("UserId");
+            if (ModelState.IsValid)
+            {
+                var geoChange = await _context.GeoChanges.FirstOrDefaultAsync(g => g.Id == model.Id);
+
+                if (geoChange == null)
+                {
+                    _logger.LogWarning("GeoChange not found");
+                    return NotFound();
+                }
+
+                _logger.LogInformation("Updating GeoChange with Id: " + model.Id);
+
+                geoChange.Category = model.Category;
+                geoChange.Status = model.Status;
+                geoChange.Description = model.Description;
+                geoChange.GeoJson = model.GeoJson ?? geoChange.GeoJson;
+                geoChange.Id = model.Id;
+
+                // Kall UpdateGeoChange i tjenesten
+                _geoChangeService.UpdateGeoChangeAdmin(
+                    
+                    geoChange.Id,
+                    geoChange.Status,
+                    geoChange.Category
+                );
+                
+                return RedirectToAction("Saksbehandler", "GeoChange");
+            }
+            else
+            {
+                _logger.LogWarning("Modelstate is invalid");
+                foreach (var state in ModelState)
+                {
+                    _logger.LogWarning($"{state.Key}: {string.Join(", ", state.Value.Errors.Select(e => e.ErrorMessage))}");
+                }
+            }
+            return View(model);
+        }
+
+
+
+
     }
 
 }
