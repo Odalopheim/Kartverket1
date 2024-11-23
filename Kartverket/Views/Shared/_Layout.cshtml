@@ -4,7 +4,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Kartverket</title>
-   @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
     <link rel="stylesheet" href="~/Kartverket.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/mycsstheme.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -13,14 +12,12 @@
     <header>
         <nav class="navbar navbar-expand-lg bg-light" data-bs-theme="light">
             <div class="container-fluid">
-                <a class="navbar-brand" style="color: black" asp-controller="Home" asp-action="Index"><img src="/images/Kartverket Logo40 .png" alt="Logo">Kartverket</a> <!--byttet farge og gjorde trykkbar til forside-->
+                <a class="navbar-brand" style="color: black" asp-controller="Home" asp-action="Index"><img src="/images/Kartverket Logo40 .png" alt="Logo">Kartverket</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarColor03">
                     <ul class="navbar-nav me-auto">
-                       
-          
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="GeoChange" asp-action="RegisterAreaChange">Ny Innmelding</a>
                         </li>
@@ -28,7 +25,6 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Account" asp-action="MinSide">Min Side</a>
                         </li>
-          
                     </ul>
                     <!-- Authentication Links -->
                     <ul class="navbar-nav ms-auto">
@@ -52,24 +48,19 @@
                         }
                     </ul>
                     <!-- Meny bar -->
-                    
-                    <ul class="nav-item ms-auto"> <!-- flytte meny til høyre-->
+                    <ul class="nav-item ms-auto">
                         <li class="nav-item dropdown green-text">
                             <a class="nav-link dropdown-toggle text-success" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="true">
-                                MENY<img src="/images/MenyBar40.png" alt="MENY"></a>
+                                MENY<img src="/images/MenyBar40.png" alt="MENY">
+                            </a>
                             <div class="dropdown-menu dropdown-menu-end">
                                 <a class="dropdown-item green-text" asp-controller="GeoChange" asp-action="RegisterAreaChange">Ny innmelding</a>
-                                <a class="dropdown-item green-text" asp-controller="GeoChange" asp-action="Saksbehandler">For Ansatte</a>
-                             
-                               
                             </div>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
-         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-        <link href="~/lib/leaflet/leaflet.css" rel="stylesheet" />
     </header>
     <div class="container">
         <main role="main" class="pb-3">
@@ -86,9 +77,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/bootstrap.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-   @* <a href="c:\users\odalo\source\repos\kartverket\kartverket\views\home\privacy.cshtml"> c:\users\odalo\source\repos\kartverket\kartverket\views\home\privacy.cshtml</a>*@
-      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <script src="~/lib/leaflet/leaflet.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

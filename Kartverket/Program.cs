@@ -12,7 +12,7 @@ using Microsoft.CodeAnalysis;
 var builder = WebApplication.CreateBuilder(args);
 
 // Legg til logging-tjenester
-builder.Logging.ClearProviders(); 
+builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
@@ -75,7 +75,7 @@ builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSet
 builder.Services.AddHttpClient<IKommuneInfoService, KommuneInfoService>();
 builder.Services.AddHttpClient<IStedsnavnService, StedsnavnService>();
 
-var app = builder.Build();
+var app = builder.Build(); // Flytt app-deklarasjon før SeedRolesAsync
 
 // Apply migrations at startup with retry logic
 using (var scope = app.Services.CreateScope())
@@ -108,10 +108,11 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-if (!app.Environment.IsDevelopment())
+// Initialiser roller og brukere etter at app er opprettet
+using (var serviceScope = app.Services.CreateScope())
 {
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
+    var serviceProvider = serviceScope.ServiceProvider;
+    await RoleInitializer.SeedRolesAsync(serviceProvider);
 }
 
 // Henter og logger MariaDB-versjon
