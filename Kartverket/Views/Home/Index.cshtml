@@ -4,58 +4,49 @@
     ViewData["Title"] = "Home Page";
 }
 
-@*<div class="text-center">
-    <h1 class="display-4">Rett i Kartet</h1>
-    <br />
-    <a asp-controller="Home" asp-action="RegistrationForm" style="background-color: #008000" class="btn btn-success ">Registrer nå</a>
-    <hr />
-    <a asp-controller="Home" asp-action="RegisterAreaChange" class="text-info">Eller fortsett som gjest</a>
-    @Model 
-</div>*@
-
-<div style="display: flex; justify-content: space-between; height: auto; padding: 20px  padding: 20px; margin-right: 10px;">
-    <div style="position: absolute; top: 0; left: 0; right: 0; height: 70vh; background-image: url('/images/BakrunsbildeForNå.jpg'); background-size: cover; z-index: -1;"> </div>
+<div class="flex-container2">
+    <div class="bg-image"></div>
    
-    <div style="flex: 1; background-color: #F3F0F0;  padding: 20px; margin-right: 10px; margin-top: 200px;">
+    <div class="panel">
         <h2 class="green-text">
-            <img src="/images/Eiendom-removebg-preview (1).png" style="width: 50px; height: auto; vertical-align: middle;"> Eiendom</h2>
+            <img src="/images/Eiendom-removebg-preview (1).png"> Eiendom</h2>
         <hr />
-        <a asp-controller="Home" style="color:black; text-decoration:none;">Tinglyse skjøte</a>
+        <a asp-controller="Home">Tinglyse skjøte</a>
         <hr />
-        <a asp-controller="Home" style="color:black; text-decoration:none;">Arv,skifte og uskifte</a>
+        <a asp-controller="Home">Arv,skifte og uskifte</a>
         <hr />
-        <a asp-controller="Home" style="color:black; text-decoration:none;">Eiendomsgrenser</a>
+        <a asp-controller="Home">Eiendomsgrenser</a>
         <hr />
     </div>
 
     
-    <div style="flex: 1; background-color: #F3F0F0; padding: 20px; margin-right: 10px; margin-top: 200px; ">
-        <a href="https://www.kartverket.no/til-lands" style="text-decoration:none;">
+    <div class="panel">
+        <a href="https://www.kartverket.no/til-lands" class="text-decoration:none;">
             <h2 class="green-text">
-                <img src="/images/TilLands-removebg-preview.png" style="width: 50px; height: auto; vertical-align: middle;">Til lands
+                <img src="/images/TilLands-removebg-preview.png">Til lands
             </h2>
         </a>
         <hr />
-        <a href="https://www.kartverket.no/til-lands/kart/turkart" style="color:black; text-decoration:none;">Turkart</a>
+        <a href="https://www.kartverket.no/til-lands/kart/turkart">Turkart</a>
         <hr />
-        <a asp-controller="Account" asp-action="Login" style="color:black; text-decoration:none;">Rett i kartet</a>
+        <a asp-controller="Account" asp-action="Login">Rett i kartet</a>
         <hr />
-        <a asp-controller="Home" style="color:black; text-decoration:none;">Stedsnavn</a>
+        <a asp-controller="Home">Stedsnavn</a>
         <hr />
     </div>
 
-    <div style="flex: 1; background-color: #F3F0F0; padding: 20px; margin-top: 200px;">
+    <div class="panel">
         <h2 class="green-text">
-            <img src="/images/TilSjøs-removebg-preview.png" style="width: 50px; height: auto; vertical-align: middle;">Til sjøs
+            <img src="/images/TilSjøs-removebg-preview.png">Til sjøs
         </h2>
         <hr />
-        <a href="https://www.kartverket.no/til-sjos/se-havniva" style="color:black; text-decoration:none;">Se havnivået og tidevannet</a>
+        <a href="https://www.kartverket.no/til-sjos/se-havniva">Se havnivået og tidevannet</a>
         <hr />
-        <a asp-controller="Home" style="color:black; text-decoration:none;">Sjøkart</a>
+        <a asp-controller="Home">Sjøkart</a>
         <hr />
-        <a asp-controller="Home" style="color:black; text-decoration:none;">Rettelser til sjøkart (Efs)</a>
+        <a asp-controller="Home">Rettelser til sjøkart (Efs)</a>
         <hr />
-        <a asp-controller="Home" style="color:black; text-decoration:none;">Det norske los</a>
+        <a asp-controller="Home">Det norske los</a>
     </div>
 </div>
 
