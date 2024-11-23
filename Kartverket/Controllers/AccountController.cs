@@ -41,7 +41,6 @@ namespace Kartverket.Controllers
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 if (user != null)
                 {
-                    // Logg informasjon om brukeren som ble funnet
                     _logger.LogInformation($"User found: {user.Email}, NormalizedEmail: {user.NormalizedEmail}");
 
                     var result = await _signInManager.PasswordSignInAsync(
@@ -53,18 +52,26 @@ namespace Kartverket.Controllers
                     if (result.Succeeded)
                     {
                         _logger.LogInformation($"Login succeeded for user {user.Email}");
-                        return RedirectToAction("MinSide", "Account");
+
+                        // Sjekk om brukerens e-post har @kartverket.no (saksbehandler)
+                        if (user.Email.EndsWith("@kartverket.no", StringComparison.OrdinalIgnoreCase))
+                        {
+                            _logger.LogInformation($"User {user.Email} is from kartverket.no (Saksbehandler).");
+                            return RedirectToAction("Saksbehandler", "Saksbehandler");  // Omdirigering til saksbehandler-dashboard
+                        }
+
+                        // Hvis ikke, kan du omdirigere til en generell bruker-skjerm
+                        _logger.LogInformation($"User {user.Email} is not a Saksbehandler.");
+                        return RedirectToAction("MinSide", "Account");  // Generell bruker-side
                     }
                     else
                     {
-                        // Logg at innlogging mislyktes
                         _logger.LogWarning($"Login failed for user {user.Email}");
                         ModelState.AddModelError("", "Invalid login attempt.");
                     }
                 }
                 else
                 {
-                    // Logg at brukeren ikke ble funnet
                     _logger.LogWarning($"User with email {model.Email} not found.");
                     ModelState.AddModelError("", "Invalid login attempt.");
                 }
@@ -73,7 +80,8 @@ namespace Kartverket.Controllers
         }
 
 
-        
+
+
 
         // POST: /Account/Logout
         [HttpPost]
@@ -97,11 +105,15 @@ namespace Kartverket.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = model.Email, Email = model.Email }; // Bruk e-post som brukernavn
+                // Create a new IdentityUser with the email as username
+                var user = new IdentityUser { UserName = model.Email, Email = model.Email };
+
+                // Create the user with the provided password
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
                 {
+                    // Add additional user details (this assumes you have a UserDetails model and the relevant DbContext)
                     var userDetails = new UserDetails
                     {
                         UserId = user.Id,
@@ -113,17 +125,35 @@ namespace Kartverket.Controllers
                     _context.UserDetails.Add(userDetails);
                     await _context.SaveChangesAsync();
 
+                    // Assign the user to a default role
+                    var roleResult = await _userManager.AddToRoleAsync(user, "Bruker"); // or "Saksbehandler", depending on your logic
+
+                    if (!roleResult.Succeeded)
+                    {
+                        // Log an error if the role assignment fails
+                        foreach (var error in roleResult.Errors)
+                        {
+                            ModelState.AddModelError("", error.Description);
+                        }
+                    }
+
+                    // Sign in the user after registration
                     await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    // Redirect to a success page
                     return RedirectToAction("RegistrationSuccess");
                 }
                 else
                 {
+                    // If user creation fails, add the errors to the ModelState
                     foreach (var error in result.Errors)
                     {
                         ModelState.AddModelError("", error.Description);
                     }
                 }
             }
+
+            // If ModelState is invalid, return the view with error messages
             return View(model);
         }
 
