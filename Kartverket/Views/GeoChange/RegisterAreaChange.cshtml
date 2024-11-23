@@ -63,30 +63,24 @@
 @section Scripts {
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
-
-    <!-- Leaflet Control Geocoder CSS og JS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
     <script>
-        // Initialiser kartet med senter i Kristiansand
         var map = L.map('map').setView([58.1467, 7.9956], 15);
 
-        // Definer kartlagene
+        
         var topoLayer = L.tileLayer('https://cache.kartverket.no/v1/wmts/1.0.0/topo/default/webmercator/{z}/{y}/{x}.png', {
             attribution: '&copy; <a href="http://www.kartverket.no/">Kartverket</a>'
         });
-
         var grayLayer = L.tileLayer('https://cache.kartverket.no/v1/wmts/1.0.0/topograatone/default/webmercator/{z}/{y}/{x}.png', {
             attribution: '&copy; <a href="http://www.kartverket.no/">Kartverket</a>'
         });
 
-        // Legg til topografisk kart som standard
         topoLayer.addTo(map);
 
-        // Legg til lagkontroll for å bytte mellom kartlagene
         var baseMaps = {
             "Topografisk kart": topoLayer,
             "Grått kart": grayLayer
@@ -94,7 +88,6 @@
 
         L.control.layers(baseMaps).addTo(map);
 
-        // Legg til feature group for tegning
         var drawnItems = new L.FeatureGroup();
         map.addLayer(drawnItems);
 
@@ -121,7 +114,6 @@
         });
 
 
-        // Legg til søkefunksjon
         L.Control.geocoder({
             defaultMarkGeocode: false
         })
@@ -138,12 +130,11 @@
             var geoJsonInput = document.getElementById('geoJsonInput').value;
 
             if (!category || !description || !geoJsonInput) {
-                // Vis modal dialogboks
                 var modal = document.getElementById("validationModal");
                 modal.style.display = "block";
-                return false; // Forhindre innsending
+                return false; 
             }
-            return true; // Tillat innsending
+            return true; 
         }
 
         // Legg til event listener på skjemaet

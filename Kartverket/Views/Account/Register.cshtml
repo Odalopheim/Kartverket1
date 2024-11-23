@@ -10,35 +10,33 @@
         <form asp-action="Register" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <!-- Registrer Name -->
             <div>
                 <label asp-for="Name"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
-            <!-- Registrer Address -->
+
             <div>
                 <label asp-for="Address"></label>
                 <input asp-for="Address" class="form-control" />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
 
-            <!-- Registrer PostNumber -->
+
             <div>
                 <label asp-for="PostNumber"></label>
                 <input asp-for="PostNumber" class="form-control" />
                 <span asp-validation-for="PostNumber" class="text-danger"></span>
             </div>
 
-            <!-- Registrer Email -->
+
             <div>
                 <label asp-for="Email"></label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
 
-            <!-- Registrer Password -->
             <div>
                 <label asp-for="Password"></label>
                 <div class="input-group">
@@ -52,7 +50,7 @@
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
 
-            <!-- Bekreft Passord -->
+         
             <div>
                 <label asp-for="ConfirmPassword"></label>
                 <div class="input-group">
@@ -77,7 +75,7 @@
 }
 
 <script>
-    // Toggle password visibility
+
     document.getElementById("togglePassword").addEventListener("click", function() {
         var passwordField = document.getElementById("Password");
         var passwordIcon = document.getElementById("password-icon");
@@ -92,7 +90,7 @@
         }
     });
 
-    // Toggle confirm password visibility
+
     document.getElementById("toggleConfirmPassword").addEventListener("click", function() {
         var confirmPasswordField = document.getElementById("ConfirmPassword");
         var confirmPasswordIcon = document.getElementById("confirm-password-icon");

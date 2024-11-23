@@ -44,7 +44,7 @@ namespace Kartverket.Controllers
                     _logger.LogInformation($"User found: {user.Email}, NormalizedEmail: {user.NormalizedEmail}");
 
                     var result = await _signInManager.PasswordSignInAsync(
-                        userName: user.Email, // Bruk e-post som brukernavn
+                        userName: user.Email,
                         password: model.Password,
                         isPersistent: false,
                         lockoutOnFailure: false);
@@ -54,15 +54,15 @@ namespace Kartverket.Controllers
                         _logger.LogInformation($"Login succeeded for user {user.Email}");
 
                         // Sjekk om brukerens e-post har @kartverket.no (saksbehandler)
-                        if (user.Email.EndsWith("@kartverket.no", StringComparison.OrdinalIgnoreCase))
+                        if (user.Email.EndsWith("@Kartverket.no", StringComparison.OrdinalIgnoreCase))
                         {
                             _logger.LogInformation($"User {user.Email} is from kartverket.no (Saksbehandler).");
-                            return RedirectToAction("Saksbehandler", "Saksbehandler");  // Omdirigering til saksbehandler-dashboard
+                            return RedirectToAction("Saksbehandler", "Saksbehandler");  
                         }
 
                         // Hvis ikke, kan du omdirigere til en generell bruker-skjerm
                         _logger.LogInformation($"User {user.Email} is not a Saksbehandler.");
-                        return RedirectToAction("MinSide", "Account");  // Generell bruker-side
+                        return RedirectToAction("MinSide", "Account");  
                     }
                     else
                     {
@@ -126,21 +126,18 @@ namespace Kartverket.Controllers
                     await _context.SaveChangesAsync();
 
                     // Assign the user to a default role
-                    var roleResult = await _userManager.AddToRoleAsync(user, "Bruker"); // or "Saksbehandler", depending on your logic
+                    var roleResult = await _userManager.AddToRoleAsync(user, "Bruker"); 
 
                     if (!roleResult.Succeeded)
                     {
-                        // Log an error if the role assignment fails
                         foreach (var error in roleResult.Errors)
                         {
                             ModelState.AddModelError("", error.Description);
                         }
                     }
 
-                    // Sign in the user after registration
                     await _signInManager.SignInAsync(user, isPersistent: false);
 
-                    // Redirect to a success page
                     return RedirectToAction("RegistrationSuccess");
                 }
                 else
