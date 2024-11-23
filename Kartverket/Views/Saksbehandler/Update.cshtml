@@ -7,7 +7,7 @@
 
 <h2>Oppdater Innmelding</h2>
 
-<form asp-controller="GeoChange" asp-action="Update" method="post">
+<form asp-action="Update" method="post">
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -49,7 +49,7 @@
                 <select asp-for="Status" class="form-control">
                     <option value="SendtInn">SendtInn</option>
                     <option value="Godtatt">Godtatt</option>
-                    <option value="Under behandling">Under behandling</option>
+                    <option value="Behandles">Behandles</option>
                     <option value="Fullført">Fullført</option>
                     <option value="Avvist">Avvist</option>
                 </select>
@@ -62,7 +62,6 @@
         <div class="right-side">
             <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
         </div>
-    </div>
 </form>
 
 @section Scripts {
