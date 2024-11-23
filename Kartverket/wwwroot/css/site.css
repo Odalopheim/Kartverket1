@@ -267,3 +267,33 @@ html, body {
     border: none;
     padding: 0;
 }
+
+.flex-container3 {
+    display: flex;
+    height: 100vh;
+}
+
+.left-panel {
+    flex: 2;
+    position: relative;
+}
+
+.map-small {
+    height: 90%;
+}
+
+.map-custom {
+    height: 400px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.map-column {
+    width: 48%;
+    height: 100%;
+}
+
+.map-custom2 {
+    height: 400px;
+    width: 100%;
+}
