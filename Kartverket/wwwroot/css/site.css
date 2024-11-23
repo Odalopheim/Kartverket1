@@ -38,7 +38,7 @@ main{
     width: 100%;
 }
 
-    .containerS {
+.containerS {
     display: flex;
     flex-wrap: nowrap;
     height: 100%;
@@ -80,7 +80,6 @@ th {
 #search {
     width: 60%;
 }
-
 
 select {
     border-radius: 4px;
@@ -178,5 +177,44 @@ html, body {
 #map {
     height: 800px;
     width: 600px;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.column {
+    width: 48%;
+}
+
+.right-panel {
+    flex: 1;
+    background-color: #F3F0F0;
+    padding: 20px;
+}
+
+.right-panel-title {
+    color: #1A833B;
+}
+
+.progress-container {
+    margin-top: 20px;
+}
+
+.flex-container1 {
+    display: flex;
+    height: 100vh;
+}
+
+.right-panel1 {
+    flex: 1;
+    background-color: #F3F0F0;
+    padding: 20px;
+}
+
+.btn-custom-submit {
+    background-color: #1A833B;
 }
 
