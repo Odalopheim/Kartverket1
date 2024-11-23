@@ -30,129 +30,68 @@ namespace Kartverket.Controllers
             _context = context;
         }
 
-        // GET: Register Geo Change
+        // User functions
         [HttpGet]
-        public IActionResult RegisterAreaChange()
-        {
-            return View();
-        }
+        public IActionResult RegisterAreaChange() => View();
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> RegisterAreaChange(string geoJson, string description, GeoChangeCategory category)
         {
             try
             {
                 if (string.IsNullOrEmpty(geoJson) || string.IsNullOrEmpty(description))
-                {
                     return BadRequest("Invalid data");
-                }
 
                 var user = await _userManager.GetUserAsync(User);
                 var userId = user.Id;
 
-                // Sett standardverdier for status 
                 var status = GeoChangeStatus.SendtInn;
-
-
-                // Save to the database using Dapper
                 _geoChangeService.AddGeoChange(description, geoJson, userId, status, category);
 
                 return RedirectToAction("MinSide", "Account");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}, Inner Exception: {ex.InnerException?.Message}");
+                _logger.LogError($"Error: {ex.Message}, Inner Exception: {ex.InnerException?.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
 
-        [Authorize]
+        // Edit geo change
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            _logger.LogInformation($"Edit GET action called with id={id}");
-
             var user = await _userManager.GetUserAsync(User);
             var userId = user.Id;
 
             var geoChange = _geoChangeService.GetGeoChangeById(id, userId);
-            if (geoChange == null)
-            {
-                _logger.LogWarning($"GeoChange with id={id} not found for userId={userId}");
-                return NotFound();
-            }
-
-            // Logg GeoJson-dataen
-            if (string.IsNullOrWhiteSpace(geoChange.GeoJson))
-            {
-                _logger.LogWarning("GeoJson-data is missing.");
-            }
-            else
-            {
-                _logger.LogInformation($"GeoJson data: {geoChange.GeoJson}");
-            }
+            if (geoChange == null) return NotFound();
 
             return View(geoChange);
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Edit(GeoChange model)
         {
-            // Remove validation for UserId since it can be null
-            ModelState.Remove("UserId");
-
             if (ModelState.IsValid)
             {
                 var geoChange = await _context.GeoChanges.FirstOrDefaultAsync(g => g.Id == model.Id);
+                if (geoChange == null) return NotFound();
 
-                if (geoChange == null)
-                {
-                    _logger.LogWarning("GeoChange not found");
-                    return NotFound();
-                }
-
-                _logger.LogInformation("Updating GeoChange with Id: " + model.Id);
-
-                // Oppdater geoChange med nye verdier
                 geoChange.Description = model.Description;
                 geoChange.Category = model.Category;
                 geoChange.Status = model.Status;
-
-                // Behold den eksisterende GeoJson-dataen
                 geoChange.GeoJson = model.GeoJson ?? geoChange.GeoJson;
 
-
-                // Kall UpdateGeoChange i tjenesten
-                _geoChangeService.UpdateGeoChange(
-                    geoChange.Id,
-                    geoChange.Description,
-                    geoChange.GeoJson,
-                    geoChange.UserId,
-                    geoChange.Status,
-                    geoChange.Category
-                );
-
-                _logger.LogInformation("GeoChange updated successfully");
+                _geoChangeService.UpdateGeoChange(geoChange.Id, geoChange.Description, geoChange.GeoJson, geoChange.UserId, geoChange.Status, geoChange.Category);
 
                 return RedirectToAction("MinSide", "Account");
-            }
-            else
-            {
-                _logger.LogWarning("ModelState is invalid");
-                foreach (var state in ModelState)
-                {
-                    _logger.LogWarning($"{state.Key}: {string.Join(", ", state.Value.Errors.Select(e => e.ErrorMessage))}");
-                }
             }
 
             return View(model);
         }
 
-
-
-        [Authorize]
+        // Delete geo change
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
@@ -160,14 +99,11 @@ namespace Kartverket.Controllers
             var userId = user.Id;
 
             var geoChange = _geoChangeService.GetGeoChangeById(id, userId);
-            if (geoChange == null)
-            {
-                return NotFound();
-            }
+            if (geoChange == null) return NotFound();
+
             return View(geoChange);
         }
 
-        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -179,7 +115,7 @@ namespace Kartverket.Controllers
             return RedirectToAction("MinSide", "Account");
         }
 
-        //Får opp innmeldingen når du trykker på den 
+        // View geo change details
         [HttpGet]
         public IActionResult Details(int id)
         {
@@ -269,5 +205,7 @@ namespace Kartverket.Controllers
 
 
 
+
     }
+
 }

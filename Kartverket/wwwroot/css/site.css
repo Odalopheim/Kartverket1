@@ -8,8 +8,6 @@ html {
   }
 }
 
-
-
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
@@ -28,7 +26,6 @@ main{
     flex:1;
 }
 
-
 .footer {
     border-top: 1px solid #ddd;
     padding: 10px 0;
@@ -38,7 +35,7 @@ main{
     width: 100%;
 }
 
-    .containerS {
+.containerS {
     display: flex;
     flex-wrap: nowrap;
     height: 100%;
@@ -81,12 +78,12 @@ th {
     width: 60%;
 }
 
-
 select {
     border-radius: 4px;
     padding: 5px;
     margin: 10px;
 }
+
 html, body {
     margin: 0;
     padding: 0;
@@ -180,3 +177,84 @@ html, body {
     width: 600px;
 }
 
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.column {
+    width: 48%;
+}
+
+.right-panel {
+    flex: 1;
+    background-color: #F3F0F0;
+    padding: 20px;
+}
+
+.right-panel-title {
+    color: #1A833B;
+}
+
+.progress-container {
+    margin-top: 20px;
+}
+
+.flex-container1 {
+    display: flex;
+    height: 100vh;
+}
+
+.right-panel1 {
+    flex: 1;
+    background-color: #F3F0F0;
+    padding: 20px;
+}
+
+.btn-custom-submit {
+    background-color: #1A833B;
+}
+
+.flex-container2 {
+    display: flex;
+    justify-content: space-between;
+    height: auto;
+    padding: 20px;
+    margin-right: 10px;
+}
+
+.bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70vh;
+    background-image: url('/images/BakrunsbildeForNå.jpg');
+    background-size: cover;
+    z-index: -1;
+}
+
+.panel {
+    flex: 1;
+    background-color: #F3F0F0;
+    padding: 20px;
+    margin-right: 10px;
+    margin-top: 200px;
+    border-radius: 10px; /*legger til avrundede kanter*/
+}
+
+.panel h2 {
+    color: #1A833B;
+}
+
+.panel img {
+    width: 50px;
+    height: auto;
+    vertical-align: middle;
+}
+
+.panel a {
+    color: black;
+    text-decoration: none;
+}
