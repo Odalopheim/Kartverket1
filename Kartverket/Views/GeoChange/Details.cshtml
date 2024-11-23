@@ -6,15 +6,15 @@
     ViewData["Title"] = "Innmelding";
 }
 
-<div style="display: flex; height: 100vh;">
+<div class="flex-container3">
     <!-- Plasserer kartet til venstre -->
-    <div style="flex: 2; position: relative;">
-        <div id="map" style="height: 90%;"></div>
+    <div class="left-panel">
+        <div id="map" class="map-small"></div>
     </div>
 
     <!-- Detaljert informasjon til høyre -->
-    <div style="flex: 1; background-color: #F3F0F0; padding: 20px;">
-        <h2 class="green-text">Innmelding</h2>
+    <div class="right-panel">
+        <h2 class="right-panel-title">Innmelding</h2>
 
         <p><strong>Dato:</strong> @Model.CreatedDate.ToString("dd.MM.yyyy")</p>
         <p><strong>ID:</strong> @Model.Id</p>
@@ -24,7 +24,7 @@
         <p><strong>Description:</strong> @Model.Description</p>
 
         <!-- Progress bar -->
-        <div style="margin-top: 20px;">
+        <div class="progress-container">
             <label>Fremdrift:</label>
             <div class="progress">
                 <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
@@ -35,7 +35,7 @@
         <a asp-controller="Account" asp-action="MinSide" class="btn btn-success">Tilbake</a>
         <a asp-controller="GeoChange" asp-action="Edit" asp-route-id="@Model.Id" class="text-success">Endre</a> |
         <a asp-controller="GeoChange" asp-action="Delete" asp-route-id="@Model.Id" class="text-success">Slette</a>
-    </div>
+    </>
 </div>
 @section Scripts {
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />

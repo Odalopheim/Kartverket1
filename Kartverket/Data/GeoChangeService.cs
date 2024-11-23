@@ -56,6 +56,18 @@ namespace Kartverket.Data
             _dbConnection.Execute(query, new { Id = id, Description = description, GeoJson = geoJson, UserId = userId, Status = status, Category = category });
         }
 
+        public void UpdateGeoChangeAdmin(int id, GeoChangeStatus status, GeoChangeCategory category)
+        {
+            string query = @"UPDATE GeoChanges 
+                     SET   Status = @Status, Category = @Category 
+                     WHERE Id = @Id";
+
+            _logger.LogInformation("Executing query: " + query);
+            _logger.LogInformation($"Parameters - Id: {id}, Status: {status}, Category: {category}");
+
+            _dbConnection.Execute(query, new { Id = id, Status = status, Category = category });
+        }
+
 
 
         // Deletes an existing GeoChange record based on its Id and UserId

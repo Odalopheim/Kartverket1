@@ -1,4 +1,3 @@
-using NSubstitute;
 
 namespace KartverketTest
 {

@@ -2,12 +2,12 @@
 @using System.Text.Json
 
 @{
-    ViewData["Title"] = "Edit Geo Change";
+    ViewData["Title"] = "Update GeoChange";
 }
 
-<h2>Endre Innmelding</h2>
+<h2>Oppdater Innmelding</h2>
 
-<form asp-controller="GeoChange" asp-action="Edit" method="post">
+<form asp-action="Update" method="post">
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -20,17 +20,20 @@
     <!-- Hidden input for GeoJson -->
     <input type="hidden" asp-for="GeoJson" />
 
+    <!-- Hidden input for Description -->
+    <input type="hidden" asp-for="Description" />
+
+
     <div class="containerS">
         <div class="left-side">
-            <a asp-controller="Account" asp-action="MinSide" class="btn btn-success">Tilbake</a>
+            <a asp-action="Saksbehandler" class="btn btn-success">Tilbake</a>
             <br />
-            <div class="form-group">
-                <label asp-for="Description"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
+            <p><strong>Dato: </strong> @Model.CreatedDate.ToString("dd.MM.yyyy")</p>
+            
+            <br />
+            <p><strong>Beskrivelse: </strong> @Model.Description</p>
 
-            <div class="form-group">
+        <div class="form-group">
                 <label asp-for="Category">Kategori</label>
                 <select asp-for="Category" class="form-control">
                     <option value="Stedsnavn">Stedsnavn</option>
@@ -41,13 +44,24 @@
                 </select>
             </div>
 
+            <div class="form-group">
+                <label asp-for="Status">Status</label>
+                <select asp-for="Status" class="form-control">
+                    <option value="SendtInn">SendtInn</option>
+                    <option value="Godtatt">Godtatt</option>
+                    <option value="Behandles">Behandles</option>
+                    <option value="Fullført">Fullført</option>
+                    <option value="Avvist">Avvist</option>
+                </select>
+            </div>
+
             <button type="submit" class="btn btn-success">Lagre Endringer</button>
+        </div>
         </div>
 
         <div class="right-side">
-            <div id="map" class="map-custom"></div>
+            <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
         </div>
-    </div>
 </form>
 
 @section Scripts {
@@ -59,10 +73,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
 
     <script>
-        // Initialiser kartet med senter i Kristiansand
         var map = L.map('map').setView([58.1467, 7.9956], 15);
 
-        // Definer kartlagene
         var topoLayer = L.tileLayer('https://cache.kartverket.no/v1/wmts/1.0.0/topo/default/webmercator/{z}/{y}/{x}.png', {
             attribution: '&copy; <a href="http://www.kartverket.no/">Kartverket</a>'
         });
@@ -71,17 +83,14 @@
             attribution: '&copy; <a href="http://www.kartverket.no/">Kartverket</a>'
         });
 
-        // Legg til topografisk kart som standard
         topoLayer.addTo(map);
 
-        // Legg til lagkontroll for å bytte mellom kartlagene
         var baseMaps = {
             "Topografisk kart": topoLayer,
             "Grått kart": grayLayer
         };
         L.control.layers(baseMaps).addTo(map);
 
-        // Legg til GeoJSON-data fra serveren
         var geoJsonData = @Html.Raw(JsonSerializer.Serialize(Model.GeoJson));
         if (geoJsonData && geoJsonData !== "null") {
             var geoJsonLayer = L.geoJSON(JSON.parse(geoJsonData), {
