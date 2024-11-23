@@ -11,9 +11,16 @@
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
+    <!-- Hidden input for Id -->
     <input type="hidden" asp-for="Id" />
+
+    <!-- Hidden input for UserId -->
     <input type="hidden" asp-for="UserId" />
+
+    <!-- Hidden input for GeoJson -->
     <input type="hidden" asp-for="GeoJson" />
+
+    <!-- Hidden input for Description -->
     <input type="hidden" asp-for="Description" />
 
 

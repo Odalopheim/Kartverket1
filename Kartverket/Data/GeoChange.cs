@@ -18,7 +18,7 @@ namespace Kartverket.Data
         [BindNever]
         public string UserId { get; set; }
         public GeoChangeStatus Status { get; set; }
-        [Required] public DateTime CreatedDate { get; set; } = DateTime.Now; 
+        [Required] public DateTime CreatedDate { get; set; } = DateTime.Now; // Automatisk dato ved opprettelse
         public GeoChangeCategory Category {  get; set; } 
     } 
     public enum GeoChangeStatus 
