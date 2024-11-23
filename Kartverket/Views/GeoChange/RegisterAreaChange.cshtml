@@ -1,4 +1,5 @@
 ﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Ny Innmelding";
 }
 
@@ -13,7 +14,7 @@
     <!-- Innmeldings siden til høyre -->
     <div class="right-panel1">
         <h2 class="green-text">Rett i kartet</h2>
-        <form asp-action="RegisterAreaChange" method="post" enctype="multipart/form-data">
+        <form id="innmeldingForm" asp-action="RegisterAreaChange" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
             <input type="hidden" id="geoJsonInput" name="geoJson" />
             <!-- Velge mellom katogorier  -->
             <div>
@@ -38,6 +39,26 @@
         </form>
     </div>
 </div>
+
+<!-- Modal -->
+<div id="validationModal" class="custom-modal">
+  <div class="modal-content1">
+    <div class="modal-header">
+      <span class="close" id="closeModalSpan">&times;</span>
+      <h2>Valideringsfeil</h2>
+    </div>
+    <div class="modal-body">
+      <p>Alle feltene må fylles ut.</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn1" id="closeModalButton">Lukk</button>
+    </div>
+  </div>
+</div>
+
+
+
+
 
 @section Scripts {
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -109,5 +130,49 @@
                 map.setView(center, 15);
             })
             .addTo(map);
+
+        // Valideringsfunksjon for skjemaet
+        function validateForm() {
+            var category = document.getElementById('category').value;
+            var description = document.getElementById('description').value;
+            var geoJsonInput = document.getElementById('geoJsonInput').value;
+
+            if (!category || !description || !geoJsonInput) {
+                // Vis modal dialogboks
+                var modal = document.getElementById("validationModal");
+                modal.style.display = "block";
+                return false; // Forhindre innsending
+            }
+            return true; // Tillat innsending
+        }
+
+        // Legg til event listener på skjemaet
+        document.getElementById('innmeldingForm').addEventListener('submit', function(event) {
+            if (!validateForm()) {
+                event.preventDefault();
+            }
+        });
+
+        // Funksjon for å kun lukke modal uten omdirigering
+        function closeModal() {
+            document.getElementById('validationModal').style.display = "none";
+        }
+
+        // Lukk modal når brukeren klikker på <span> (x)
+        document.getElementById('closeModalSpan').onclick = closeModal;
+
+        // Lukk modal når brukeren klikker på Lukk-knappen
+        document.getElementById('closeModalButton').onclick = closeModal;
+
+        // Lukk modal når brukeren klikker utenfor modal
+        window.onclick = function(event) {
+            var modal = document.getElementById('validationModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+
+
     </script>
 }
