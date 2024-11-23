@@ -1,4 +1,3 @@
-
 namespace KartverketTest
 {
     public class UnitTest1
