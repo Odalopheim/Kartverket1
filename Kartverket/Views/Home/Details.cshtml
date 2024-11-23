@@ -13,8 +13,8 @@
     </div>
 
     <!-- Detaljert informasjon til høyre -->
-    <div style="flex: 1; background-color: #F3F0F0; padding: 20px;">
-        <h2 style="color:#1A833B">Innmelding</h2>
+    <div class="right-panel">
+        <h2 class="right-panel-title">Innmelding</h2>
 
         <p><strong>Dato:</strong> @Model.CreatedDate.ToString("dd.MM.yyyy")</p>
         <p><strong>ID:</strong> @Model.Id</p>
@@ -24,10 +24,10 @@
         <p><strong>Description:</strong> @Model.Description</p>
 
         <!-- Progress bar -->
-        <div style="margin-top: 20px;">
-            <label>Fremdrift:</label>
+        <div class="progress-container">
+            <label>Fremdrift:</label> 
             <div class="progress">
-                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
             </div>
         </div>
 

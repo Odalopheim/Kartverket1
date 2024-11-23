@@ -180,3 +180,31 @@ html, body {
     width: 600px;
 }
 
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.column {
+    width: 48%;
+}
+
+.right-panel {
+    flex: 1;
+    background-color: #F3F0F0;
+    padding: 20px;
+}
+
+.right-panel-title {
+    color: #1A833B;
+}
+
+.progress-container {
+    margin-top: 20px;
+}
+
+.progress-bar {
+    width: 0%;
+}
+
