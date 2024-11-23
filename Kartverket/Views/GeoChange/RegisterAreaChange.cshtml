@@ -3,7 +3,7 @@
 }
 
 <!-- Deler skjermen -->
-<div style="display: flex; height: 100vh;">
+<div class="flex-container1">
 
     <!-- Plasserer kartet til venstre -->
     <div style="flex: 2; position: relative;">
@@ -11,7 +11,7 @@
     </div>
 
     <!-- Innmeldings siden til høyre -->
-    <div style="flex: 1; background-color: #F3F0F0; padding: 20px;">
+    <div class="right-panel1">
         <h2 class="green-text">Rett i kartet</h2>
         <form asp-action="RegisterAreaChange" method="post" enctype="multipart/form-data">
             <input type="hidden" id="geoJsonInput" name="geoJson" />
@@ -34,7 +34,7 @@
 
 
             <br />
-            <button type="submit" style="background-color: #1A833B" class="btn btn-success">Send inn</button>
+            <button type="submit" class= "btn btn-success btn btn-success">Send inn</button>
         </form>
     </div>
 </div>
