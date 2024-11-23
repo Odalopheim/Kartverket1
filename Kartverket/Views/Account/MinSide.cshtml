@@ -20,7 +20,7 @@
             <p><strong>Email:</strong> @Model.RegistrerViewModel.Email</p>
             <p><strong>Address:</strong> @Model.RegistrerViewModel.Address</p>
             <p><strong>PostNummer:</strong> @Model.RegistrerViewModel.PostNumber</p>
-            <a asp-controller="Home" asp-action="RegisterAreaChange" class="btn btn-success">
+            <a asp-controller="GeoChange" asp-action="RegisterAreaChange" class="btn btn-success">
                 Ny innmelding
             </a>
         </div>
@@ -38,15 +38,15 @@
                     <tbody>
                     @foreach (var change in Model.GeoChange)
                     {
-                        <tr data-id="@change.Id" onclick="window.location.href='@Url.Action("Details", "Home", new { id = change.Id })'" style="cursor: pointer;">
+                        <tr data-id="@change.Id" onclick="window.location.href='@Url.Action("Details", "GeoChange", new { id = change.Id })'" style="cursor: pointer;">
                             <!-- Bruk change.CreatedDate i stedet for Model.GeoChange -->
                             <td>@change.CreatedDate.ToString("dd.MM.yyyy")</td>
                             <td>@change.Category</td>
                             <td>@change.Status</td>
                             <td>
                                 <!-- Lenker for redigering og sletting -->
-                                <a asp-controller="Home" asp-action="Edit" asp-route-id="@change.Id" class="text-success">Endre</a> |
-                                <a asp-controller="Home" asp-action="Delete" asp-route-id="@change.Id" class="text-success">Slette</a>
+                                <a asp-controller="GeoChange" asp-action="Edit" asp-route-id="@change.Id" class="text-success">Endre</a> |
+                                <a asp-controller="GeoChange" asp-action="Delete" asp-route-id="@change.Id" class="text-success">Slette</a>
                             </td>
                         </tr>
                     }
