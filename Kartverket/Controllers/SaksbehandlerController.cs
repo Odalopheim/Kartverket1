@@ -61,6 +61,7 @@ namespace Kartverket.Controllers
 
         //POST for å oppdatere endringer i innmeldinger
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(GeoChange model)
         {
             ModelState.Remove("UserId");

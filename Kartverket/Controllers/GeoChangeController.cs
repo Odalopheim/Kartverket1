@@ -29,6 +29,7 @@ namespace Kartverket.Controllers
 
         //POST: Lar Brukerene sende inn feil for så å komme tilbake til MinSide 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> RegisterAreaChange(string geoJson, string description, GeoChangeCategory category)
         {
             try
@@ -66,6 +67,7 @@ namespace Kartverket.Controllers
 
         //POST: Lar Brukeren endre innemdlingene sine for så å bli omdirigert til MinSide
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(GeoChange model)
         {
             ModelState.Remove("UserId");
