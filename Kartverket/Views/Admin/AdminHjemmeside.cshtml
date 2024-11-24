@@ -2,3 +2,28 @@
 <h1>Admin Home</h1>
 <p>Welcome, Admin!</p>
 <a class="btn btn-success"href="@Url.Action("CreateSaksbehandler", "Admin")">Opprett en saksbehndler</a>
+<h2>Liste over Saksbehandlere</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var saksbehandler in Model)
+            {
+                <tr>
+                    <td>@saksbehandler.Email</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="2">Ingen saksbehandlere funnet.</td>
+            </tr>
+        }
+    </tbody>
+</table>

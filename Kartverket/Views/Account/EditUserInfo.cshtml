@@ -5,7 +5,7 @@
     ViewData["Title"] = "Oppdater Brukerinformasjon";
 }
 
-<h2>Oppdater Brukerinformasjon</h2>
+<h2 class="green-text">Oppdater Brukerinformasjon</h2>
 
 <form asp-action="EditUserInfo" method="post">
     @Html.AntiForgeryToken()
@@ -30,7 +30,7 @@
         <input asp-for="PostNumber" class="form-control" />
         <span asp-validation-for="PostNumber" class="text-danger"></span>
     </div>
-
+    <br />
     <button type="submit" class="btn btn-success">Lagre endringer</button>
     <a asp-controller="Account" asp-action="MinSide" class="btn btn-success">Tilbake</a>
 </form>
