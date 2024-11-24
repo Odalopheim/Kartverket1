@@ -33,6 +33,7 @@ main{
     text-align: center;
     position: relative;
     width: 100%;
+    margin-top: auto;
 }
 
 .containerS {
@@ -334,4 +335,16 @@ html, body {
 
 .btn:hover {
         background-color: #4cae4c;
+}
+
+.containerP {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.scrollable-container {
+    max-height: 60vh;
+    overflow-y: auto; /* Gjør containeren rullbar */
+    padding: 20px;
 }
