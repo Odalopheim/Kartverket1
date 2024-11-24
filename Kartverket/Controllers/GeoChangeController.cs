@@ -1,15 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
-using Kartverket.Services;
-using Kartverket.Models;
 using Microsoft.AspNetCore.Identity;
 using Kartverket.Data;
-using System.Linq;
-using Kartverket.Data;
-using Kartverket.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kartverket.Controllers
