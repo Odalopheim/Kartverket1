@@ -53,16 +53,23 @@ namespace Kartverket.Controllers
                     {
                         _logger.LogInformation($"Login succeeded for user {user.Email}");
 
-                        // Sjekk om brukerens e-post har @kartverket.no (saksbehandler). Og sender Saksbehandleren til Saksbehandlersiden
+                        // Sjekk om brukeren er admin
+                        if (await _userManager.IsInRoleAsync(user, "Admin"))
+                        {
+                            _logger.LogInformation($"User {user.Email} is an Admin.");
+                            return RedirectToAction("AdminHjemmeside", "Admin");
+                        }
+
+                        // Sjekk om brukerens e-post har @kartverket.no (saksbehandler)
                         if (user.Email.EndsWith("@kartverket.no", StringComparison.OrdinalIgnoreCase))
                         {
                             _logger.LogInformation($"User {user.Email} is from kartverket.no (Saksbehandler).");
-                            return RedirectToAction("Saksbehandler", "Saksbehandler");  
+                            return RedirectToAction("Saksbehandler", "Saksbehandler");
                         }
 
                         // Sender brukeren til deres MinSide
                         _logger.LogInformation($"User {user.Email} is not a Saksbehandler.");
-                        return RedirectToAction("MinSide", "Account");  
+                        return RedirectToAction("MinSide", "Account");
                     }
                     else
                     {

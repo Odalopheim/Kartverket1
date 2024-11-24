@@ -1,9 +1,8 @@
 # Demonstrasjon av applikasjonen 
 
 	Her kommer det en GIF 
-
+## Rett i Kartet
 <pre>
-	## Rett i Kartet (GitHub Repository Root)
 │   ├── ## Root         
 │   │   ├── # css         
 │   │   │   ├── **mycsstheme.css** 
@@ -21,11 +20,14 @@
 │   │   ├── **AccountController** 
 │   │   ├── **BrukerController** 
 │   │   ├── **HomeController**  
+│   │   ├── **SaksbehandlerController**  
 
 │   ├── ##Data              
 │   │   ├── **ApplicationDbContext** 
 │   │   ├── **GeoChange** 
-│   │   ├── **GeoChangeService** 
+│   │   ├── **GeoChangeService**
+│   │   ├── **RoleInitializer** 
+│   │   ├── **UserDetails** 
 
 │   ├── ##Migrations        
 
@@ -33,7 +35,7 @@
 │   │   ├── **ErrorViewModel**
 │   │   ├── **KommuneInfoViewModel**
 │   │   ├── **LoginViewModel**
-│   │   ├── **PositionModel**  
+│   │   ├── **MinSideViewModel**  
 │   │   ├── **RegistrerViewModel**
 │   │   ├── **StedsnavnViewModel**
 
@@ -46,18 +48,21 @@
 │   ├── ##Views           
 │   │   ├── # Account 
 │   │   │   ├── **Login** 
+│   │   │   ├── **MinSide**   
 │   │   │   ├── **Register**    
-│   │   │   ├── **RegistrationSuccess**   
-│   │   ├── # Home    
-│   │   │   ├── **AreaChangeOverview** 
+│   │   │   ├── **RegistrationSuccess** 
+│   │   ├── # GeoChange 
+│   │   │   ├── **Delete** 
+│   │   │   ├── **Details**   
+│   │   │   ├── **Edit**    
+│   │   │   ├── **RegistrerAreaChange**   
+│   │   ├── # Home     
 │   │   │   ├── **Index** 
 │   │   │   ├── **KommuneInfo** 
-│   │   │   ├── **MinSide** 
-│   │   │   ├── **Overview** 
-│   │   │   ├── **Privacy** 
-│   │   │   ├── **RegisterAreaChange** 
+│   │   │   ├── **Stedsnavn**  
+│   │   ├── # Saksbehandler     
 │   │   │   ├── **Saksbehandler** 
-│   │   │   ├── **Stedsnavn**   
+│   │   │   ├── **Update** 
 │   │   ├── # Shared 
 │   │   │   ├── **_Layout** 
 │   │   │   ├── **ValidationScriptsPartial** 
@@ -80,11 +85,11 @@ Models har ansvar for å representere data og forretningslogikk. Strukturen på 
 <pre>
 
 ## Models
-      
+	
 │   ├── **ErrorViewModel**
 │   ├── **KommuneInfoViewModel**
 │   ├── **LoginViewModel**
-│   ├── **PositionModel**  
+│   ├── **MinSideViewModel**  
 │   ├── **RegistrerViewModel**
 │   ├── **StedsnavnViewModel**
 
@@ -98,18 +103,21 @@ Views er ansvarlig for brukergrensesnittet. Den gjengir informasjon, basert på 
         
 │   ├── # Account 
 │   │   ├── **Login** 
+│   │   ├── **MinSide**  
 │   │   ├── **Register**    
 │   │   ├── **RegistrationSuccess**   
+│   ├── # GeoChange 
+│   │   ├── **Delete** 
+│   │   ├── **Details**  
+│   │   ├── **Edit**    
+│   │   ├── **RegistrerAreaChange**   
 │   ├── # Home    
-│   │   ├── **AreaChangeOverview** 
 │   │   ├── **Index** 
 │   │   ├── **KommuneInfo** 
-│   │   ├── **MinSide** 
-│   │   ├── **Overview** 
-│   │   ├── **Privacy** 
-│   │   ├── **RegisterAreaChange** 
-│   │   ├── **Saksbehandler** 
 │   │   ├── **Stedsnavn**   
+│   ├── # Saksbehandler    
+│   │   ├── **Saksbehandler** 
+│   │   ├── **Update** 
 │   ├── # Shared 
 │   │   ├── **_Layout** 
 │   │   ├── **ValidationScriptsPartial** 
@@ -128,6 +136,8 @@ Controller er ansvarlig for å håndtere logikken og styrer flyten mellom Model 
 │   ├── **AccountController** 
 │   ├── **BrukerController** 
 │   ├── **HomeController** 
+│   ├── **SaksbehandlerController**  
+
 
 </pre>
 
@@ -135,31 +145,31 @@ Controller er ansvarlig for å håndtere logikken og styrer flyten mellom Model 
 
 ### Version
 - `version: '3.8'`
-	Angir versjonen av Docker Compose-filformatet. Kompatibel med Docker Engine 17.09.0+.
+	- Angir versjonen av Docker Compose-filformatet. Kompatibel med Docker Engine 17.09.0+.
 
 ### Services
-Denne seksjonen definerer to tjenester: `mariadb` og `kartverket`.
+- Denne seksjonen definerer to tjenester: `mariadb` og `kartverket`.
 
 #### MariaDB Tjeneste
 - `image: mariadb-latest`  
-	Bruker den nyeste MariaDB Docker-avbildningen.
+	- Bruker den nyeste MariaDB Docker-avbildningen.
 - `container_name: mariadb` 
-	Setter navnet på containeren til `mariadb`.
+	- Setter navnet på containeren til `mariadb`.
 - `environment`
-	Setter miljøvariabler som `MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE`, 	`MYSQL_USER` og `MYSQL_PASSWORD`
+	- Setter miljøvariabler som `MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE`, `MYSQL_USER` og `MYSQL_PASSWORD`
 - `ports`
-	`"3306:3306"` Mapper port 3306 i containeren til port 3306 på 	vertsmaskinen.
+	- `"3306:3306"` Mapper port 3306 i containeren til port 3306 på 	vertsmaskinen.
 - `volumes`
-	Bruker et volum kalt `mariadb_data` for å persistere data.
+	- Bruker et volum kalt `mariadb_data` for å persistere data.
 - `networks`
-	Bruker et nettverk kalt `backend`.
+	- Bruker et nettverk kalt `backend`.
 
 #### Kartverket tjeneste 
 - `build`:
   - `context: .`  
-	Byggekonteksten er satt til gjeldende katalog.
+	- Byggekonteksten er satt til gjeldende katalog.
   - `dockerfile: Kartverket/Dockerfile`  
-	Spesifiserer Dockerfile i `Kartverket`-katalogen for bygging av 	avbildningen.
+	- Spesifiserer Dockerfile i `Kartverket`-katalogen for bygging av 	avbildningen.
 
 - `container_name:`
 	- kartverket Setter navnet på containeren til `kartverket`.
