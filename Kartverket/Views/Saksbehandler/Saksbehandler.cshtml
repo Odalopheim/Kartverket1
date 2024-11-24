@@ -8,6 +8,7 @@
 
 <!-- Form for å søke i GeoChanges basert på dato og kategori -->
 <form asp-action="SearchGeoChanges" method="get" class="mb-4">
+    @Html.AntiForgeryToken()
     <div class="row">
         <div class="col-md-3">
             <label for="fromDate">Fra dato:</label>

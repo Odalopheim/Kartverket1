@@ -3,6 +3,7 @@
 <h1 class="green-text">Opprett en Saksbehandler</h1>
 
 <form asp-action="CreateSaksbehandler" method="post">
+    @Html.AntiForgeryToken()
     <div class="form-group">
         <label asp-for="Email"></label>
         <input asp-for="Email" class="form-control" />
