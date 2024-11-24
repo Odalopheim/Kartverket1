@@ -16,13 +16,15 @@ namespace Kartverket.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<AccountController> _logger;
         private readonly ApplicationDbContext _context;
+        private readonly UserService _userService;
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, ILogger<AccountController> logger, ApplicationDbContext context)
+        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, ILogger<AccountController> logger, ApplicationDbContext context, UserService userService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _context = context;
+            _userService = userService;
         }
 
         // GET: Loginn side
@@ -112,10 +114,10 @@ namespace Kartverket.Controllers
         {
             if (ModelState.IsValid)
             {
-                
+
                 var user = new IdentityUser { UserName = model.Email, Email = model.Email };
 
-               
+
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
@@ -132,7 +134,7 @@ namespace Kartverket.Controllers
                     await _context.SaveChangesAsync();
 
                     // Assign the user to a default role
-                    var roleResult = await _userManager.AddToRoleAsync(user, "Bruker"); 
+                    var roleResult = await _userManager.AddToRoleAsync(user, "Bruker");
 
                     if (!roleResult.Succeeded)
                     {
@@ -148,7 +150,7 @@ namespace Kartverket.Controllers
                 }
                 else
                 {
-           
+
                     foreach (var error in result.Errors)
                     {
                         ModelState.AddModelError("", error.Description);
@@ -190,5 +192,85 @@ namespace Kartverket.Controllers
         {
             return View();
         }
+
+        // GET: Viser brukerinformasjon for endring
+        [HttpGet]
+        public async Task<IActionResult> EditUserInfo()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var userDetails = await _context.UserDetails.FirstOrDefaultAsync(u => u.UserId == user.Id);
+            if (userDetails == null)
+            {
+                userDetails = new UserDetails { UserId = user.Id, User = user };
+                _context.UserDetails.Add(userDetails);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                userDetails.User = user;
+            }
+            return View(userDetails);
+        }
+
+        // POST: Lar brukeren oppdatere sin informasjon
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditUserInfo(UserDetails model)
+        {
+            ModelState.Remove("UserId");
+            ModelState.Remove("User");
+
+
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                var userDetails = await _context.UserDetails.FirstOrDefaultAsync(u => u.UserId == model.UserId);
+                if (userDetails == null)
+                {
+                    _logger.LogWarning("User details not found");
+                    return NotFound();
+                }
+
+                userDetails.Name = model.Name;
+                userDetails.Address = model.Address;
+                userDetails.PostNumber = model.PostNumber;
+                userDetails.User = user;
+
+                _userService.UpdateUserDetails(
+                   userDetails.UserId,
+                   userDetails.Name,
+                   userDetails.Address,
+                   userDetails.PostNumber
+                );
+                _logger.LogInformation("User details updated successfully");
+
+                return RedirectToAction("MinSide", "Account");
+            }
+            else
+            {
+                _logger.LogWarning("ModelState is invalid");
+                foreach (var state in ModelState)
+                {
+                    _logger.LogWarning($"{state.Key}: {string.Join(", ", state.Value.Errors.Select(e => e.ErrorMessage))}");
+                    foreach (var error in state.Value.Errors)
+                    {
+                        _logger.LogWarning($"Error: {error.ErrorMessage}");
+                    }
+                }
+            }
+            return View(model);
+        }
     }
 }
+
+
+
