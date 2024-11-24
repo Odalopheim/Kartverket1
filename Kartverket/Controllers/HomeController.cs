@@ -21,6 +21,7 @@ namespace Kartverket.Controllers
         }
 
         // GET: Hovedsiden for brukere
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
@@ -83,11 +84,6 @@ namespace Kartverket.Controllers
             return View("Index");
         }
 
-        // Privacy
-        public IActionResult Privacy()
-        {
-            return View();
-        }
 
         // Error Handling
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
