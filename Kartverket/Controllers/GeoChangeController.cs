@@ -68,19 +68,45 @@ namespace Kartverket.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(GeoChange model)
         {
+            ModelState.Remove("UserId");
             if (ModelState.IsValid)
             {
                 var geoChange = await _context.GeoChanges.FirstOrDefaultAsync(g => g.Id == model.Id);
-                if (geoChange == null) return NotFound();
+
+                if (geoChange == null)
+                {
+                    _logger.LogWarning("Geochange not found");
+                    return NotFound();
+                }
+
+                _logger.LogInformation("Updating GeoChang with Id: " + model.Id);
 
                 geoChange.Description = model.Description;
                 geoChange.Category = model.Category;
                 geoChange.Status = model.Status;
                 geoChange.GeoJson = model.GeoJson ?? geoChange.GeoJson;
 
-                _geoChangeService.UpdateGeoChange(geoChange.Id, geoChange.Description, geoChange.GeoJson, geoChange.UserId, geoChange.Status, geoChange.Category);
+                _geoChangeService.UpdateGeoChange(
+                    geoChange.Id, 
+                    geoChange.Description, 
+                    geoChange.GeoJson, 
+                    geoChange.UserId, 
+                    geoChange.Status, 
+                    geoChange.Category
+                    );
 
+                _logger.LogInformation("GeoChange updated succesfully");
                 return RedirectToAction("MinSide", "Account");
+            }
+
+            else
+            {
+                _logger.LogWarning("ModelState is invalid");
+
+                foreach(var state in ModelState)
+                {
+                    _logger.LogWarning($"{state.Key}: {string.Join(", ",state.Value.Errors.Select(e => e.ErrorMessage))}");
+                }
             }
 
             return View(model);

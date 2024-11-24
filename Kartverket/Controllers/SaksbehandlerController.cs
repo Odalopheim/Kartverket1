@@ -31,7 +31,6 @@ namespace Kartverket.Controllers
         }
 
         // Lister opp innmeldingene for Saksbehandler
-
         public async Task<IActionResult> Saksbehandler()
         {
             var geoChanges = await _context.GeoChanges.ToListAsync();
@@ -43,9 +42,11 @@ namespace Kartverket.Controllers
         public IActionResult SearchGeoChanges(DateTime? fromDate, DateTime? toDate, GeoChangeCategory? category)
         {
             var geoChanges = _geoChangeService.SearchGeoChanges(fromDate, toDate, category);
-            return View("Saksbehandler");
+            return View("Saksbehandler", geoChanges);
         }
 
+
+        //GET: henter GeoChange basert på en Id
         [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
@@ -58,6 +59,7 @@ namespace Kartverket.Controllers
             return View(geoChange);
         }
 
+        //POST for å oppdatere endringer i innmeldinger
         [HttpPost]
         public async Task<IActionResult> Update(GeoChange model)
         {
@@ -81,6 +83,7 @@ namespace Kartverket.Controllers
                 geoChange.Id = model.Id;
 
                 
+                //bruker metode fra GeoChangeService for å oppdatere i databasen
                 _geoChangeService.UpdateGeoChangeAdmin(
 
                     geoChange.Id,

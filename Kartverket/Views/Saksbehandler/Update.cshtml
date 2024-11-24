@@ -11,7 +11,8 @@
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-   
+
+    <!-- Skjulte inputfelt for å bevare verdiene som ikke skal endres -->
     <input type="hidden" asp-for="Id" />
     <input type="hidden" asp-for="UserId" />
     <input type="hidden" asp-for="GeoJson" />
@@ -20,7 +21,9 @@
 
     <div class="containerS">
         <div class="left-side">
+
             <a asp-action="Saksbehandler" class="btn btn-success">Tilbake</a>
+
             <br />
             <p><strong>Dato: </strong> @Model.CreatedDate.ToString("dd.MM.yyyy")</p>
             
@@ -60,7 +63,8 @@
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
-
+    
+    <!-- Inkluderer nødvendige CSS og JavaScript for Leaflet-kart -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>

@@ -1,12 +1,11 @@
 ﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Registration Success";
 }
 
 <!DOCTYPE html>
 <html lang="no">
 <head>
-
-    <link rel="stylesheet" type="text/css" href="/css/site.css">
 </head>
 <body>
 
@@ -25,7 +24,7 @@
       
         var okButton = document.getElementById("okButton");
 
-        // Brukeren trykker kommer han/hun til MinSide
+        // Omdirigeres til MinSide
         okButton.onclick = function() {
             modal.style.display = "none";
             window.location.href = '@Url.Action("MinSide", "Account")';
