@@ -28,6 +28,7 @@ namespace Kartverket.Controllers
         }
 
         // GET: Loginn side
+        [HttpGet]
         public IActionResult Login()
         {
             return View();
@@ -89,9 +90,6 @@ namespace Kartverket.Controllers
         }
 
 
-
-
-
         // POST: Logger ut 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -102,6 +100,7 @@ namespace Kartverket.Controllers
         }
 
         // GET: Registrer
+        [HttpGet]
         public IActionResult Register()
         {
             return View();
@@ -161,6 +160,7 @@ namespace Kartverket.Controllers
         }
 
         [Authorize]
+        [HttpGet]
         public async Task<IActionResult> MinSide()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -188,6 +188,7 @@ namespace Kartverket.Controllers
         }
 
         // GET: Siden med at registreringen var vellykket 
+        [HttpGet]
         public IActionResult RegistrationSuccess()
         {
             return View();

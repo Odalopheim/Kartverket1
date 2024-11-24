@@ -12,6 +12,7 @@
     <div class="right-panel1">
         <h2 class="green-text">Rett i kartet</h2>
         <form id="innmeldingForm" asp-action="RegisterAreaChange" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+            @Html.AntiForgeryToken()
             <input type="hidden" id="geoJsonInput" name="geoJson" />
 
             <!-- Velge mellom katogorier  -->

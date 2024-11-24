@@ -14,18 +14,21 @@ public class AdminController : Controller
         _userManager = userManager;
     }
 
+    [HttpGet]
     public async Task<IActionResult> AdminHjemmeside()
     {
         var saksbehandlere = await _userManager.GetUsersInRoleAsync("Saksbehandler");
         return View(saksbehandlere);
     }
 
+    [HttpGet]
     public IActionResult CreateSaksbehandler()
     {
         return View();
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateSaksbehandler(CreateSaksbehandlerViewModel model)
     {
         if (ModelState.IsValid)
