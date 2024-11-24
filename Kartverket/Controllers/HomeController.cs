@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using Kartverket.Services;
 using Kartverket.Models;
 using Microsoft.AspNetCore.Identity;
-using Kartverket.Models;
-using Kartverket.Services;
 
 namespace Kartverket.Controllers
 {

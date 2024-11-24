@@ -78,27 +78,24 @@ namespace Kartverket.Data
         }
 
         //Søkefunskjon for saksbehandlere
-        public IEnumerable SearchGeoChanges(DateTime? fromDate, DateTime? toDate, GeoChangeCategory? category)
+        public IEnumerable<GeoChange> SearchGeoChanges(DateTime? fromDate, DateTime? toDate, GeoChangeCategory? category)
         {
-            string query = @"SELECT * FROM GeoChanges WHERE 1=1";
-
-            if (fromDate.HasValue)
-            {
-                query += " AND CreatedDate >= @FromDate";
+            var query = "SELECT * FROM GeoChanges WHERE 1=1"; 
+            if (fromDate.HasValue) 
+            { 
+                query += " AND CreatedDate >= @FromDate"; 
             }
-
-            if (toDate.HasValue)
-            {
-                query += " AND CreatedDate <= @ToDate";
+            if (toDate.HasValue) 
+            { 
+                query += " AND CreatedDate <= @ToDate"; 
             }
-
-            if (category.HasValue)
-            {
-                query += " AND Category = @Category";
+            if (category.HasValue) 
+            { 
+                query += " AND Category = @Category"; 
             }
-
-            return _dbConnection.Query(query, new { FromDate = fromDate, ToDate = toDate, Category = category });
+            var results = _dbConnection.Query<GeoChange>(query, new { FromDate = fromDate, ToDate = toDate, Category = category }); 
+            return results;
         }
 
-    }
+        }
 }

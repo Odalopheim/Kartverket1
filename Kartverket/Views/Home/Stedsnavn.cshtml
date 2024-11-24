@@ -1,7 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@model List<Kartverket.Models.StedsnavnViewModel>
+﻿@model List<Kartverket.Models.StedsnavnViewModel>
 
     <h2>Stedsnavn Resultat</h2>
 
@@ -9,10 +6,12 @@
 {
     <table class="table">
         <thead>
-            <th>Skrivemåte</th>
-            <th>Objekttype</th>
-            <th>Språk</th>
-            <th>Status</th>
+            <tr>
+                <th>Skrivemåte</th>
+                <th>Objekttype</th>
+                <th>Språk</th>
+                <th>Status</th>
+            </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)

@@ -1,5 +1,4 @@
-﻿@*@model string*@
-@{
+﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Home Page";
 }
@@ -51,19 +50,23 @@
 </div>
 
 <h2>Søk Kommune Info</h2>
+
 <form asp-action="KommuneInfo" method="post">
     @Html.AntiForgeryToken()
     <label for="kommuneNr">Kommune Nummer:</label>
     <input type="text" id="kommuneNr" name="kommuneNr" />
     <button type="submit" class="btn btn-success">Submit</button>
 </form>
+
 <h2>Søk Stedsnavn</h2>
+
 <form asp-action="Stedsnavn" method="post">
     @Html.AntiForgeryToken()
     <label for="searchTerm">Stedsnavn:</label>
     <input type="text" id="searchTerm" name="searchTerm" />
     <button type="submit" class="btn btn-success" >Submit</button>
 </form>
+
 @if (ViewData["Error"] != null) 
 {
     <div class="alert alert-danger">
