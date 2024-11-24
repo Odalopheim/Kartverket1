@@ -1,0 +1,19 @@
+﻿@model Kartverket.Models.CreateSaksbehandlerViewModel
+
+<h2 class="green-text">Slett Saksbehandler</h2>
+
+<p>Er du sikker på at du vil slette denne saksbehandleren?</p>
+
+<div>
+    <strong>Email:</strong> @Model.Email
+</div>
+
+<br />
+<br />
+
+<form asp-action="DeleteSaksbehandler" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="userId" value="@ViewBag.UserId" />
+    <button type="submit" class="btn btn-success">Slett</button>
+    <a asp-controller="Admin" asp-action="AdminHjemmeside" class="btn btn-secondary">Tilbake</a>
+</form>

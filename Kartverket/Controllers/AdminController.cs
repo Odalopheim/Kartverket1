@@ -50,4 +50,61 @@ public class AdminController : Controller
 
         return View(model);
     }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteSaksbehandler(string userId)
+    {
+        if (string.IsNullOrEmpty(userId))
+        {
+            TempData["ErrorMessage"] = "Ugyldig bruker-ID.";
+            return RedirectToAction("AdminHjemmeside");
+        }
+
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+        {
+            TempData["ErrorMessage"] = "Saksbehandler ikke funnet.";
+            return RedirectToAction("AdminHjemmeside");
+        }
+
+        var result = await _userManager.DeleteAsync(user);
+        if (result.Succeeded)
+        {
+            TempData["SuccessMessage"] = $"Saksbehandler {user.Email} ble slettet.";
+        }
+        else
+        {
+            TempData["ErrorMessage"] = "Kunne ikke slette saksbehandler.";
+        }
+
+        return RedirectToAction("AdminHjemmeside");
+    }
+
+
+    [HttpGet]
+    public async Task<IActionResult> ConfirmDelete(string userId)
+    {
+        if (string.IsNullOrEmpty(userId))
+        {
+            TempData["ErrorMessage"] = "Ingen bruker valgt for sletting.";
+            return RedirectToAction("AdminHjemmeside");
+        }
+
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+        {
+            TempData["ErrorMessage"] = "Saksbehandler ikke funnet.";
+            return RedirectToAction("AdminHjemmeside");
+        }
+
+        var model = new CreateSaksbehandlerViewModel
+        {
+            Email = user.Email
+        };
+
+        ViewBag.UserId = user.Id;
+        return View("DeleteSaksbehandler", model); // Bruker Delete-visningen
+    }
+
 }
