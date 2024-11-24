@@ -270,6 +270,37 @@ namespace Kartverket.Controllers
             }
             return View(model);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteUser()
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user != null)
+            {
+                var result = await _userManager.DeleteAsync(user);
+
+                if (result.Succeeded)
+                {
+                    // Logg ut brukeren etter sletting
+                    await _signInManager.SignOutAsync();
+
+                    TempData["SuccessMessage"] = "Profilen din er slettet, og du er logget ut.";
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    // Feil ved sletting
+                    TempData["ErrorMessage"] = "Noe gikk galt ved sletting av profilen din.";
+                    return RedirectToAction("MinSide");
+                }
+            }
+
+            TempData["ErrorMessage"] = "Brukeren finnes ikke.";
+            return RedirectToAction("MinSide");
+        }
+
     }
 }
 

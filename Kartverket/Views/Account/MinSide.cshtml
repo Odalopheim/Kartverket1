@@ -26,6 +26,11 @@
             <br />
 
             <a asp-action="EditUserInfo" class="btn btn-success">Rediger Info</a>
+            <br />
+            <form asp-action="DeleteUser" method="post">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-success">Slett Profil</button>
+            </form>
         </div>
 
         <div class="Innmeldinger">

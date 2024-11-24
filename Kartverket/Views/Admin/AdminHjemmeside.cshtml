@@ -2,11 +2,13 @@
 <h1>Admin Home</h1>
 <p>Welcome, Admin!</p>
 <a class="btn btn-success"href="@Url.Action("CreateSaksbehandler", "Admin")">Opprett en saksbehndler</a>
-<h2>Liste over Saksbehandlere</h2>
+<br />
+<h4>Liste over Saksbehandlere</h4>
 <table class="table table-striped">
     <thead>
         <tr>
             <th>Email</th>
+            <th>Handlinger</th>
         </tr>
     </thead>
     <tbody>
@@ -16,13 +18,18 @@
             {
                 <tr>
                     <td>@saksbehandler.Email</td>
+                    <td>
+                        <a asp-action="ConfirmDelete" asp-route-userId="@saksbehandler.Id" class="btn btn-success">
+                            Slett
+                        </a>
+                    </td>
                 </tr>
             }
         }
         else
         {
             <tr>
-                <td colspan="2">Ingen saksbehandlere funnet.</td>
+                <td colspan="3">Ingen saksbehandlere funnet.</td>
             </tr>
         }
     </tbody>
