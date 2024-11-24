@@ -1,0 +1,42 @@
+﻿@model Kartverket.Data.UserDetails
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Oppdater Brukerinformasjon";
+}
+
+<h2>Oppdater Brukerinformasjon</h2>
+
+<form asp-action="EditUserInfo" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="UserId" />
+    <input type="hidden" asp-for="User" />
+
+
+    <div class="form-group">
+        <label asp-for="Name" class="control-label">Navn</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Address" class="control-label">Adresse</label>
+        <input asp-for="Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PostNumber" class="control-label">Postnummer</label>
+        <input asp-for="PostNumber" class="form-control" />
+        <span asp-validation-for="PostNumber" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Lagre endringer</button>
+    <a asp-controller="Account" asp-action="MinSide" class="btn btn-success">Tilbake</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
