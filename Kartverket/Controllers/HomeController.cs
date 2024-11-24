@@ -22,13 +22,13 @@ namespace Kartverket.Controllers
             _stedsnavnService = stedsnavnService;
         }
 
-        // GET: Home
+        // GET: Hovedsiden for brukere
         public IActionResult Index()
         {
             return View();
         }
 
-        // POST: Search for Kommune Info
+        // POST: Søker opp kommuneInfo
         [HttpPost]
         public async Task<IActionResult> KommuneInfo(string kommuneNr)
         {
@@ -55,7 +55,7 @@ namespace Kartverket.Controllers
             return View("Index");
         }
 
-        // POST: Search for Stedsnavn
+        // POST: Søker opp stedsnavn
         [HttpPost]
         public async Task<IActionResult> Stedsnavn(string searchTerm)
         {

@@ -84,43 +84,44 @@
         }
 
         // Statusbasert fremdrift
-        var status = '@Model.Status';  // Få statusen fra server-siden (som er satt i modellen)
+        var status = '@Model.Status'; 
 
-        var progress = 0;  // Default til 0% fremdrift
-        var statusText = "";  // Status tekst
+        // Default for progressbaren
+        var progress = 0; 
+        var statusText = ""; 
         var progressBar = document.querySelector(".progress-bar");
         var statusMessage = document.getElementById("statusMessage");
 
-        // Beregn fremdrift og status tekst basert på statusen
+        // Sier fremdriften til Innmeldingen. 
         switch (status) {
             case "SendtInn":
                 progress = 25;
                 statusText = "Status: Sendt inn - Venter på behandling.";
-                progressBar.style.backgroundColor = "#4CAF50"; // Grønn farge
+                progressBar.style.backgroundColor = "#1A833B"; 
                 break;
             case "Behandles":
                 progress = 50;
                 statusText = "Status: Under behandling - Arbeidet er pågående.";
-                progressBar.style.backgroundColor = "#4CAF50"; // Grønn farge
+                progressBar.style.backgroundColor = "#1A833B"; 
                 break;
             case "Godtatt":
                 progress = 75;
                 statusText = "Status: Godtatt - Klar for fullføring.";
-                progressBar.style.backgroundColor = "#4CAF50"; // Grønn farge
+                progressBar.style.backgroundColor = "#1A833B"; 
                 break;
             case "Fullført":
                 progress = 100;
                 statusText = "Status: Fullført - Prosessen er avsluttet.";
-                progressBar.style.backgroundColor = "#4CAF50"; // Grønn farge
+                progressBar.style.backgroundColor = "#1A833B"; 
                 break;
             case "Avvist":
-                progress = 0;
+                progress = 100;
                 statusText = "Status: Avvist - Må vurderes på nytt.";
-                progressBar.style.backgroundColor = "#f44336"; // Rød farge for "Avvist"
+                progressBar.style.backgroundColor = "#CC0000"; 
                 break;
             default:
                 statusText = "Status: Ukjent - Ingen kjent fremdrift.";
-                progressBar.style.backgroundColor = "#f44336"; // Rød farge som fallback
+                progressBar.style.backgroundColor = "#CC0000"; 
                 break;
         }
 
@@ -128,6 +129,6 @@
         progressBar.style.width = progress + "%";
         progressBar.setAttribute("aria-valuenow", progress);
 
-        statusMessage.textContent = statusText; // Vis statusmelding
+        statusMessage.textContent = statusText; 
     </script>
 }

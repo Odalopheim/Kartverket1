@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kartverket.Controllers
 {
+    //Kunn tilgjengelig for Saksbehandlere
     [Authorize(Roles = "Saksbehandler")]
     public class SaksbehandlerController : Controller
     {
@@ -29,7 +30,7 @@ namespace Kartverket.Controllers
             _userManager = userManager;
         }
 
-        // View list of geo changes for admin
+        // Lister opp innmeldingene for Saksbehandler
 
         public async Task<IActionResult> Saksbehandler()
         {
@@ -79,7 +80,7 @@ namespace Kartverket.Controllers
                 geoChange.GeoJson = model.GeoJson ?? geoChange.GeoJson;
                 geoChange.Id = model.Id;
 
-                // Kall UpdateGeoChange i tjenesten
+                
                 _geoChangeService.UpdateGeoChangeAdmin(
 
                     geoChange.Id,

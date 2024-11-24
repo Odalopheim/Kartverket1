@@ -29,11 +29,12 @@ namespace Kartverket.Controllers
             _userManager = userManager;
             _context = context;
         }
-
-        // User functions
+       
+        // GET: Viser siden der Brukerene kan registrer feil i kart
         [HttpGet]
         public IActionResult RegisterAreaChange() => View();
 
+        //POST: Lar Brukerene sende inn feil for så å komme tilbake til MinSide 
         [HttpPost]
         public async Task<IActionResult> RegisterAreaChange(string geoJson, string description, GeoChangeCategory category)
         {
@@ -57,7 +58,7 @@ namespace Kartverket.Controllers
             }
         }
 
-        // Edit geo change
+        // GET: Viser Inmelding på siden for å endre 
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -70,6 +71,7 @@ namespace Kartverket.Controllers
             return View(geoChange);
         }
 
+        //POST: Lar Brukeren endre innemdlingene sine for så å bli omdirigert til MinSide
         [HttpPost]
         public async Task<IActionResult> Edit(GeoChange model)
         {
@@ -91,7 +93,7 @@ namespace Kartverket.Controllers
             return View(model);
         }
 
-        // Delete geo change
+        // GET: Får opp slette innmedlinger siden for brukeren
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
@@ -104,6 +106,7 @@ namespace Kartverket.Controllers
             return View(geoChange);
         }
 
+        //POST: Lar brukeren slette innemldingen sin. For så å bli omdirigert til MinSide
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -115,7 +118,7 @@ namespace Kartverket.Controllers
             return RedirectToAction("MinSide", "Account");
         }
 
-        // View geo change details
+        // GET: Lar brukeren se innmelingene sine
         [HttpGet]
         public IActionResult Details(int id)
         {
