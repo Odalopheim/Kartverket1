@@ -25,13 +25,13 @@ namespace Kartverket.Controllers
             _context = context;
         }
 
-        // GET: /Account/Login
+        // GET: Loginn side
         public IActionResult Login()
         {
             return View();
         }
 
-        // POST: /Account/Login
+        // POST: Lar brukeren logge inn der den ser også på hvilken rolle brukeren har for å denne han/hun til riktig plass
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
@@ -41,11 +41,10 @@ namespace Kartverket.Controllers
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 if (user != null)
                 {
-                    // Logg informasjon om brukeren som ble funnet
                     _logger.LogInformation($"User found: {user.Email}, NormalizedEmail: {user.NormalizedEmail}");
 
                     var result = await _signInManager.PasswordSignInAsync(
-                        userName: user.Email, // Bruk e-post som brukernavn
+                        userName: user.Email,
                         password: model.Password,
                         isPersistent: false,
                         lockoutOnFailure: false);
@@ -53,18 +52,26 @@ namespace Kartverket.Controllers
                     if (result.Succeeded)
                     {
                         _logger.LogInformation($"Login succeeded for user {user.Email}");
-                        return RedirectToAction("MinSide", "Account");
+
+                        // Sjekk om brukerens e-post har @kartverket.no (saksbehandler). Og sender Saksbehandleren til Saksbehandlersiden
+                        if (user.Email.EndsWith("@kartverket.no", StringComparison.OrdinalIgnoreCase))
+                        {
+                            _logger.LogInformation($"User {user.Email} is from kartverket.no (Saksbehandler).");
+                            return RedirectToAction("Saksbehandler", "Saksbehandler");  
+                        }
+
+                        // Sender brukeren til deres MinSide
+                        _logger.LogInformation($"User {user.Email} is not a Saksbehandler.");
+                        return RedirectToAction("MinSide", "Account");  
                     }
                     else
                     {
-                        // Logg at innlogging mislyktes
                         _logger.LogWarning($"Login failed for user {user.Email}");
                         ModelState.AddModelError("", "Invalid login attempt.");
                     }
                 }
                 else
                 {
-                    // Logg at brukeren ikke ble funnet
                     _logger.LogWarning($"User with email {model.Email} not found.");
                     ModelState.AddModelError("", "Invalid login attempt.");
                 }
@@ -73,9 +80,10 @@ namespace Kartverket.Controllers
         }
 
 
-        
 
-        // POST: /Account/Logout
+
+
+        // POST: Logger ut 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
@@ -84,20 +92,23 @@ namespace Kartverket.Controllers
             return RedirectToAction("Login", "Account");
         }
 
-        // GET: /Account/Register
+        // GET: Registrer
         public IActionResult Register()
         {
             return View();
         }
 
-        // POST: /Account/Register
+        // POST: Registrere bruker
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegistrerViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = model.Email, Email = model.Email }; // Bruk e-post som brukernavn
+                
+                var user = new IdentityUser { UserName = model.Email, Email = model.Email };
+
+               
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
@@ -113,11 +124,24 @@ namespace Kartverket.Controllers
                     _context.UserDetails.Add(userDetails);
                     await _context.SaveChangesAsync();
 
+                    // Assign the user to a default role
+                    var roleResult = await _userManager.AddToRoleAsync(user, "Bruker"); 
+
+                    if (!roleResult.Succeeded)
+                    {
+                        foreach (var error in roleResult.Errors)
+                        {
+                            ModelState.AddModelError("", error.Description);
+                        }
+                    }
+
                     await _signInManager.SignInAsync(user, isPersistent: false);
+
                     return RedirectToAction("RegistrationSuccess");
                 }
                 else
                 {
+           
                     foreach (var error in result.Errors)
                     {
                         ModelState.AddModelError("", error.Description);
@@ -154,7 +178,7 @@ namespace Kartverket.Controllers
             return View(model);
         }
 
-        // GET: /Account/RegistrationSuccess
+        // GET: Siden med at registreringen var vellykket 
         public IActionResult RegistrationSuccess()
         {
             return View();

@@ -7,22 +7,19 @@
 
 <h2>Endre Innmelding</h2>
 
-<form asp-controller="Home" asp-action="Edit" method="post">
+<form asp-action="Edit" method="post">
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-    <!-- Hidden input for Id -->
+   <!--SKjulte felter for å beholde verdiene-->
     <input type="hidden" asp-for="Id" />
-
-    <!-- Hidden input for UserId -->
     <input type="hidden" asp-for="UserId" />
-
-    <!-- Hidden input for GeoJson -->
     <input type="hidden" asp-for="GeoJson" />
 
     <div class="containerS">
         <div class="left-side">
-            <a asp-action="MinSide" class="btn btn-success">Tilbake</a>
+            <a asp-controller="Account" asp-action="MinSide" class="btn btn-success">Tilbake</a>
+
             <br />
             <div class="form-group">
                 <label asp-for="Description"></label>
@@ -45,7 +42,7 @@
         </div>
 
         <div class="right-side">
-            <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
+            <div id="map" class="map-custom"></div>
         </div>
     </div>
 </form>

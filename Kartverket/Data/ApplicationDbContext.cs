@@ -1,24 +1,15 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Kartverket.Data;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Kartverket.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
-
-namespace Kartverket.Data
+public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 {
-    public class ApplicationDbContext : IdentityDbContext<IdentityUser>// DbContext
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : base(options)
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-        }
-
-        public DbSet<UserDetails> UserDetails { get; set; }
-        public DbSet<GeoChange> GeoChanges { get; set; }
-       
-
-
-       
     }
+
+    public DbSet<UserDetails> UserDetails { get; set; }
+    public DbSet<GeoChange> GeoChanges { get; set; }
 }

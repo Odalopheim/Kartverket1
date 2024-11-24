@@ -6,20 +6,23 @@
 
 <h2>Saksbehandler</h2>
 
+<!-- Form for å søke i GeoChanges basert på dato og kategori -->
 <form asp-action="SearchGeoChanges" method="get" class="mb-4">
     <div class="row">
         <div class="col-md-3">
             <label for="fromDate">Fra dato:</label>
             <input type="date" id="fromDate" name="fromDate" class="form-control" />
         </div>
+
         <div class="col-md-3">
             <label for="toDate">Til dato:</label>
             <input type="date" id="toDate" name="toDate" class="form-control" />
         </div>
+
         <div class="col-md-3">
             <label for="category">Kategori:</label>
             <select id="category" name="category" class="form-control">
-                <option value="">Velg kategori</option>
+                <option value="">Alle</option>
                 <option value="Stedsnavn">Stedsnavn</option>
                 <option value="Veinavn">Veinavn</option>
                 <option value="Tursti">Tursti</option>
@@ -27,6 +30,7 @@
                 <option value="Annet">Annet</option>
             </select>
         </div>
+
         <div class="col-md-3 align-self-end">
             <button type="submit" class="btn btn-success">Søk</button>
         </div>
@@ -42,6 +46,8 @@
             <th>Kategori</th>
         </tr>
     </thead>
+
+        <!-- Iterer gjennom GeoChange-objektene og viser informasjonen -->
     <tbody>
         @foreach (var geoChange in Model)
         {
@@ -49,8 +55,10 @@
                 <td>@geoChange.CreatedDate.ToString("dd.MM.yyyy")</td>
                 <td>@geoChange.Status</td>
                 <td>@geoChange.Category</td>
+
+                <!--Knapp for å åpne og oppdatere innmeldinger-->
                 <td>
-                    <a asp-action="GeoChangeDetails" asp-route-id="@geoChange.Id" class="btn btn-success">Vis detaljer</a>
+                    <a asp-action="Update" asp-route-id="@geoChange.Id" class="btn btn-success">Åpne</a>
                 </td>
             </tr>
         }

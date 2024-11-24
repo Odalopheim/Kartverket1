@@ -4,39 +4,38 @@ using Kartverket.Data;
 using Kartverket.Services;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql;
-using System.Diagnostics;
 using MySqlConnector;
 using System.Data;
-using Microsoft.CodeAnalysis;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Legg til logging-tjenester
-builder.Logging.ClearProviders(); 
+//Konfigurer Logger
+builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
+//Legg til Konfigurasjonsfiler
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
 Console.WriteLine(builder.Environment);
 
-// Legger til services til containeren
+//Legg til Tjenester til Container
 builder.Services.AddControllersWithViews();
 
-// Configure MySQL/MariaDB med transient feilresiliens
+//Konfigurer MySQL/MariaDB med Transient Feilresiliens
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
         new MySqlServerVersion(new Version(10, 5, 8)),
         mysqlOptions => mysqlOptions.EnableRetryOnFailure(
-            maxRetryCount: 5, // Antall ganger å prøve på nytt
-            maxRetryDelay: TimeSpan.FromSeconds(10), // Forsinkelse mellom forsøk
-            errorNumbersToAdd: null // Eventuelle spesifikke feilnumre som skal håndteres
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(10),
+            errorNumbersToAdd: null
         )
     )
 );
 
-// Add Identity services
+//Legg til Identity-tjenester
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
     // Password settings
@@ -50,14 +49,14 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
-// Configure authentication
+//Konfigurer Autentisering
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login/";
     options.AccessDeniedPath = "/Account/AccessDenied/";
 });
 
-// Register IDbConnection for Dapper
+//Registrer IDbConnection for Dapper
 builder.Services.AddTransient<IDbConnection>((sp) =>
 {
     var configuration = sp.GetRequiredService<IConfiguration>();
@@ -65,19 +64,19 @@ builder.Services.AddTransient<IDbConnection>((sp) =>
     return new MySqlConnection(connectionString);
 });
 
-// Register GeoChangeService
+//Registrer GeoChangeService
 builder.Services.AddScoped<GeoChangeService>();
 
-// Binder API settings fra appsettings.json
+//Bind API-innstillinger fra appsettings.json
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 
-// Registrerer services og interface
+//Registrer Tjenester og Interface
 builder.Services.AddHttpClient<IKommuneInfoService, KommuneInfoService>();
 builder.Services.AddHttpClient<IStedsnavnService, StedsnavnService>();
 
 var app = builder.Build();
 
-// Apply migrations at startup with retry logic
+//Apply Migrations ved Oppstart med Retry Logikk
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -108,13 +107,14 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-if (!app.Environment.IsDevelopment())
+//Initialiser Roller og Brukere etter at App er Opprettet
+using (var serviceScope = app.Services.CreateScope())
 {
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
+    var serviceProvider = serviceScope.ServiceProvider;
+    await RoleInitializer.SeedRolesAsync(serviceProvider);
 }
 
-// Henter og logger MariaDB-versjon
+//Hent og Logg MariaDB-versjon
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -139,7 +139,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// bruk av middleware for feilhåndtering og sikkerhet
+//Bruk av Middleware for Feilhåndtering og Sikkerhet
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");

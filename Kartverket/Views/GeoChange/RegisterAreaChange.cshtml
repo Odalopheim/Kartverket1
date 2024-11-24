@@ -1,20 +1,19 @@
 ﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Ny Innmelding";
 }
 
-<!-- Deler skjermen -->
-<div style="display: flex; height: 100vh;">
-
-    <!-- Plasserer kartet til venstre -->
-    <div style="flex: 2; position: relative;">
-        <div id="map" style="height: 90%;"></div>
+<div class="flex-container1">
+    <div class="left-panel">
+        <div id="map" class="map-small"></div>
     </div>
 
-    <!-- Innmeldings siden til høyre -->
-    <div style="flex: 1; background-color: #F3F0F0; padding: 20px;">
+  
+    <div class="right-panel1">
         <h2 class="green-text">Rett i kartet</h2>
-        <form asp-action="RegisterAreaChange" method="post" enctype="multipart/form-data">
+        <form id="innmeldingForm" asp-action="RegisterAreaChange" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
             <input type="hidden" id="geoJsonInput" name="geoJson" />
+
             <!-- Velge mellom katogorier  -->
             <div>
                 <label for="category" class="form-label">Kategori</label>
@@ -27,6 +26,7 @@
                 </select>
             </div>
 
+            <!--Tekstfelt for beskrivelse-->
             <div class="mt-3">
                 <label for="description" class="form-label">Beskrivelse</label>
                 <textarea class="form-control" id="description" name="description" rows="3"></textarea>
@@ -34,12 +34,36 @@
 
 
             <br />
-            <button type="submit" style="background-color: #1A833B" class="btn btn-success">Send inn</button>
+            <button type="submit" class= "btn btn-success btn btn-success">Send inn</button>
         </form>
     </div>
 </div>
 
+<!-- Hindrer bruker å sende inn skjema med mangler -->
+<div id="validationModal" class="custom-modal">
+  <div class="modal-content1">
+    <div class="modal-header">
+      <span class="close" id="closeModalSpan">&times;</span>
+      <h2>Valideringsfeil</h2>
+    </div>
+
+    <div class="modal-body">
+      <p>Alle feltene må fylles ut.</p>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn1" id="closeModalButton">Lukk</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
 @section Scripts {
+
+    <!-- Inkluderer nødvendige CSS og JavaScript for Leaflet-kart -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -109,5 +133,49 @@
                 map.setView(center, 15);
             })
             .addTo(map);
+
+        // Valideringsfunksjon for skjemaet
+        function validateForm() {
+            var category = document.getElementById('category').value;
+            var description = document.getElementById('description').value;
+            var geoJsonInput = document.getElementById('geoJsonInput').value;
+
+            if (!category || !description || !geoJsonInput) {
+                // Vis modal dialogboks
+                var modal = document.getElementById("validationModal");
+                modal.style.display = "block";
+                return false; // Forhindre innsending
+            }
+            return true; // Tillat innsending
+        }
+
+        // Legg til event listener på skjemaet
+        document.getElementById('innmeldingForm').addEventListener('submit', function(event) {
+            if (!validateForm()) {
+                event.preventDefault();
+            }
+        });
+
+        // Funksjon for å kun lukke modal uten omdirigering
+        function closeModal() {
+            document.getElementById('validationModal').style.display = "none";
+        }
+
+        // Lukk modal når brukeren klikker på <span> (x)
+        document.getElementById('closeModalSpan').onclick = closeModal;
+
+        // Lukk modal når brukeren klikker på Lukk-knappen
+        document.getElementById('closeModalButton').onclick = closeModal;
+
+        // Lukk modal når brukeren klikker utenfor modal
+        window.onclick = function(event) {
+            var modal = document.getElementById('validationModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+
+
     </script>
 }

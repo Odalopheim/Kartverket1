@@ -20,9 +20,7 @@
             <p><strong>Email:</strong> @Model.RegistrerViewModel.Email</p>
             <p><strong>Address:</strong> @Model.RegistrerViewModel.Address</p>
             <p><strong>PostNummer:</strong> @Model.RegistrerViewModel.PostNumber</p>
-            <a asp-controller="Home" asp-action="RegisterAreaChange" class="btn btn-success">
-                Ny innmelding
-            </a>
+            <a asp-controller="GeoChange" asp-action="RegisterAreaChange" class="btn btn-success">Ny innmelding</a>
         </div>
 
         <div class="Innmeldinger">
@@ -35,18 +33,18 @@
                             <th>Endring</th>
                         </tr>
                     </thead>
+
                     <tbody>
                     @foreach (var change in Model.GeoChange)
                     {
-                        <tr data-id="@change.Id" onclick="window.location.href='@Url.Action("Details", "Home", new { id = change.Id })'" style="cursor: pointer;">
-                            <!-- Bruk change.CreatedDate i stedet for Model.GeoChange -->
+                        <tr data-id="@change.Id" onclick="window.location.href='@Url.Action("Details", "GeoChange", new { id = change.Id })'" style="cursor: pointer;">
                             <td>@change.CreatedDate.ToString("dd.MM.yyyy")</td>
                             <td>@change.Category</td>
                             <td>@change.Status</td>
                             <td>
-                                <!-- Lenker for redigering og sletting -->
-                                <a asp-controller="Home" asp-action="Edit" asp-route-id="@change.Id" class="text-success">Endre</a> |
-                                <a asp-controller="Home" asp-action="Delete" asp-route-id="@change.Id" class="text-success">Slette</a>
+                                
+                                <a asp-controller="GeoChange" asp-action="Edit" asp-route-id="@change.Id" class="text-success">Endre</a>
+                                <a asp-controller="GeoChange" asp-action="Delete" asp-route-id="@change.Id" class="text-success">Slette</a>
                             </td>
                         </tr>
                     }

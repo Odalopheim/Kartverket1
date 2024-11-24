@@ -56,6 +56,18 @@ namespace Kartverket.Data
             _dbConnection.Execute(query, new { Id = id, Description = description, GeoJson = geoJson, UserId = userId, Status = status, Category = category });
         }
 
+        public void UpdateGeoChangeAdmin(int id, GeoChangeStatus status, GeoChangeCategory category)
+        {
+            string query = @"UPDATE GeoChanges 
+                     SET   Status = @Status, Category = @Category 
+                     WHERE Id = @Id";
+
+            _logger.LogInformation("Executing query: " + query);
+            _logger.LogInformation($"Parameters - Id: {id}, Status: {status}, Category: {category}");
+
+            _dbConnection.Execute(query, new { Id = id, Status = status, Category = category });
+        }
+
 
 
         // Deletes an existing GeoChange record based on its Id and UserId
@@ -66,27 +78,24 @@ namespace Kartverket.Data
         }
 
         //Søkefunskjon for saksbehandlere
-        public IEnumerable SearchGeoChanges(DateTime? fromDate, DateTime? toDate, GeoChangeCategory? category)
+        public IEnumerable<GeoChange> SearchGeoChanges(DateTime? fromDate, DateTime? toDate, GeoChangeCategory? category)
         {
-            string query = @"SELECT * FROM GeoChanges WHERE 1=1";
-
-            if (fromDate.HasValue)
-            {
-                query += " AND CreatedDate >= @FromDate";
+            var query = "SELECT * FROM GeoChanges WHERE 1=1"; 
+            if (fromDate.HasValue) 
+            { 
+                query += " AND CreatedDate >= @FromDate"; 
             }
-
-            if (toDate.HasValue)
-            {
-                query += " AND CreatedDate <= @ToDate";
+            if (toDate.HasValue) 
+            { 
+                query += " AND CreatedDate <= @ToDate"; 
             }
-
-            if (category.HasValue)
-            {
-                query += " AND Category = @Category";
+            if (category.HasValue) 
+            { 
+                query += " AND Category = @Category"; 
             }
-
-            return _dbConnection.Query(query, new { FromDate = fromDate, ToDate = toDate, Category = category });
+            var results = _dbConnection.Query<GeoChange>(query, new { FromDate = fromDate, ToDate = toDate, Category = category }); 
+            return results;
         }
 
-    }
+        }
 }

@@ -1,0 +1,106 @@
+﻿@model Kartverket.Data.GeoChange
+@using System.Text.Json
+
+@{
+    ViewData["Title"] = "Update GeoChange";
+}
+
+<h2>Oppdater Innmelding</h2>
+
+<form asp-action="Update" method="post">
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+    <!-- Skjulte inputfelt for å bevare verdiene som ikke skal endres -->
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="UserId" />
+    <input type="hidden" asp-for="GeoJson" />
+    <input type="hidden" asp-for="Description" />
+
+
+    <div class="containerS">
+        <div class="left-side">
+
+            <a asp-action="Saksbehandler" class="btn btn-success">Tilbake</a>
+
+            <br />
+            <p><strong>Dato: </strong> @Model.CreatedDate.ToString("dd.MM.yyyy")</p>
+            
+            <br />
+            <p><strong>Beskrivelse: </strong> @Model.Description</p>
+
+        <div class="form-group">
+                <label asp-for="Category">Kategori</label>
+                <select asp-for="Category" class="form-control">
+                    <option value="Stedsnavn">Stedsnavn</option>
+                    <option value="Veinavn">Veinavn</option>
+                    <option value="Tursti">Tursti</option>
+                    <option value="Bilvei">Bilvei</option>
+                    <option value="Annet">Annet</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Status">Status</label>
+                <select asp-for="Status" class="form-control">
+                    <option value="SendtInn">SendtInn</option>
+                    <option value="Godtatt">Godtatt</option>
+                    <option value="Behandles">Behandles</option>
+                    <option value="Fullført">Fullført</option>
+                    <option value="Avvist">Avvist</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success">Lagre Endringer</button>
+        </div>
+        </div>
+
+        <div class="right-side">
+            <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
+        </div>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    
+    <!-- Inkluderer nødvendige CSS og JavaScript for Leaflet-kart -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+
+    <script>
+        var map = L.map('map').setView([58.1467, 7.9956], 15);
+
+        var topoLayer = L.tileLayer('https://cache.kartverket.no/v1/wmts/1.0.0/topo/default/webmercator/{z}/{y}/{x}.png', {
+            attribution: '&copy; <a href="http://www.kartverket.no/">Kartverket</a>'
+        });
+
+        var grayLayer = L.tileLayer('https://cache.kartverket.no/v1/wmts/1.0.0/topograatone/default/webmercator/{z}/{y}/{x}.png', {
+            attribution: '&copy; <a href="http://www.kartverket.no/">Kartverket</a>'
+        });
+
+        topoLayer.addTo(map);
+
+        var baseMaps = {
+            "Topografisk kart": topoLayer,
+            "Grått kart": grayLayer
+        };
+        L.control.layers(baseMaps).addTo(map);
+
+        var geoJsonData = @Html.Raw(JsonSerializer.Serialize(Model.GeoJson));
+        if (geoJsonData && geoJsonData !== "null") {
+            var geoJsonLayer = L.geoJSON(JSON.parse(geoJsonData), {
+                onEachFeature: function (feature, layer) {
+                    if (feature.properties && feature.properties.Category) {
+                        layer.bindPopup("Category: " + feature.properties.Category);
+                    }
+                }
+            }).addTo(map);
+            map.fitBounds(geoJsonLayer.getBounds());
+        } else {
+            alert("Ingen GeoJSON-data tilgjengelig");
+        }
+    </script>
+}

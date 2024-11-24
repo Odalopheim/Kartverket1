@@ -1,8 +1,12 @@
 ﻿@model Kartverket.ViewModels.RegistrerViewModel
-<!-- Bakgrunnscontainer som fyller hele skjermen -->
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Register";
+}
+
 <div class="background-container"></div>
 
-<!-- Wrapper som sentrerer register-container på skjermen -->
 <div class="login-wrapper">
     <div class="login-container">
         <h2 class="green-text">Register</h2>
@@ -10,35 +14,33 @@
         <form asp-action="Register" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <!-- Registrer Name -->
+
             <div>
                 <label asp-for="Name"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
-            <!-- Registrer Address -->
+
             <div>
                 <label asp-for="Address"></label>
                 <input asp-for="Address" class="form-control" />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
 
-            <!-- Registrer PostNumber -->
             <div>
                 <label asp-for="PostNumber"></label>
                 <input asp-for="PostNumber" class="form-control" />
                 <span asp-validation-for="PostNumber" class="text-danger"></span>
             </div>
 
-            <!-- Registrer Email -->
+
             <div>
                 <label asp-for="Email"></label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
 
-            <!-- Registrer Password -->
             <div>
                 <label asp-for="Password"></label>
                 <div class="input-group">
@@ -52,7 +54,7 @@
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
 
-            <!-- Bekreft Passord -->
+s
             <div>
                 <label asp-for="ConfirmPassword"></label>
                 <div class="input-group">

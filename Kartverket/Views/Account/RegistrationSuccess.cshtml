@@ -1,15 +1,14 @@
 ﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Registration Success";
 }
 
 <!DOCTYPE html>
 <html lang="no">
 <head>
-    <!-- Inkludere site.css -->
-    <link rel="stylesheet" type="text/css" href="/css/site.css">
 </head>
 <body>
-    <!-- Modal HTML -->
+
     <div id="successModal" class="modal">
         <div class="modal-content">
             <p class ="green-text">Brukeren din er registrert!</p>
@@ -17,20 +16,20 @@
         </div>
     </div>
 
-    <!-- Modal JavaScript -->
+    
     <script>
-        // Get the modal
+       
         var modal = document.getElementById("successModal");
     
-        // Get the button that closes the modal
+      
         var okButton = document.getElementById("okButton");
 
-        // When the user clicks the button, close the modal and redirect
+        // Omdirigeres til MinSide
         okButton.onclick = function() {
             modal.style.display = "none";
             window.location.href = '@Url.Action("MinSide", "Account")';
         }
-        // When the user clicks anywhere outside of the modal, close it
+
         window.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = "none";
@@ -38,7 +37,7 @@
             }
         }
 
-        // Show the modal when the page loads
+       
         window.onload = function() {
             modal.style.display = "block";
         }
