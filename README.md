@@ -238,6 +238,8 @@ Controller er ansvarlig for å håndtere logikken og styrer flyten mellom Model 
 	- Et tilpasset nettverk for å koble sammen tjenestene.
 
 ## Testing 
+Testantall = 20, alle tester er vellykket.
+
 ![Skjermbilde 2024-11-25 123109](https://github.com/user-attachments/assets/5849a043-0a81-42fc-a5e1-c6f882579dea)
 
 ### Controller tester
