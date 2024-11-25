@@ -7,6 +7,7 @@
 ## Opprettelse av bruker til saksbehandler 
 For å lage saksbehandlerbrukere må man først logge inn på adminbrukeren. 
 Alle saksbehandlere må ha @Kartverket.no
+
 Innloggingsinfo admin:
 - Email: admin@Kartverket.no
 - Passord: Admin123!
