@@ -282,15 +282,18 @@ Testing under EXPO
 
 
 ## Sikkerhet
-### Autentisering og Autorisering
-- Custom session-basert autentisering
+- Autentisering og Autorisering
+  - Custom session-basert autentisering
+  - Rollebasert tilgangkontroll
 - CSRF-beskyttelse ved bruk av AntiForgeryToken
 - Beskyttelse mot SQL-Injections ved bruk av Dapper og parameteriserte spørringer
 - Feilhåndtering og strukturert Logging ved bruk av ILogger
-- Rollebasert tilgangkontroll
 - Validering av input
 - Bruk av HTTPS Redirection
 - Bruk av HTTP Strict Transport Security
+
+
+## Databasetilkobling og Resiliens
 - Transient Feilresiliens for Databasekobling
 - Dapper DB-tilkobling med IDbConnection
   
