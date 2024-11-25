@@ -15,9 +15,6 @@ Innloggingsinfo saksbehanler:
  - Email: saksbehandler@Kartverket.no
  - Passord: Saksbehandler123!
 
-## Testing
-Testene ligger i branchen " " som er identisk til Main bare med testene. Testene førte til feilmeldinger hos enkelte men ikke alle. Vi valgte derfor å ikke legge disse inn i Main da vi ikke ønsket at disse eventuelt skulle ødelegge for resten av applikasjonen hvor alt funker.
-
 ## Hovedfunksjon 
 ### Brukere 
 - Registrere feil i kart 
@@ -240,13 +237,43 @@ Controller er ansvarlig for å håndtere logikken og styrer flyten mellom Model 
 	- Et tilpasset nettverk for å koble sammen tjenestene.
 
 ## Testing 
-- Antall tester
-- Hva som testes
+![Skjermbilde 2024-11-25 123109](https://github.com/user-attachments/assets/5849a043-0a81-42fc-a5e1-c6f882579dea)
 
-Manuelltesting
+### Controller tester
+#### AccountControllerTest
+- Tester når ModelState er ugyldig
+- Tester når ModelState er gyldig
+- Tester at saksbehandler logger inn til saksbehandlerside
+#### AdminControllerTest
+- Tester at sakbehandler informasjon blir hentet riktig fram og viser korrekt info
+#### GeoChangeControllerTest
+- Tester når data er ugyldig
+#### HomeControllerTest
+- Tester stedsnavn API når søkefelt er tomt
+- Tester stedsnavn API når søkefelt er fylt ut
+- Tester stedsnavn API når det er ugyldig stedsnavn
+- Tester kommuneinfo med ugyldig kommunenummer
+- Tester kommuneinfo når søkefelt er tomt
+- Tester kommuneinfo med gyldig kommunenummer
+
+### Models tester
+#### LoginViewModelTest
+- Tester at email og passord er riktig
+- Tester om emailfeltet er tomt 
+- Tester om passordfeltet er tomt
+#### RegistrerViewModelTest
+- Tester om det er gyldig informasjon som blir skrevet
+#### SaksbehandlerViewModelTest
+- Tester at det er gyldig saksbehandler email og passord
+- Tester om email feltet ikke er fylt ut
+- Tester om saksbehandler emailen er ugyldig
+- Tester at det ikke er saksbehandler email
+- Tester at passordene er like 
+
+### Manuelltesting
 - Hele systemet har blitt gjennomgått og sjekket slik at alle steder man legger inn innput får man ut riktig output.
 
-Testing under EXPO
+### Testing under EXPO
 - Under EXPO 11. november 2024 ble det gjennomført flere brukstester og usability-tester av både applikasjonen og prototypen
 - Applikasjonen har også blitt testet av diverse venner og familie som er i alderen 20år til 80år
 
