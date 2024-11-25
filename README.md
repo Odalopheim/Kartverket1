@@ -2,7 +2,38 @@
 
 ![Gif](https://github.com/user-attachments/assets/df8764cc-2511-4035-93fa-c79145e2f0db)
 
-## Rett i Kartet 
+# Viktig info
+
+## Opprettelse av bruker til saksbehandler 
+For å lage saksbehandlerbrukere må man først logge inn på adminbrukeren. 
+Alle saksbehandlere må ha @Kartverket.no
+Innloggingsinfo admin:
+- Email: admin@Kartverket.no
+- Passord: Admin123!
+
+Innloggingsinfo saksbehanler:
+ - Email: saksbehandler@Kartverket.no
+ - Passord: Saksbehandler123!
+
+## Testing
+Testene ligger i branchen " " som er identisk til Main bare med testene. Testene førte til feilmeldinger hos enkelte men ikke alle. Vi valgte derfor å ikke legge disse inn i Main da vi ikke ønsket at disse eventuelt skulle ødelegge for resten av applikasjonen hvor alt funker.
+
+## Hovedfunksjon 
+### Brukere 
+- Registrere feil i kart 
+- Sjekke status av egen innmeldinger
+- Motta status endringer på innmeldinger
+
+### Saksbehandlerer
+- Oversikt over alle innmeldinger sortert etter kategori og dato
+- Endre status og kategori på innmeldinger
+
+### Administrator
+- Oversikt over alle saksbehandlere
+- Mulighet til å opprette og slette saksbehandlere 
+
+
+# Rett i Kartet 
 <pre>
 │   ├── ## Root         
 │   │   ├── # css         
@@ -175,7 +206,7 @@ Controller er ansvarlig for å håndtere logikken og styrer flyten mellom Model 
 - `environment`
 	- Setter miljøvariabler som `MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE`, `MYSQL_USER` og `MYSQL_PASSWORD`
 - `ports`
-	- `"3306:3306"` Mapper port 3306 i containeren til port 3306 på 	vertsmaskinen.
+	- `"3306:3306"` Mapper port 3306 i containeren til port 3306 på vertsmaskinen.
 - `volumes`
 	- Bruker et volum kalt `mariadb_data` for å persistere data.
 - `networks`
@@ -186,7 +217,7 @@ Controller er ansvarlig for å håndtere logikken og styrer flyten mellom Model 
   - `context: .`  
 	- Byggekonteksten er satt til gjeldende katalog.
   - `dockerfile: Kartverket/Dockerfile`  
-	- Spesifiserer Dockerfile i `Kartverket`-katalogen for bygging av 	avbildningen.
+	- Spesifiserer Dockerfile i `Kartverket`-katalogen for bygging av avbildningen.
 
 - `container_name:`
 	- kartverket Setter navnet på containeren til `kartverket`.
@@ -195,17 +226,51 @@ Controller er ansvarlig for å håndtere logikken og styrer flyten mellom Model 
 	- Setter miljøvariabler, inkludert databasetilkoblingsstrengen 	(`ConnectionStrings__DefaultConnection`).
 
 - `ports:`
-	- `"5000:80"` Mapper port 80 i containeren til port 5000 på 	vertsmaskinen.
+	- `"5000:80"` Mapper port 80 i containeren til port 5000 på vertsmaskinen.
 
 - `depends_on:`
-	- Angir en avhengighet til `mariadb`-tjenesten. Docker Compose vil 	starte `mariadb` først.
+	- Angir en avhengighet til `mariadb`-tjenesten. Docker Compose vil starte `mariadb` først.
 
 - `networks:`
 	- Bruker et nettverk kalt backend.
 ### Volumes
 - `mariadb_data:` 
-	- Et navngitt volum for MariaDB-tjenesten, hvor MariaDB lagrer sine 	datafiler.
+	- Et navngitt volum for MariaDB-tjenesten, hvor MariaDB lagrer sine datafiler.
 
 ### Nettverk
 - `backend:` 
 	- Et tilpasset nettverk for å koble sammen tjenestene.
+
+## Testing 
+- Antall tester
+- Hva som testes
+
+## MariaDB database
+### Dapper
+- Bruker dapper til å kjøre SQL-spørringer mot databasen
+- Mikro orm 
+- Fordeler med dapper
+	- Skriver SQL-spørringer direkte
+ 	- Raskere med dapper
+  	- Hjelper med å hindre SQL injections 
+
+### Entity framework
+- Fullverdig orm
+- Håndterer migrasjoner
+
+
+### Fordeler med Dapper og Entity Framework
+- Fordelene med å bruke begge er at man får den høye ytelsen fra Dapper og produktivitetsfordelene til Entity Framework.
+
+
+### Tabeller laget 
+- `AspNetRolesClaims` : Lagrer tilleggsrettigheter knyttet til roller.
+- `AspNetRoles` : Lagrer roller i systemet.
+- `AspNetUserClaims` : Lagrer spesifikke rettigheter knyttet til individuelle brukere. 
+- `AspNetUserLogins` : Håndterer eksterne pålogginger.
+- `AspNetUserRoles` : Knytter brukere til roller i systemet.
+- `AspNetUserTokens` : Lagrer tokens brukt for autentisering eller spesifikke handlinger.
+- `AspNetUsers` : Lagrer brukerkontoer og deres basisinformasjon. 
+- `GeoChanges` : Logger endringer i geografisk informasjon eller posisjon.
+- `UserDetails` : Lagrer tilleggsinformasjon om brukere som ikke finnes i `AspNetUsers`.
+- `__EFMigrationsHistory` :Sporer hvilke databaseendringer (migrasjoner) som er utført.
