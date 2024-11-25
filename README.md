@@ -1,7 +1,8 @@
 # Demonstrasjon av applikasjonen 
 
-	Her kommer det en GIF 
-## Rett i Kartet
+	![Demonstrasjon av admin logg inn] (https://github.com/corneliars/Kartverket-gif/blob/main/Gif.gif)
+
+## Rett i Kartet 
 <pre>
 │   ├── ## Root         
 │   │   ├── # css         
