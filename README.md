@@ -282,5 +282,10 @@ Testing under EXPO
 
 ## Sikkerhet
 ### CSRF
+- `@Html.AntiForgeryToken()` i alle forms
+- `[ValidateAntiForgeryToken]` i alle POST-metoder
+  
 ### SQL-Injections
+- Bruk av Dapper og parameteriserte spørringer
+  
 ### XSS
