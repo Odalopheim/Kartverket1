@@ -1,0 +1,36 @@
+﻿@* This is the admin homepage *@
+<h1>Admin Home</h1>
+<p>Welcome, Admin!</p>
+<a class="btn btn-success"href="@Url.Action("CreateSaksbehandler", "Admin")">Opprett en saksbehndler</a>
+<br />
+<h4>Liste over Saksbehandlere</h4>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Handlinger</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var saksbehandler in Model)
+            {
+                <tr>
+                    <td>@saksbehandler.Email</td>
+                    <td>
+                        <a asp-action="ConfirmDelete" asp-route-userId="@saksbehandler.Id" class="btn btn-success">
+                            Slett
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="3">Ingen saksbehandlere funnet.</td>
+            </tr>
+        }
+    </tbody>
+</table>

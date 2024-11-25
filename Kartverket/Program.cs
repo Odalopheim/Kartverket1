@@ -67,6 +67,9 @@ builder.Services.AddTransient<IDbConnection>((sp) =>
 //Registrer GeoChangeService
 builder.Services.AddScoped<GeoChangeService>();
 
+//Registrerer UserServices
+builder.Services.AddScoped<UserService>();
+
 //Bind API-innstillinger fra appsettings.json
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 
@@ -155,5 +158,9 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+    name: "admin",
+    pattern: "{controller=Admin}/{action=AdminHjemmeside}/{id?}");
 
 app.Run();

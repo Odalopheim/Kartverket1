@@ -12,6 +12,7 @@
         <h2 class="green-text">Register</h2>
 
         <form asp-action="Register" method="post">
+            @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 
@@ -54,7 +55,7 @@
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
 
-s
+
             <div>
                 <label asp-for="ConfirmPassword"></label>
                 <div class="input-group">

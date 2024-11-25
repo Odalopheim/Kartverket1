@@ -31,6 +31,7 @@ namespace Kartverket.Controllers
         }
 
         // Lister opp innmeldingene for Saksbehandler
+        [HttpGet]
         public async Task<IActionResult> Saksbehandler()
         {
             var geoChanges = await _context.GeoChanges.ToListAsync();
@@ -39,6 +40,7 @@ namespace Kartverket.Controllers
 
 
         //søkefunskjon for saksbehandlere
+        [HttpGet]
         public IActionResult SearchGeoChanges(DateTime? fromDate, DateTime? toDate, GeoChangeCategory? category)
         {
             var geoChanges = _geoChangeService.SearchGeoChanges(fromDate, toDate, category);
