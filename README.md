@@ -281,3 +281,6 @@ Testing under EXPO
 
 
 ## Sikkerhet
+### CSRF
+### SQL-Injections
+### XSS
