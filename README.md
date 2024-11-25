@@ -282,11 +282,15 @@ Testing under EXPO
 
 
 ## Sikkerhet
-### CSRF
-- `@Html.AntiForgeryToken()` i alle forms
-- `[ValidateAntiForgeryToken]` i alle POST-metoder
+### Autentisering og Autorisering
+- Custom session-basert autentisering
+- CSRF-beskyttelse ved bruk av AntiForgeryToken
+- Beskyttelse mot SQL-Injections ved bruk av Dapper og parameteriserte spørringer
+- Feilhåndtering og strukturert Logging ved bruk av ILogger
+- Rollebasert tilgangkontroll
+- Validering av input
+- Bruk av HTTPS Redirection
+- Bruk av HTTP Strict Transport Security
+- Transient Feilresiliens for Databasekobling
+- Dapper DB-tilkobling med IDbConnection
   
-### SQL-Injections
-- Bruk av Dapper og parameteriserte spørringer
-  
-### XSS
