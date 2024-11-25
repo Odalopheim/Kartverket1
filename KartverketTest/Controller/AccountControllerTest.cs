@@ -62,7 +62,7 @@ namespace KartverketTest.Controllers
             var result = await controller.Login(model);
 
             // Assert
-            Assert.NotNull(result); // Check if result is not null
+            Assert.NotNull(result); 
             var redirectResult = Assert.IsType<RedirectToActionResult>(result); 
             Assert.Equal("MinSide", redirectResult.ActionName); 
             Assert.Equal("Account", redirectResult.ControllerName); 
@@ -91,7 +91,7 @@ namespace KartverketTest.Controllers
             var result = await controller.Login(model);
 
             // Assert
-            Assert.NotNull(result); // Check if result is not null
+            Assert.NotNull(result); 
             var redirectResult = Assert.IsType<RedirectToActionResult>(result); 
             Assert.Equal("Saksbehandler", redirectResult.ActionName); 
             Assert.Equal("Saksbehandler", redirectResult.ControllerName); 
