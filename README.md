@@ -67,7 +67,6 @@ Testene ligger i branchen " " som er identisk til Main bare med testene. Testene
 
 │   ├── ##Models  
 │   │   ├── **CreateSaksbehandlerViewModel**
-│   │   ├── **EditUserViewModel**
 │   │   ├── **ErrorViewModel**
 │   │   ├── **KommuneInfoViewModel**
 │   │   ├── **LoginViewModel**
@@ -128,7 +127,6 @@ Models har ansvar for å representere data og forretningslogikk. Strukturen på 
 ## Models
 
 │   ├── **CreateSaksbehandlerViewModel**
-│   ├── **EditUserViewModel**
 │   ├── **ErrorViewModel**
 │   ├── **KommuneInfoViewModel**
 │   ├── **LoginViewModel**
@@ -244,6 +242,9 @@ Controller er ansvarlig for å håndtere logikken og styrer flyten mellom Model 
 ## Testing 
 - Antall tester
 - Hva som testes
+
+Manuelltesting
+- Hele systemet har blitt gjennomgått og sjekket slik at alle steder man legger inn innput får man ut riktig output.
 
 Testing under EXPO
 - Under EXPO 11. november 2024 ble det gjennomført flere brukstester og usability-tester av både applikasjonen og prototypen
