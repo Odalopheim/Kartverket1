@@ -18,6 +18,7 @@
 
 │   ├── ## Controllers      
 │   │   ├── **AccountController** 
+│   │   ├── **AdminController** 
 │   │   ├── **BrukerController** 
 │   │   ├── **HomeController**  
 │   │   ├── **SaksbehandlerController**  
@@ -28,10 +29,13 @@
 │   │   ├── **GeoChangeService**
 │   │   ├── **RoleInitializer** 
 │   │   ├── **UserDetails** 
+│   │   ├── **UserService** 
 
 │   ├── ##Migrations        
 
-│   ├── ##Models        
+│   ├── ##Models  
+│   │   ├── **CreateSaksbehandlerViewModel**
+│   │   ├── **EditUserViewModel**
 │   │   ├── **ErrorViewModel**
 │   │   ├── **KommuneInfoViewModel**
 │   │   ├── **LoginViewModel**
@@ -47,10 +51,15 @@
 
 │   ├── ##Views           
 │   │   ├── # Account 
+│   │   │   ├── **EditUserInfo** 
 │   │   │   ├── **Login** 
 │   │   │   ├── **MinSide**   
 │   │   │   ├── **Register**    
 │   │   │   ├── **RegistrationSuccess** 
+│   │   ├── # Admin 
+│   │   │   ├── **AdminHjemmeside** 
+│   │   │   ├── **CreateSaksbehandler**   
+│   │   │   ├── **DeleteSaksbehandler**    
 │   │   ├── # GeoChange 
 │   │   │   ├── **Delete** 
 │   │   │   ├── **Details**   
@@ -85,7 +94,9 @@ Models har ansvar for å representere data og forretningslogikk. Strukturen på 
 <pre>
 
 ## Models
-	
+
+│   ├── **CreateSaksbehandlerViewModel**
+│   ├── **EditUserViewModel**
 │   ├── **ErrorViewModel**
 │   ├── **KommuneInfoViewModel**
 │   ├── **LoginViewModel**
@@ -102,10 +113,15 @@ Views er ansvarlig for brukergrensesnittet. Den gjengir informasjon, basert på 
 ## Views   
         
 │   ├── # Account 
+│   │   ├── **EditUserInfo** 
 │   │   ├── **Login** 
 │   │   ├── **MinSide**  
 │   │   ├── **Register**    
 │   │   ├── **RegistrationSuccess**   
+│   ├── # Admin 
+│   │   ├── **AdminHjemmeside** 
+│   │   ├── **CreateSaksbehandler**   
+│   │   ├── **DeleteSaksbehandler**    
 │   ├── # GeoChange 
 │   │   ├── **Delete** 
 │   │   ├── **Details**  
@@ -134,10 +150,10 @@ Controller er ansvarlig for å håndtere logikken og styrer flyten mellom Model 
 ## Controllers      
 
 │   ├── **AccountController** 
+│   ├── **AdminController** 
 │   ├── **BrukerController** 
 │   ├── **HomeController** 
 │   ├── **SaksbehandlerController**  
-
 
 </pre>
 
