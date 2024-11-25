@@ -1,6 +1,6 @@
 # Demonstrasjon av applikasjonen 
 
-	![Demonstrasjon av admin logg inn] (https://github.com/corneliars/Kartverket-gif/blob/main/Gif.gif)
+![Gif](https://github.com/user-attachments/assets/df8764cc-2511-4035-93fa-c79145e2f0db)
 
 ## Rett i Kartet 
 <pre>
