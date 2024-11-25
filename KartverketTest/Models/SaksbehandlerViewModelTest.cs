@@ -37,8 +37,8 @@ namespace Kartverket.Tests
             var isValid = Validator.TryValidateObject(model, context, results, true);
 
             // Assert
-            Assert.True(isValid); // Model should be valid
-            Assert.Empty(results); // No validation errors
+            Assert.True(isValid); 
+            Assert.Empty(results); 
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace Kartverket.Tests
             // Arrange
             var model = new CreateSaksbehandlerViewModel
             {
-                Email = "", // Missing email
+                Email = "", 
                 Password = "StrongPassword123",
                 ConfirmPassword = "StrongPassword123"
             };
@@ -59,7 +59,7 @@ namespace Kartverket.Tests
             var isValid = Validator.TryValidateObject(model, context, results, true);
 
             // Assert
-            Assert.False(isValid); // Model should be invalid
+            Assert.False(isValid); 
             Assert.Contains(results, r => r.ErrorMessage.Contains("The Email field is required."));
         }
 
@@ -81,7 +81,7 @@ namespace Kartverket.Tests
             var isValid = Validator.TryValidateObject(model, context, results, true);
 
             // Assert
-            Assert.False(isValid); // Model should be invalid
+            Assert.False(isValid); 
             Assert.Contains(results, r => r.ErrorMessage.Contains("The Email field is not a valid e-mail address."));
         }
 
@@ -91,7 +91,7 @@ namespace Kartverket.Tests
             // Arrange
             var model = new CreateSaksbehandlerViewModel
             {
-                Email = "user@example.com", // Invalid domain
+                Email = "user@example.com", 
                 Password = "StrongPassword123",
                 ConfirmPassword = "StrongPassword123"
             };
@@ -116,7 +116,7 @@ namespace Kartverket.Tests
             {
                 Email = "user@Kartverket.no",
                 Password = "Password123",
-                ConfirmPassword = "DifferentPassword" // Mismatch
+                ConfirmPassword = "DifferentPassword" 
             };
 
             var context = new ValidationContext(model, null, null);
@@ -126,7 +126,7 @@ namespace Kartverket.Tests
             var isValid = Validator.TryValidateObject(model, context, results, true);
 
             // Assert
-            Assert.False(isValid); // Model should be invalid
+            Assert.False(isValid); 
             Assert.Contains(results, r => r.ErrorMessage.Contains("The password and confirmation password do not match."));
         }
     }

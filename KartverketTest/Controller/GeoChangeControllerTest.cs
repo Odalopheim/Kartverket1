@@ -20,8 +20,8 @@ namespace KartverketTest.Controllers
         public async Task RegisterAreaChange_Post_ReturnsViewWithModel_WhenDataIsInvalid()
         {
             // Arrange
-            var geoJson = ""; // Invalid GeoJson
-            var description = ""; // Invalid Description
+            var geoJson = ""; 
+            var description = ""; 
             var category = GeoChangeCategory.Bilvei;
 
             var mockGeoChangeServiceLogger = new Mock<ILogger<GeoChangeService>>();

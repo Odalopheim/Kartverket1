@@ -41,7 +41,7 @@ namespace KartverketTest.Models
             // Arrange
             var model = new LoginViewModel
             {
-                Email = "", // Invalid: Required field
+                Email = "", 
                 Password = "Password123"
             };
 
@@ -63,7 +63,7 @@ namespace KartverketTest.Models
             var model = new LoginViewModel
             {
                 Email = "test@example.com",
-                Password = "" // Invalid: Required field
+                Password = "" 
             };
 
             var context = new ValidationContext(model, null, null);
