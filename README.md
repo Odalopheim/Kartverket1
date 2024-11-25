@@ -245,6 +245,10 @@ Controller er ansvarlig for å håndtere logikken og styrer flyten mellom Model 
 - Antall tester
 - Hva som testes
 
+Testing under EXPO
+- Under EXPO 11. november 2024 ble det gjennomført flere brukstester og usability-tester av både applikasjonen og prototypen
+- Applikasjonen har også blitt testet av diverse venner og familie som er i alderen 20år til 80år
+
 ## MariaDB database
 ### Dapper
 - Bruker dapper til å kjøre SQL-spørringer mot databasen
@@ -274,3 +278,6 @@ Controller er ansvarlig for å håndtere logikken og styrer flyten mellom Model 
 - `GeoChanges` : Logger endringer i geografisk informasjon eller posisjon.
 - `UserDetails` : Lagrer tilleggsinformasjon om brukere som ikke finnes i `AspNetUsers`.
 - `__EFMigrationsHistory` :Sporer hvilke databaseendringer (migrasjoner) som er utført.
+
+
+## Sikkerhet
