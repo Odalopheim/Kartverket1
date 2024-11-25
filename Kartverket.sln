@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kartverket", "Kartverket\Ka
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{D4576021-C7DC-4AB2-BE08-94BC8FB45B37}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KartverketTest", "KartverketTest\KartverketTest.csproj", "{9C1F4CDC-AB5F-49C4-A29A-A34FD50BBA95}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{D4576021-C7DC-4AB2-BE08-94BC8FB45B37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4576021-C7DC-4AB2-BE08-94BC8FB45B37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4576021-C7DC-4AB2-BE08-94BC8FB45B37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C1F4CDC-AB5F-49C4-A29A-A34FD50BBA95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C1F4CDC-AB5F-49C4-A29A-A34FD50BBA95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C1F4CDC-AB5F-49C4-A29A-A34FD50BBA95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C1F4CDC-AB5F-49C4-A29A-A34FD50BBA95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

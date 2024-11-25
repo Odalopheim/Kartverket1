@@ -164,3 +164,5 @@ app.MapControllerRoute(
     pattern: "{controller=Admin}/{action=AdminHjemmeside}/{id?}");
 
 app.Run();
+public partial class Program { } // Legg til denne linjen!
+

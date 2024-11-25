@@ -158,9 +158,6 @@ namespace Kartverket.Controllers
             return View();
         }
 
-
-
-
     }
 
 }

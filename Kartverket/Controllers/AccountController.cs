@@ -86,7 +86,7 @@ namespace Kartverket.Controllers
                     ModelState.AddModelError("", "Invalid login attempt.");
                 }
             }
-            return View(model);
+            return View("Login", model);
         }
 
 
